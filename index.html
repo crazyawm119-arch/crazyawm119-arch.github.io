@@ -85,8 +85,86 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <section id="auth" class="page hidden authpage"><div class="authbox"><h1>THE COUNCIL</h1><h2>Login / Register</h2><p>This Chrome version stores demo account data locally in your browser.</p><input id="username" placeholder="Username"><input id="password" type="password" placeholder="Password"><button class="red" onclick="register()">CREATE / LOGIN</button><p id="authStatus" class="status"></p></div></section>
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-let points=Number(localStorage.getItem("councilPoints")||50);
+const SUPABASE_URL = "https://wxsjttouasmvinjlrayk.supabase.co";
+const SUPABASE_KEY = "sb_publishable_UW-FqBWnc4IjNAk5Kuu6vA_jFV0tMqX";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let points=0, name="Guest", tasks=[];
+
+async function loadProfile(){
+ const {data:{user}}=await supabaseClient.auth.getUser();
+ if(!user) return;
+ const {data}=await supabaseClient.from("profiles").select("*").eq("id",user.id).maybeSingle();
+ if(data){name=data.username||"Member";points=Number(data.points||0);}
+ else {name=(user.email||"member").split("@")[0];points=50;await supabaseClient.from("profiles").insert({id:user.id,username:name,points});}
+}
+async function loadTasks(){
+ const {data,error}=await supabaseClient.from("challenges").select("*").eq("status","active").order("votes",{ascending:false});
+ if(!error) tasks=(data||[]).map(x=>({id:x.id,title:x.title,desc:x.description||"",votes:Number(x.votes||0)}));
+}
+function sync(){
+ document.getElementById("points").textContent=points;
+ document.getElementById("memberName").textContent=name;
+ document.getElementById("yourRank").textContent=points+" CP";
+ document.getElementById("activeCount").textContent=tasks.length;
+ render();
+}
+async function init(){await loadProfile();await loadTasks();sync();}
+async function earn(){
+ const s=document.getElementById("earnStatus");
+ const {data:{user}}=await supabaseClient.auth.getUser();
+ if(!user){s.textContent="Please log in first.";show("auth");return;}
+ points+=10;
+ await supabaseClient.from("profiles").update({points}).eq("id",user.id);
+ sync(); s.textContent="✅ Demo reward credited: +10 CP";
+}
+async function register(){
+ const u=document.getElementById("username").value.trim(), p=document.getElementById("password").value, s=document.getElementById("authStatus");
+ if(u.length<3){s.textContent="Username must be at least 3 characters.";return}
+ if(p.length<6){s.textContent="Password must be at least 6 characters.";return}
+ const email=u.toLowerCase().replace(/[^a-z0-9._-]/g,"")+"@thechriscouncil.local";
+ let r=await supabaseClient.auth.signUp({email,password:p});
+ if(r.error) r=await supabaseClient.auth.signInWithPassword({email,password:p});
+ if(r.error){s.textContent=r.error.message;return}
+ name=u;points=50;
+ await supabaseClient.from("profiles").upsert({id:r.data.user.id,username:name,points});
+ await init(); s.textContent="✅ Account ready!"; setTimeout(()=>show("dashboard"),500);
+}
+async function logout(){await supabaseClient.auth.signOut();name="Guest";points=0;sync();}
+async function createTask(){
+ const t=document.getElementById("title").value.trim(),d=document.getElementById("desc").value.trim(),s=document.getElementById("createStatus");
+ const {data:{user}}=await supabaseClient.auth.getUser();
+ if(!user){s.textContent="Please log in first.";show("auth");return}
+ if(!t){s.textContent="Enter a challenge.";return}
+ if(points<20){s.textContent="You need 20 CP.";return}
+ if(tasks.some(x=>x.title.toLowerCase()===t.toLowerCase())){s.textContent="⚠️ That challenge already exists.";return}
+ const r=await supabaseClient.from("challenges").insert({title:t,description:d||"No description.",votes:0,status:"active"}).select().single();
+ if(r.error){s.textContent="Could not submit: "+r.error.message;return}
+ points-=20;
+ await supabaseClient.from("profiles").update({points}).eq("id",user.id);
+ await loadTasks();sync();s.textContent="✅ Challenge submitted!";
+ document.getElementById("title").value="";document.getElementById("desc").value="";
+}
+async function vote(i){
+ const {data:{user}}=await supabaseClient.auth.getUser();
+ if(!user){show("auth");return}
+ const t=tasks[i];
+ const v=await supabaseClient.from("votes").insert({challenge_id:t.id,user_id:user.id});
+ if(v.error){alert(v.error.message.includes("duplicate")?"You already voted for this challenge.":v.error.message);return}
+ const u=await supabaseClient.from("challenges").update({votes:t.votes+1}).eq("id",t.id);
+ if(u.error){alert(u.error.message);return}
+ await loadTasks();sync();
+}
+</script>
+
+<script>
+// legacy UI functions below are replaced by the connected functions above
+let points=0;
+let name="Guest";
+let tasks=[];
+Number(localStorage.getItem("councilPoints")||50);
 let name=localStorage.getItem("councilName")||"Guest";
 let tasks=JSON.parse(localStorage.getItem("councilTasks")||'null')||[
 {title:"Learn a Backflip in 7 Days",desc:"Document the challenge safely.",votes:1324},
@@ -103,7 +181,7 @@ function createTask(){let t=document.getElementById("title").value.trim(),d=docu
 function vote(i){tasks[i].votes++;save()}
 function render(){let html=tasks.map((t,i)=>'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.desc)+'</small></section><strong>'+t.votes+'<br><i>Votes</i></strong><button onclick="vote('+i+')">VOTE</button></div>').join("");document.getElementById("taskList").innerHTML=html;document.getElementById("allTasks").innerHTML=html}
 function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-sync();
+init();
 </script>
 </body>
 </html>
