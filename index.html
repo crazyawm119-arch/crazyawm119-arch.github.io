@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Council</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#070708;color:#eee;font-family:Arial,Helvetica,sans-serif}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#090a0b;border-right:1px solid #292929;padding:24px 18px;z-index:5}
+.logo{display:flex;gap:10px;align-items:center;font-weight:900;font-size:18px;line-height:.9;margin:0 12px 35px}.logo b,.eyebrow,h3{color:#f01818}
+nav button{display:flex;gap:15px;width:100%;padding:13px 14px;margin:3px 0;background:none;border:0;color:#ddd;text-align:left;border-radius:4px;cursor:pointer}
+nav button:hover,nav .active{background:#480707;border-left:3px solid #f11;color:#fff}
+.side-points{border:1px solid #a20f0f;border-radius:8px;padding:18px;margin-top:30px;text-align:center}
+.side-points small{display:block}.side-points strong{display:block;color:#f22;font-size:29px;margin:10px}
+.red{display:inline-block;background:#ed1010;color:white;border:0;border-radius:6px;padding:13px 20px;font-weight:bold;cursor:pointer;text-decoration:none}
+.profile{position:absolute;bottom:20px;left:18px;right:18px;border:1px solid #292929;padding:14px;border-radius:8px;display:flex;gap:10px}
+.profile div{flex:1}.profile small{display:block;color:#e22}.profile a{color:#f22;cursor:pointer}
+.topbar{height:58px;position:fixed;left:245px;right:0;top:0;border-bottom:1px solid #252525;background:#080808;z-index:4;display:flex;justify-content:space-between;align-items:center;padding:0 25px}
+.topbar button{background:none;border:0;color:#f22;cursor:pointer}
+main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto}.hidden{display:none}
+.hero{height:410px;background:#080404;border:1px solid #250707;display:flex;overflow:hidden;position:relative}
+.hero-text{padding:45px 30px 20px 55px;width:55%;position:relative;z-index:2;background:linear-gradient(90deg,#070707 70%,transparent)}
+.hero h1{font-size:72px;line-height:.82;margin:10px 0;color:#e00}.hero h1 span{color:#fff}.hero h2{font-size:20px}.hero h2 b{color:#f01818}
+.hero p{color:#bbb;line-height:1.55}.outline{display:inline-block;background:#0b0b0b;color:#fff;border:1px solid #777;padding:12px 18px;border-radius:6px;margin-left:10px;font-weight:bold;cursor:pointer}
+.hero img{width:58%;height:100%;object-fit:cover;object-position:center;margin-left:-8%}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.stats div,.panel,.authbox{background:#0e0f10;border:1px solid #292929;border-radius:8px}
+.stats div{padding:17px}.stats small{display:block;color:#aaa;margin:5px 0}.stats b{font-size:24px;color:#f11}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:12px 0}.panel{padding:16px}.panel h3{margin:0 0 15px;border-bottom:1px solid #292929;padding-bottom:13px}
+.topchallenge{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center}.fakepic{height:130px;border-radius:7px;background:linear-gradient(135deg,#321010,#a30);display:grid;place-items:center;font-size:55px}
+.topchallenge em{color:#e22;font-style:normal}.topchallenge p{color:#aaa;line-height:1.5}
+.rank{padding:10px;border-bottom:1px solid #222;display:flex;justify-content:space-between}.challenge{display:grid;grid-template-columns:55px 1fr 70px 70px;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #222}
+.challenge>div{height:50px;background:#242424;border-radius:6px;display:grid;place-items:center;font-size:25px}.challenge section b,.challenge section small{display:block}.challenge section small{color:#999;margin-top:6px}
+.challenge strong{text-align:center}.challenge i{font-style:normal;color:#e22;font-size:11px}.challenge button{background:transparent;border:1px solid #e22;color:#f22;padding:9px;border-radius:5px;font-weight:bold;cursor:pointer}
+.how p{margin:12px 0}.how p b{display:inline-grid;place-items:center;background:#e11;border-radius:50%;width:24px;height:24px;margin-right:8px}.how small{color:#999;margin-left:34px}
+.form input,.form textarea,.authbox input{display:block;width:100%;padding:14px;margin:12px 0;background:#080808;color:#fff;border:1px solid #333;border-radius:6px}.form textarea{min-height:120px}
+.authpage{min-height:70vh;display:grid;place-items:center}.authbox{width:min(430px,95%);padding:30px}.authbox h1{color:#f11}.authbox a{color:#f22;cursor:pointer}.status{color:#f33;font-weight:bold}
+@media(max-width:900px){.sidebar{width:70px;padding:15px 8px}.logo span,nav button span,.side-points,.profile div{display:none}.logo{margin:0 5px 25px}.topbar{left:70px}main{margin-left:70px;padding:70px 12px}.hero-text{width:70%;padding:35px 20px}.hero h1{font-size:55px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
+@media(max-width:560px){.hero{height:430px}.hero-text{width:100%;background:linear-gradient(90deg,#070707 45%,#070707aa)}.hero img{position:absolute;right:0;width:80%;opacity:.5}.hero h1{font-size:50px}.stats{grid-template-columns:1fr}.topchallenge{grid-template-columns:1fr}.challenge{grid-template-columns:45px 1fr}.challenge strong,.challenge button{grid-column:2}.outline{margin:8px 0 0}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+<div class="logo">🏛️ <span>THE<br><b>COUNCIL</b></span></div>
+<nav>
+<button class="active" onclick="show('dashboard')">⌂ <span>Dashboard</span></button>
+<button onclick="show('earn')">▶ <span>Earn Points</span></button>
+<button onclick="show('create')">◎ <span>Create Challenge</span></button>
+<button onclick="show('challenges')">◉ <span>Challenges</span></button>
+<button onclick="show('leaderboard')">🏆 <span>Leaderboard</span></button>
+</nav>
+<div class="side-points"><small>COUNCIL POINTS</small><strong>🪙 <span id="points">50</span></strong><button class="red" onclick="show('earn')">EARN POINTS</button></div>
+<div class="profile">🔴 <div><b id="memberName">Guest</b><small>Member</small></div><a onclick="logout()">Logout</a></div>
+</aside>
+
+<header class="topbar"><div></div><div id="accountArea"><button onclick="show('auth')">LOGIN / REGISTER</button></div></header>
+
+<main>
+<section id="dashboard" class="page">
+<div class="hero">
+<div class="hero-text"><div class="eyebrow">THE COUNCIL IS IN SESSION</div><h1><span>THE</span><br>COUNCIL</h1>
+<h2>TURN POINTS INTO <b>REAL CHALLENGES.</b></h2>
+<p>Earn Council Points by watching rewarded ads.<br>Create challenges. The community votes.<br>The highest eligible challenge gets fulfilled by Chris.</p>
+<button class="red" onclick="show('earn')">▶ EARN POINTS</button><button class="outline" onclick="show('create')">＋ CREATE CHALLENGE</button></div>
+<img src="chris-council-hero.jpg" alt="Chris Council">
+</div>
+<div class="stats"><div>🪙<small>TOTAL POINTS EARNED</small><b>1,250,340</b></div><div>👥<small>TOTAL MEMBERS</small><b>24,581</b></div><div>🔥<small>CHALLENGES COMPLETED</small><b>312</b></div><div>▣<small>CHALLENGES ACTIVE</small><b id="activeCount">3</b></div></div>
+<div class="grid">
+<div class="panel"><h3>🔥 TOP CHALLENGE</h3><div class="topchallenge"><div class="fakepic">🔥</div><div><h2>Run a Marathon in 30 Days</h2><em>Submitted by @CouncilDemo</em><p>Complete a full marathon in 30 days and document the journey.</p><b>↑ 2,487 Votes</b></div></div></div>
+<div class="panel"><h3>🏆 LEADERBOARD</h3><div class="rank">🥇 ChampionX <b>12,540 CP</b></div><div class="rank">🥈 ShadowNinja <b>9,870 CP</b></div><div class="rank">🥉 Vortex <b>8,220 CP</b></div><div class="rank">4 &nbsp; Fearless <b>7,340 CP</b></div></div>
+</div>
+<div class="grid">
+<div class="panel"><h3>RECENT CHALLENGES</h3><div id="taskList"></div></div>
+<div class="panel how"><h3>HOW IT WORKS</h3><p><b>1</b> Earn Council Points<br><small>Watch rewarded ads and earn without a daily cap.</small></p><p><b>2</b> Create Challenges<br><small>Use 20 CP to submit a challenge.</small></p><p><b>3</b> Community Votes<br><small>Members vote for eligible challenges.</small></p><p><b>4</b> Chris Fulfills<br><small>The highest eligible challenge rises to the top.</small></p><p><b>5</b> Permanent History<br><small>Completed challenges cannot return to voting.</small></p></div>
+</div>
+</section>
+
+<section id="earn" class="page hidden"><h1>Earn Points</h1><div class="panel"><h2>📺 Rewarded Ad</h2><p>No daily points cap in this prototype. A real version will credit points only after the ad provider's valid reward event.</p><button class="red" onclick="earn()">WATCH AD · +10 CP</button><p id="earnStatus" class="status"></p></div></section>
+
+<section id="create" class="page hidden"><h1>Create Challenge</h1><div class="panel form"><p>Submitting a challenge costs <b>20 CP</b>.</p><input id="title" maxlength="120" placeholder="What should Chris do?"><textarea id="desc" maxlength="400" placeholder="Describe your challenge"></textarea><button class="red" onclick="createTask()">SUBMIT FOR 20 CP</button><p id="createStatus" class="status"></p></div></section>
+
+<section id="challenges" class="page hidden"><h1>Challenges</h1><div class="panel"><div id="allTasks"></div></div></section>
+<section id="leaderboard" class="page hidden"><h1>Leaderboard</h1><div class="panel"><div class="rank">🥇 ChampionX <b>12,540 CP</b></div><div class="rank">🥈 ShadowNinja <b>9,870 CP</b></div><div class="rank">🥉 Vortex <b>8,220 CP</b></div><div class="rank">4 &nbsp; Fearless <b>7,340 CP</b></div><div class="rank">5 &nbsp; You <b id="yourRank">50 CP</b></div></div></section>
+
+<section id="auth" class="page hidden authpage"><div class="authbox"><h1>THE COUNCIL</h1><h2>Login / Register</h2><p>This Chrome version stores demo account data locally in your browser.</p><input id="username" placeholder="Username"><input id="password" type="password" placeholder="Password"><button class="red" onclick="register()">CREATE / LOGIN</button><p id="authStatus" class="status"></p></div></section>
+</main>
+
+<script>
+let points=Number(localStorage.getItem("councilPoints")||50);
+let name=localStorage.getItem("councilName")||"Guest";
+let tasks=JSON.parse(localStorage.getItem("councilTasks")||'null')||[
+{title:"Learn a Backflip in 7 Days",desc:"Document the challenge safely.",votes:1324},
+{title:"Read 10 Books in 30 Days",desc:"Share the reading journey.",votes:987},
+{title:"Make a funny 60-second Council announcement",desc:"Chris makes the announcement.",votes:642}
+];
+function save(){localStorage.setItem("councilPoints",points);localStorage.setItem("councilName",name);localStorage.setItem("councilTasks",JSON.stringify(tasks));sync()}
+function sync(){document.getElementById("points").textContent=points;document.getElementById("memberName").textContent=name;document.getElementById("yourRank").textContent=points+" CP";document.getElementById("activeCount").textContent=tasks.length;render()}
+function show(id){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));window.scrollTo({top:0,behavior:"smooth"})}
+function earn(){let s=document.getElementById("earnStatus");s.textContent="Verifying demo reward…";setTimeout(()=>{points+=10;save();s.textContent="✅ Demo reward credited: +10 CP";},900)}
+function register(){let u=document.getElementById("username").value.trim();if(u.length<3){document.getElementById("authStatus").textContent="Username must be at least 3 characters.";return}name=u;save();document.getElementById("authStatus").textContent="✅ Welcome, "+name+"!";setTimeout(()=>show("dashboard"),500)}
+function logout(){name="Guest";points=50;localStorage.removeItem("councilName");localStorage.removeItem("councilPoints");sync()}
+function createTask(){let t=document.getElementById("title").value.trim(),d=document.getElementById("desc").value.trim(),s=document.getElementById("createStatus");if(!t){s.textContent="Enter a challenge.";return}if(points<20){s.textContent="You need 20 CP.";return}if(tasks.some(x=>x.title.toLowerCase()===t.toLowerCase())){s.textContent="⚠️ That challenge already exists.";return}points-=20;tasks.push({title:t,desc:d||"No description.",votes:0});save();s.textContent="✅ Challenge submitted!";document.getElementById("title").value="";document.getElementById("desc").value=""}
+function vote(i){tasks[i].votes++;save()}
+function render(){let html=tasks.map((t,i)=>'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.desc)+'</small></section><strong>'+t.votes+'<br><i>Votes</i></strong><button onclick="vote('+i+')">VOTE</button></div>').join("");document.getElementById("taskList").innerHTML=html;document.getElementById("allTasks").innerHTML=html}
+function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+sync();
+</script>
+</body>
+</html>
