@@ -82,7 +82,10 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <section id="challenges" class="page hidden"><h1>Challenges</h1><div class="panel"><div id="allTasks"></div></div></section>
 <section id="leaderboard" class="page hidden"><h1>Leaderboard</h1><div class="panel"><div class="rank">🥇 ChampionX <b>12,540 CP</b></div><div class="rank">🥈 ShadowNinja <b>9,870 CP</b></div><div class="rank">🥉 Vortex <b>8,220 CP</b></div><div class="rank">4 &nbsp; Fearless <b>7,340 CP</b></div><div class="rank">5 &nbsp; You <b id="yourRank">50 CP</b></div></div></section>
 
-<section id="auth" class="page hidden authpage"><div class="authbox"><h1>THE COUNCIL</h1><h2>Login / Register</h2><p>This Chrome version stores demo account data locally in your browser.</p><input id="username" placeholder="Username"><input id="password" type="password" placeholder="Password"><button class="red" onclick="register()">CREATE / LOGIN</button><p id="authStatus" class="status"></p></div></section>
+<section id="auth" class="page hidden authpage"><div class="authbox"><h1>THE COUNCIL</h1><h2>Login / Register</h2><p>This Chrome version stores demo account data locally in your browser.</p><input id="username" placeholder="Username"><input id="password" type="password" placeholder="Password"><button class="red" onclick="register()">CREATE / LOGIN</button>
+<div style="display:flex;align-items:center;gap:10px;margin:14px 0;color:#777"><span style="height:1px;background:#333;flex:1"></span><span>OR</span><span style="height:1px;background:#333;flex:1"></span></div>
+<button class="outline" style="width:100%;margin:0;border-color:#555" onclick="signInWithGoogle()">🔵 Continue with Google</button>
+<p id="authStatus" class="status"></p></div></section>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -148,6 +151,18 @@ async function earn(){
   await supabaseClient.from("profiles").update({points}).eq("id",user.id);
   sync();
   s.textContent="✅ Demo reward credited: +10 CP";
+}
+
+async function signInWithGoogle(){
+  const s=document.getElementById("authStatus");
+  s.textContent="Opening Google…";
+  const {error}=await supabaseClient.auth.signInWithOAuth({
+    provider:"google",
+    options:{
+      redirectTo:window.location.origin + window.location.pathname
+    }
+  });
+  if(error) s.textContent=error.message;
 }
 
 async function register(){
@@ -251,6 +266,14 @@ function esc(s){
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
   }[c]));
 }
+
+supabaseClient.auth.onAuthStateChange(async (event, session)=>{
+  if(session?.user){
+    await loadProfile();
+    await loadTasks();
+    sync();
+  }
+});
 
 init();
 </script>
