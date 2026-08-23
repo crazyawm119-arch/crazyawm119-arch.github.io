@@ -85,6 +85,7 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <section id="auth" class="page hidden authpage"><div class="authbox"><h1>THE COUNCIL</h1><h2>Login / Register</h2><p>This Chrome version stores demo account data locally in your browser.</p><input id="username" placeholder="Username"><input id="password" type="password" placeholder="Password"><button class="red" onclick="register()">CREATE / LOGIN</button><p id="authStatus" class="status"></p></div></section>
 </main>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://wxsjttouasmvinjlrayk.supabase.co";
@@ -94,94 +95,85 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let points=0, name="Guest", tasks=[];
 
 async function loadProfile(){
- const {data:{user}}=await supabaseClient.auth.getUser();
- if(!user) return;
- const {data}=await supabaseClient.from("profiles").select("*").eq("id",user.id).maybeSingle();
- if(data){name=data.username||"Member";points=Number(data.points||0);}
- else {name=(user.email||"member").split("@")[0];points=50;await supabaseClient.from("profiles").insert({id:user.id,username:name,points});}
+  const {data:{user}}=await supabaseClient.auth.getUser();
+  if(!user) return;
+  const {data,error}=await supabaseClient.from("profiles").select("*").eq("id",user.id).maybeSingle();
+  if(error) console.error(error);
+  if(data){name=data.username||"Member";points=Number(data.points||0);}
+  else {
+    name=(user.email||"member").split("@")[0];
+    points=50;
+    await supabaseClient.from("profiles").insert({id:user.id,username:name,points});
+  }
 }
 async function loadTasks(){
- const {data,error}=await supabaseClient.from("challenges").select("*").eq("status","active").order("votes",{ascending:false});
- if(!error) tasks=(data||[]).map(x=>({id:x.id,title:x.title,desc:x.description||"",votes:Number(x.votes||0)}));
+  const {data,error}=await supabaseClient.from("challenges").select("*").eq("status","active").order("votes",{ascending:false});
+  if(error){console.error(error);tasks=[];return;}
+  tasks=(data||[]).map(x=>({id:x.id,title:x.title,desc:x.description||"",votes:Number(x.votes||0)}));
 }
 function sync(){
- document.getElementById("points").textContent=points;
- document.getElementById("memberName").textContent=name;
- document.getElementById("yourRank").textContent=points+" CP";
- document.getElementById("activeCount").textContent=tasks.length;
- render();
+  document.getElementById("points").textContent=points;
+  document.getElementById("memberName").textContent=name;
+  document.getElementById("yourRank").textContent=points+" CP";
+  document.getElementById("activeCount").textContent=tasks.length;
+  render();
 }
 async function init(){await loadProfile();await loadTasks();sync();}
+function save(){} 
 async function earn(){
- const s=document.getElementById("earnStatus");
- const {data:{user}}=await supabaseClient.auth.getUser();
- if(!user){s.textContent="Please log in first.";show("auth");return;}
- points+=10;
- await supabaseClient.from("profiles").update({points}).eq("id",user.id);
- sync(); s.textContent="✅ Demo reward credited: +10 CP";
+  const s=document.getElementById("earnStatus");
+  const {data:{user}}=await supabaseClient.auth.getUser();
+  if(!user){s.textContent="Please log in first.";show("auth");return;}
+  points+=10;
+  await supabaseClient.from("profiles").update({points}).eq("id",user.id);
+  sync();s.textContent="✅ Demo reward credited: +10 CP";
 }
 async function register(){
- const u=document.getElementById("username").value.trim(), p=document.getElementById("password").value, s=document.getElementById("authStatus");
- if(u.length<3){s.textContent="Username must be at least 3 characters.";return}
- if(p.length<6){s.textContent="Password must be at least 6 characters.";return}
- const email=u.toLowerCase().replace(/[^a-z0-9._-]/g,"")+"@thechriscouncil.local";
- let r=await supabaseClient.auth.signUp({email,password:p});
- if(r.error) r=await supabaseClient.auth.signInWithPassword({email,password:p});
- if(r.error){s.textContent=r.error.message;return}
- name=u;points=50;
- await supabaseClient.from("profiles").upsert({id:r.data.user.id,username:name,points});
- await init(); s.textContent="✅ Account ready!"; setTimeout(()=>show("dashboard"),500);
+  const u=document.getElementById("username").value.trim();
+  const p=document.getElementById("password").value;
+  const s=document.getElementById("authStatus");
+  if(u.length<3){s.textContent="Username must be at least 3 characters.";return;}
+  if(p.length<6){s.textContent="Password must be at least 6 characters.";return;}
+  const email=u.toLowerCase().replace(/[^a-z0-9._-]/g,"")+"@thechriscouncil.local";
+  let r=await supabaseClient.auth.signUp({email,password:p});
+  if(r.error) r=await supabaseClient.auth.signInWithPassword({email,password:p});
+  if(r.error){s.textContent=r.error.message;return;}
+  name=u;points=50;
+  await supabaseClient.from("profiles").upsert({id:r.data.user.id,username:name,points});
+  await init();s.textContent="✅ Account ready!";
+  setTimeout(()=>show("dashboard"),500);
 }
-async function logout(){await supabaseClient.auth.signOut();name="Guest";points=0;sync();}
+async function logout(){
+  await supabaseClient.auth.signOut();
+  name="Guest";points=0;sync();
+}
 async function createTask(){
- const t=document.getElementById("title").value.trim(),d=document.getElementById("desc").value.trim(),s=document.getElementById("createStatus");
- const {data:{user}}=await supabaseClient.auth.getUser();
- if(!user){s.textContent="Please log in first.";show("auth");return}
- if(!t){s.textContent="Enter a challenge.";return}
- if(points<20){s.textContent="You need 20 CP.";return}
- if(tasks.some(x=>x.title.toLowerCase()===t.toLowerCase())){s.textContent="⚠️ That challenge already exists.";return}
- const r=await supabaseClient.from("challenges").insert({title:t,description:d||"No description.",votes:0,status:"active"}).select().single();
- if(r.error){s.textContent="Could not submit: "+r.error.message;return}
- points-=20;
- await supabaseClient.from("profiles").update({points}).eq("id",user.id);
- await loadTasks();sync();s.textContent="✅ Challenge submitted!";
- document.getElementById("title").value="";document.getElementById("desc").value="";
+  const t=document.getElementById("title").value.trim();
+  const d=document.getElementById("desc").value.trim();
+  const s=document.getElementById("createStatus");
+  const {data:{user}}=await supabaseClient.auth.getUser();
+  if(!user){s.textContent="Please log in first.";show("auth");return;}
+  if(!t){s.textContent="Enter a challenge.";return;}
+  if(points<20){s.textContent="You need 20 CP.";return;}
+  if(tasks.some(x=>x.title.toLowerCase()===t.toLowerCase())){s.textContent="⚠️ That challenge already exists.";return;}
+  const r=await supabaseClient.from("challenges").insert({title:t,description:d||"No description.",votes:0,status:"active"}).select().single();
+  if(r.error){s.textContent="Could not submit: "+r.error.message;return;}
+  points-=20;
+  await supabaseClient.from("profiles").update({points}).eq("id",user.id);
+  await loadTasks();sync();s.textContent="✅ Challenge submitted!";
+  document.getElementById("title").value="";document.getElementById("desc").value="";
 }
 async function vote(i){
- const {data:{user}}=await supabaseClient.auth.getUser();
- if(!user){show("auth");return}
- const t=tasks[i];
- const v=await supabaseClient.from("votes").insert({challenge_id:t.id,user_id:user.id});
- if(v.error){alert(v.error.message.includes("duplicate")?"You already voted for this challenge.":v.error.message);return}
- const u=await supabaseClient.from("challenges").update({votes:t.votes+1}).eq("id",t.id);
- if(u.error){alert(u.error.message);return}
- await loadTasks();sync();
+  const {data:{user}}=await supabaseClient.auth.getUser();
+  if(!user){show("auth");return;}
+  const t=tasks[i];
+  const v=await supabaseClient.from("votes").insert({challenge_id:t.id,user_id:user.id});
+  if(v.error){alert(v.error.message.includes("duplicate")?"You already voted for this challenge.":v.error.message);return;}
+  const u=await supabaseClient.from("challenges").update({votes:t.votes+1}).eq("id",t.id);
+  if(u.error){alert(u.error.message);return;}
+  await loadTasks();sync();
 }
 </script>
 
-<script>
-// legacy UI functions below are replaced by the connected functions above
-let points=0;
-let name="Guest";
-let tasks=[];
-Number(localStorage.getItem("councilPoints")||50);
-let name=localStorage.getItem("councilName")||"Guest";
-let tasks=JSON.parse(localStorage.getItem("councilTasks")||'null')||[
-{title:"Learn a Backflip in 7 Days",desc:"Document the challenge safely.",votes:1324},
-{title:"Read 10 Books in 30 Days",desc:"Share the reading journey.",votes:987},
-{title:"Make a funny 60-second Council announcement",desc:"Chris makes the announcement.",votes:642}
-];
-function save(){localStorage.setItem("councilPoints",points);localStorage.setItem("councilName",name);localStorage.setItem("councilTasks",JSON.stringify(tasks));sync()}
-function sync(){document.getElementById("points").textContent=points;document.getElementById("memberName").textContent=name;document.getElementById("yourRank").textContent=points+" CP";document.getElementById("activeCount").textContent=tasks.length;render()}
-function show(id){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));window.scrollTo({top:0,behavior:"smooth"})}
-function earn(){let s=document.getElementById("earnStatus");s.textContent="Verifying demo reward…";setTimeout(()=>{points+=10;save();s.textContent="✅ Demo reward credited: +10 CP";},900)}
-function register(){let u=document.getElementById("username").value.trim();if(u.length<3){document.getElementById("authStatus").textContent="Username must be at least 3 characters.";return}name=u;save();document.getElementById("authStatus").textContent="✅ Welcome, "+name+"!";setTimeout(()=>show("dashboard"),500)}
-function logout(){name="Guest";points=50;localStorage.removeItem("councilName");localStorage.removeItem("councilPoints");sync()}
-function createTask(){let t=document.getElementById("title").value.trim(),d=document.getElementById("desc").value.trim(),s=document.getElementById("createStatus");if(!t){s.textContent="Enter a challenge.";return}if(points<20){s.textContent="You need 20 CP.";return}if(tasks.some(x=>x.title.toLowerCase()===t.toLowerCase())){s.textContent="⚠️ That challenge already exists.";return}points-=20;tasks.push({title:t,desc:d||"No description.",votes:0});save();s.textContent="✅ Challenge submitted!";document.getElementById("title").value="";document.getElementById("desc").value=""}
-function vote(i){tasks[i].votes++;save()}
-function render(){let html=tasks.map((t,i)=>'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.desc)+'</small></section><strong>'+t.votes+'<br><i>Votes</i></strong><button onclick="vote('+i+')">VOTE</button></div>').join("");document.getElementById("taskList").innerHTML=html;document.getElementById("allTasks").innerHTML=html}
-function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-init();
-</script>
 </body>
 </html>
