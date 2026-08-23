@@ -159,7 +159,7 @@ async function signInWithGoogle(){
   const {error}=await supabaseClient.auth.signInWithOAuth({
     provider:"google",
     options:{
-      redirectTo:"https://crazyawm119-arch.github.io/"
+      redirectTo:"https://crazyawm119-arch.github.io/the-chris-council/"
     }
   });
   if(error) s.textContent=error.message;
