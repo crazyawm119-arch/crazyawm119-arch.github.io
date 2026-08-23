@@ -128,7 +128,14 @@ function sync(){
   render();
 }
 
+async function updateAuthUI(){
+  const {data:{user}}=await supabaseClient.auth.getUser();
+  const status=document.getElementById("loginStatus");
+  if(status) status.textContent=user ? "Signed in with Google" : "Not signed in";
+}
+
 async function init(){
+  await updateAuthUI();
   await loadProfile();
   await loadTasks();
   sync();
@@ -145,12 +152,25 @@ function show(id){
 async function earn(){
   const s=document.getElementById("earnStatus");
   const {data:{user}}=await supabaseClient.auth.getUser();
-  if(!user){s.textContent="Please log in first.";show("auth");return;}
-  // Development-only reward. Real ad verification will replace this.
-  points+=10;
-  await supabaseClient.from("profiles").update({points}).eq("id",user.id);
+
+  if(!user){
+    s.textContent="Please log in first.";
+    show("auth");
+    return;
+  }
+
+  // Demo reward for now. Real rewarded-ad verification will replace this.
+  const {error}=await supabaseClient.rpc("add_council_points",{amount:10});
+
+  if(error){
+    console.error(error);
+    s.textContent="Could not add points: "+error.message;
+    return;
+  }
+
+  await loadProfile();
   sync();
-  s.textContent="✅ Demo reward credited: +10 CP";
+  s.textContent="✅ +10 Council Points added to your account!";
 }
 
 async function signInWithGoogle(){
