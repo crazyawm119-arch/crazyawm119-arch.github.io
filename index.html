@@ -76,6 +76,16 @@ main{min-width:0;box-sizing:border-box;}
 @media(max-width:800px){.admin-kpis,.admin-grid{grid-template-columns:1fr;}}
 @media(max-width:900px){.side-points{margin-bottom:85px;}.profile{left:8px;right:8px;bottom:12px;}}
 
+
+/* Admin V7: click to minimize / maximize */
+.admin-collapse-wrap{width:100%;box-sizing:border-box;margin:16px 0}
+.admin-collapse-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border:1px solid #333;border-radius:12px;background:#111;color:#fff;cursor:pointer;font-weight:700;text-align:left}
+.admin-collapse-toggle:hover{background:#181818}
+.admin-collapse-icon{font-size:20px;transition:transform .2s ease}
+.admin-collapse-wrap.is-open .admin-collapse-icon{transform:rotate(180deg)}
+.admin-collapse-body{display:none;margin-top:12px}
+.admin-collapse-wrap.is-open .admin-collapse-body{display:block}
+
 </style>
 </head>
 <body>
@@ -127,7 +137,11 @@ main{min-width:0;box-sizing:border-box;}
 <button class="outline" style="width:100%;margin:0;border-color:#555" onclick="signInWithGoogle()">🔵 Continue with Google</button>
 <p id="authStatus" class="status"></p></div></section>
 
-<section id="adminMembersPanel" class="admin-panel" style="margin-top:22px">
+<div class="admin-collapse-wrap" id="adminCollapseWrap">
+<button type="button" class="admin-collapse-toggle" onclick="toggleAdminDashboard()" aria-expanded="false">
+<span>🛡️ ADMIN CONTROL CENTER</span><span class="admin-collapse-icon">⌄</span>
+</button>
+<div class="admin-collapse-body" id="adminCollapseBody"><section id="adminMembersPanel" class="admin-panel" style="margin-top:22px">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
     <div>
       <h2 style="margin:0">👥 Members</h2>
@@ -141,7 +155,7 @@ main{min-width:0;box-sizing:border-box;}
   </div>
   <div id="adminMembersStatus" style="margin-top:12px;color:#aaa">Loading members…</div>
   <div id="adminMembersList" style="margin-top:12px;display:grid;gap:10px"></div>
-</section>
+</section></div></div>
 
 </main>
 
@@ -529,6 +543,14 @@ function renderAdminMembers(){
   }).join("");
 }
 
+
+function toggleAdminDashboard(){
+  const wrap=document.getElementById('adminCollapseWrap');
+  const btn=wrap?.querySelector('.admin-collapse-toggle');
+  if(!wrap||!btn)return;
+  const open=wrap.classList.toggle('is-open');
+  btn.setAttribute('aria-expanded',open?'true':'false');
+}
 </script>
 
 <section id="admin" class="page hidden">
