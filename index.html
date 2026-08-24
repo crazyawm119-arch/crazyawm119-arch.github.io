@@ -43,6 +43,7 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <aside class="sidebar">
 <div class="logo">🏛️ <span>THE<br><b>COUNCIL</b></span></div>
 <nav>
+<button id="adminNav" onclick="show('admin')" style="display:none">ADMIN</button>
 <button class="active" onclick="show('dashboard')">⌂ <span>Dashboard</span></button>
 <button onclick="show('earn')">▶ <span>Earn Points</span></button>
 <button onclick="show('create')">◎ <span>Create Challenge</span></button>
@@ -295,7 +296,94 @@ supabaseClient.auth.onAuthStateChange(async (event, session)=>{
   }
 });
 
+async function checkAdmin(){
+  const {data,error}=await supabaseClient.rpc("is_admin");
+  if(error){ console.error(error); return false; }
+  const isAdmin=!!data;
+  const btn=document.getElementById("adminNav");
+  if(btn) btn.style.display=isAdmin?"inline-block":"none";
+  return isAdmin;
+}
+
+async function loadAdmin(){
+  if(!(await checkAdmin())) return;
+  const [stats, users, challenges, rewards]=await Promise.all([
+    supabaseClient.rpc("admin_stats"),
+    supabaseClient.rpc("admin_users"),
+    supabaseClient.rpc("admin_challenges"),
+    supabaseClient.rpc("admin_rewards")
+  ]);
+  if(stats.data){
+    document.getElementById("aUsers").textContent=stats.data.users;
+    document.getElementById("aChallenges").textContent=stats.data.challenges;
+    document.getElementById("aVotes").textContent=stats.data.votes;
+    document.getElementById("aPoints").textContent=stats.data.points;
+  }
+  if(users.data) document.getElementById("adminUsers").innerHTML=users.data.map(u=>
+    `<div class="challenge"><section><b>${esc(u.username||"Member")}</b><small>${esc(u.email||"")} · ${u.points} CP · ${esc(u.role)}</small></section>
+    <button onclick="adminAdjust('${u.id}',${u.points})">ADJUST CP</button></div>`).join("");
+  if(challenges.data) document.getElementById("adminChallenges").innerHTML=challenges.data.map(c=>
+    `<div class="challenge"><section><b>${esc(c.title)}</b><small>${c.votes} votes · ${esc(c.status)}</small></section>
+    <button onclick="adminArchive('${c.id}')">ARCHIVE</button></div>`).join("");
+  if(rewards.data) document.getElementById("adminRewards").innerHTML=rewards.data.map(r=>
+    `<div class="challenge"><section><b>${esc(r.username||"Member")}</b><small>+${r.amount} CP · ${esc(r.reward_type)} · ${new Date(r.created_at).toLocaleString()}</small></section></div>`).join("");
+}
+
+async function adminAdjust(id,current){
+  const n=prompt("New Council Point balance:",current);
+  if(n===null || !/^\d+$/.test(n)) return;
+  const {error}=await supabaseClient.rpc("admin_set_points",{p_user_id:id,p_points:Number(n)});
+  if(error){alert(error.message);return;}
+  await loadAdmin(); await loadProfile(); sync();
+}
+
+async function adminArchive(id){
+  if(!confirm("Archive this challenge?")) return;
+  const {error}=await supabaseClient.rpc("admin_set_challenge_status",{p_challenge_id:id,p_status:"archived"});
+  if(error){alert(error.message);return;}
+  await loadAdmin(); await loadTasks(); sync();
+}
+
+const oldShow=show;
+show=async function(id){
+  oldShow(id);
+  if(id==="admin") await loadAdmin();
+};
+
+supabaseClient.auth.onAuthStateChange(async (event, session)=>{
+  if(session?.user) {
+    await checkAdmin();
+  } else {
+    const b=document.getElementById("adminNav"); if(b) b.style.display="none";
+  }
+});
+
 init();
 </script>
+
+<section id="admin" class="page hidden">
+  <div class="card">
+    <h2>👑 Council Admin</h2>
+    <p class="muted">Owner controls. Only accounts marked <b>admin</b> in Supabase can use this panel.</p>
+    <div class="grid">
+      <div class="stat"><b id="aUsers">—</b><span>Members</span></div>
+      <div class="stat"><b id="aChallenges">—</b><span>Challenges</span></div>
+      <div class="stat"><b id="aVotes">—</b><span>Votes</span></div>
+      <div class="stat"><b id="aPoints">—</b><span>CP in circulation</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>👥 Members</h3>
+    <div id="adminUsers">Loading…</div>
+  </div>
+  <div class="card">
+    <h3>🎯 Challenges</h3>
+    <div id="adminChallenges">Loading…</div>
+  </div>
+  <div class="card">
+    <h3>🪙 Recent Rewards</h3>
+    <div id="adminRewards">Loading…</div>
+  </div>
+</section>
 </body>
 </html>
