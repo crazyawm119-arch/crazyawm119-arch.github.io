@@ -126,6 +126,23 @@ main{min-width:0;box-sizing:border-box;}
 <div style="display:flex;align-items:center;gap:10px;margin:14px 0;color:#777"><span style="height:1px;background:#333;flex:1"></span><span>OR</span><span style="height:1px;background:#333;flex:1"></span></div>
 <button class="outline" style="width:100%;margin:0;border-color:#555" onclick="signInWithGoogle()">🔵 Continue with Google</button>
 <p id="authStatus" class="status"></p></div></section>
+
+<section id="adminMembersPanel" class="admin-panel" style="margin-top:22px">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <div>
+      <h2 style="margin:0">👥 Members</h2>
+      <p style="margin:6px 0 0;color:#aaa">Registered Council members and their current status.</p>
+    </div>
+    <button class="outline" onclick="loadAdminMembers()">↻ Refresh Members</button>
+  </div>
+  <div style="margin-top:16px">
+    <input id="memberSearch" type="search" placeholder="Search by name or email…" oninput="renderAdminMembers()"
+      style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid #333;background:#111;color:#fff;box-sizing:border-box">
+  </div>
+  <div id="adminMembersStatus" style="margin-top:12px;color:#aaa">Loading members…</div>
+  <div id="adminMembersList" style="margin-top:12px;display:grid;gap:10px"></div>
+</section>
+
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -183,6 +200,8 @@ async function init(){
 }
 
 function show(id){
+  if(arguments[0]==='admin') setTimeout(loadAdminMembers,50);
+
   document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
   const page=document.getElementById(id);
   if(page) page.classList.remove("hidden");
@@ -431,6 +450,85 @@ supabaseClient.auth.onAuthStateChange(async (event, session)=>{
 });
 
 init();
+
+
+let adminMembersCache = [];
+
+function escHtml(v){
+  return String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+async function loadAdminMembers(){
+  const status=document.getElementById("adminMembersStatus");
+  const list=document.getElementById("adminMembersList");
+  if(!status || !list) return;
+
+  status.textContent="Loading members…";
+  list.innerHTML="";
+
+  const {data:userData,error:userErr}=await supabaseClient.auth.getUser();
+  if(userErr || !userData?.user){
+    status.textContent="You must be signed in.";
+    return;
+  }
+
+  const {data:isAdmin,error:adminErr}=await supabaseClient.rpc("is_admin");
+  if(adminErr || !isAdmin){
+    status.textContent="Admin access required.";
+    return;
+  }
+
+  const {data,error}=await supabaseClient
+    .from("profiles")
+    .select("id,username,email,points,role,created_at")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    console.error(error);
+    status.textContent="Could not load members: "+error.message;
+    return;
+  }
+
+  adminMembersCache=data || [];
+  status.textContent=`${adminMembersCache.length} member${adminMembersCache.length===1?"":"s"} found.`;
+  renderAdminMembers();
+}
+
+function renderAdminMembers(){
+  const list=document.getElementById("adminMembersList");
+  const search=(document.getElementById("memberSearch")?.value || "").trim().toLowerCase();
+  if(!list) return;
+
+  const rows=adminMembersCache.filter(m =>
+    !search ||
+    String(m.username||"").toLowerCase().includes(search) ||
+    String(m.email||"").toLowerCase().includes(search)
+  );
+
+  if(!rows.length){
+    list.innerHTML='<div style="padding:18px;border:1px solid #292929;border-radius:12px;color:#aaa">No members found.</div>';
+    return;
+  }
+
+  list.innerHTML=rows.map(m=>{
+    const name=escHtml(m.username || "Unnamed member");
+    const email=escHtml(m.email || "No email");
+    const role=escHtml(m.role || "user");
+    const points=Number(m.points||0);
+    const joined=m.created_at ? new Date(m.created_at).toLocaleDateString() : "—";
+    return `<div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:16px;border:1px solid #292929;border-radius:12px;background:#101010">
+      <div style="min-width:220px;flex:1">
+        <div style="font-weight:700">${name}</div>
+        <div style="color:#888;font-size:13px;margin-top:4px">${email}</div>
+        <div style="color:#666;font-size:12px;margin-top:5px">Joined ${joined} · Role: ${role}</div>
+      </div>
+      <div style="font-weight:800;white-space:nowrap">🪙 ${points.toLocaleString()} CP</div>
+    </div>`;
+  }).join("");
+}
+
 </script>
 
 <section id="admin" class="page hidden">
