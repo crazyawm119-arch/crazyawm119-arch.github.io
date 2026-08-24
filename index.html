@@ -37,6 +37,25 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 .authpage{min-height:70vh;display:grid;place-items:center}.authbox{width:min(430px,95%);padding:30px}.authbox h1{color:#f11}.authbox a{color:#f22;cursor:pointer}.status{color:#f33;font-weight:bold}
 @media(max-width:900px){.sidebar{width:70px;padding:15px 8px}.logo span,nav button span,.side-points,.profile div{display:none}.logo{margin:0 5px 25px}.topbar{left:70px}main{margin-left:70px;padding:70px 12px}.hero-text{width:70%;padding:35px 20px}.hero h1{font-size:55px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
 @media(max-width:560px){.hero{height:430px}.hero-text{width:100%;background:linear-gradient(90deg,#070707 45%,#070707aa)}.hero img{position:absolute;right:0;width:80%;opacity:.5}.hero h1{font-size:50px}.stats{grid-template-columns:1fr}.topchallenge{grid-template-columns:1fr}.challenge{grid-template-columns:45px 1fr}.challenge strong,.challenge button{grid-column:2}.outline{margin:8px 0 0}}
+
+/* Admin V3 */
+.admin-shell{display:grid;gap:14px}
+.admin-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px;background:linear-gradient(135deg,#120606,#0d0d0d);border:1px solid #3a1111;border-radius:10px}
+.admin-head h1{margin:0;color:#fff}.admin-head h1 b{color:#f11}.admin-head p{margin:6px 0 0;color:#999}
+.admin-badge{border:1px solid #7a1b1b;color:#f33;padding:8px 12px;border-radius:999px;font-weight:700;font-size:12px}
+.admin-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.admin-kpi{background:#0e0f10;border:1px solid #292929;border-radius:9px;padding:17px}
+.admin-kpi small{display:block;color:#999;text-transform:uppercase;font-size:11px}.admin-kpi strong{display:block;font-size:27px;color:#f11;margin-top:7px}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.admin-card{background:#0e0f10;border:1px solid #292929;border-radius:9px;padding:16px}
+.admin-card h3{margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid #292929}
+.admin-list{max-height:360px;overflow:auto}
+.admin-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #222}
+.admin-row:last-child{border-bottom:0}.admin-row-main{min-width:0}.admin-row-main b{display:block}.admin-row-main small{display:block;color:#888;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-actions{display:flex;gap:7px;flex-shrink:0}.admin-actions button{background:#111;color:#fff;border:1px solid #555;border-radius:5px;padding:7px 9px;cursor:pointer}.admin-actions .danger{border-color:#a22;color:#f55}
+.admin-note{color:#999;font-size:13px;line-height:1.5}
+@media(max-width:800px){.admin-kpis{grid-template-columns:1fr 1fr}.admin-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.admin-kpis{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -376,7 +395,11 @@ async function adminArchive(id){
 const oldShow=show;
 show=async function(id){
   oldShow(id);
-  if(id==="admin") await loadAdmin();
+  if(id==="admin"){
+    const ok=await checkAdmin();
+    if(!ok){ oldShow("dashboard"); return; }
+    await loadAdmin();
+  }
 };
 
 supabaseClient.auth.onAuthStateChange(async (event, session)=>{
@@ -391,27 +414,47 @@ init();
 </script>
 
 <section id="admin" class="page hidden">
-  <div class="card">
-    <h2>👑 Council Admin</h2>
-    <p class="muted">Owner controls. Only accounts marked <b>admin</b> in Supabase can use this panel.</p>
-    <div class="grid">
-      <div class="stat"><b id="aUsers">—</b><span>Members</span></div>
-      <div class="stat"><b id="aChallenges">—</b><span>Challenges</span></div>
-      <div class="stat"><b id="aVotes">—</b><span>Votes</span></div>
-      <div class="stat"><b id="aPoints">—</b><span>CP in circulation</span></div>
+  <div class="admin-shell">
+    <div class="admin-head">
+      <div>
+        <h1>👑 <b>ADMIN</b> CONTROL CENTER</h1>
+        <p>Private owner controls for The Chris Council.</p>
+      </div>
+      <div class="admin-badge">ADMIN ACCESS</div>
     </div>
-  </div>
-  <div class="card">
-    <h3>👥 Members</h3>
-    <div id="adminUsers">Loading…</div>
-  </div>
-  <div class="card">
-    <h3>🎯 Challenges</h3>
-    <div id="adminChallenges">Loading…</div>
-  </div>
-  <div class="card">
-    <h3>🪙 Recent Rewards</h3>
-    <div id="adminRewards">Loading…</div>
+
+    <div class="admin-kpis">
+      <div class="admin-kpi"><small>Members</small><strong id="aUsers">—</strong></div>
+      <div class="admin-kpi"><small>Challenges</small><strong id="aChallenges">—</strong></div>
+      <div class="admin-kpi"><small>Votes</small><strong id="aVotes">—</strong></div>
+      <div class="admin-kpi"><small>CP in circulation</small><strong id="aPoints">—</strong></div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="admin-card">
+        <h3>👥 Members</h3>
+        <p class="admin-note">Review accounts and adjust Council Points. Changes are protected by the admin database functions.</p>
+        <div id="adminUsers" class="admin-list">Loading…</div>
+      </div>
+
+      <div class="admin-card">
+        <h3>🎯 Challenges</h3>
+        <p class="admin-note">Review challenge activity and archive challenges when necessary.</p>
+        <div id="adminChallenges" class="admin-list">Loading…</div>
+      </div>
+
+      <div class="admin-card">
+        <h3>🪙 Reward History</h3>
+        <p class="admin-note">Recent reward records from the secure reward-history table.</p>
+        <div id="adminRewards" class="admin-list">Loading…</div>
+      </div>
+
+      <div class="admin-card">
+        <h3>🛡️ Security</h3>
+        <p class="admin-note">Your admin access is determined by the <b>role = admin</b> value in Supabase. Normal users do not receive this panel.</p>
+        <button class="outline" onclick="loadAdmin()">↻ REFRESH ADMIN DATA</button>
+      </div>
+    </div>
   </div>
 </section>
 </body>
