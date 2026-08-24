@@ -136,10 +136,11 @@ async function updateAuthUI(){
 }
 
 async function init(){
-  await updateAuthUI();
+  await refreshAccountUI();
   await loadProfile();
   await loadTasks();
   sync();
+  await checkAdmin();
 }
 
 function show(id){
@@ -289,12 +290,40 @@ function esc(s){
 }
 
 supabaseClient.auth.onAuthStateChange(async (event, session)=>{
+  await refreshAccountUI();
   if(session?.user){
     await loadProfile();
     await loadTasks();
     sync();
+  } else {
+    name="Guest";
+    points=0;
+    sync();
   }
 });
+
+async function refreshAccountUI(){
+  const {data:{user}}=await supabaseClient.auth.getUser();
+  const area=document.getElementById("accountArea");
+  const adminBtn=document.getElementById("adminNav");
+
+  if(!user){
+    if(area) area.innerHTML='<button onclick="show(\'auth\')">LOGIN / REGISTER</button>';
+    if(adminBtn) adminBtn.style.display="none";
+    return false;
+  }
+
+  if(area){
+    const label=esc(user.user_metadata?.full_name || user.email || "Signed in");
+    area.innerHTML='<span style="margin-right:12px;color:#aaa">Signed in: '+label+'</span><button onclick="logout()">LOGOUT</button>';
+  }
+
+  const {data,error}=await supabaseClient.rpc("is_admin");
+  const isAdmin=!error && !!data;
+  if(adminBtn) adminBtn.style.display=isAdmin?"flex":"none";
+  if(error) console.error("Admin check:",error);
+  return isAdmin;
+}
 
 async function checkAdmin(){
   const {data,error}=await supabaseClient.rpc("is_admin");
