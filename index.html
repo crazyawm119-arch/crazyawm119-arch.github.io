@@ -223,6 +223,36 @@ main,
   }
 }
 
+
+/* ============================
+   THE CHRIS COUNCIL 1.0
+   CONSOLIDATED ADMIN UI
+   ============================ */
+.cc10-admin-shell{width:100%;box-sizing:border-box;margin:18px auto;padding:0 12px}
+.cc10-admin-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border:1px solid #333;border-radius:14px;background:#111;color:#fff;cursor:pointer;font-weight:800}
+.cc10-admin-toggle:hover{background:#181818}
+.cc10-admin-body{display:none;margin-top:12px}
+.cc10-admin-shell.open .cc10-admin-body{display:block}
+.cc10-chevron{transition:transform .2s ease}
+.cc10-admin-shell.open .cc10-chevron{transform:rotate(180deg)}
+.cc10-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.cc10-card{background:#111;border:1px solid #2c2c2c;border-radius:14px;padding:16px;min-width:0;box-sizing:border-box}
+.cc10-card h3{margin:0 0 8px;font-size:13px;color:#aaa}
+.cc10-number{font-size:28px;font-weight:900}
+.cc10-section{margin-top:14px}
+.cc10-section-title{font-size:17px;font-weight:800;margin-bottom:10px}
+.cc10-search{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #333;border-radius:10px;background:#0c0c0c;color:#fff}
+.cc10-list{display:grid;gap:8px;margin-top:10px}
+.cc10-row{display:grid;grid-template-columns:minmax(180px,1fr) auto auto;gap:12px;align-items:center;padding:12px;border:1px solid #292929;border-radius:11px;background:#101010;min-width:0}
+.cc10-muted{color:#8b8b8b;font-size:12px}
+.cc10-badge{padding:5px 8px;border-radius:999px;background:#21151a;color:#fca5a5;font-size:11px;font-weight:800}
+.cc10-actions{display:flex;gap:7px;flex-wrap:wrap}
+.cc10-btn{border:1px solid #444;background:#181818;color:#fff;border-radius:8px;padding:7px 9px;cursor:pointer;font-size:12px}
+.cc10-btn:hover{background:#242424}
+.cc10-note{padding:12px;border-radius:10px;background:#171717;color:#aaa;font-size:12px}
+@media(max-width:900px){.cc10-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cc10-row{grid-template-columns:1fr}}
+@media(max-width:560px){.cc10-grid{grid-template-columns:1fr}.cc10-admin-shell{padding:0 6px}}
+
 </style>
 </head>
 <body>
@@ -293,6 +323,49 @@ main,
   <div id="adminMembersStatus" style="margin-top:12px;color:#aaa">Loading members…</div>
   <div id="adminMembersList" style="margin-top:12px;display:grid;gap:10px"></div>
 </section></div></div>
+
+
+<!-- THE CHRIS COUNCIL 1.0 — consolidated admin center -->
+<section class="cc10-admin-shell" id="cc10AdminShell">
+  <button class="cc10-admin-toggle" type="button" onclick="cc10ToggleAdmin()" aria-expanded="false">
+    <span>🛡️ ADMIN CONTROL CENTER</span><span class="cc10-chevron">⌄</span>
+  </button>
+  <div class="cc10-admin-body">
+    <div class="cc10-grid">
+      <div class="cc10-card"><h3>👥 Members</h3><div class="cc10-number" id="cc10Members">—</div></div>
+      <div class="cc10-card"><h3>🎯 Challenges</h3><div class="cc10-number" id="cc10Challenges">—</div></div>
+      <div class="cc10-card"><h3>🗳 Votes</h3><div class="cc10-number" id="cc10Votes">—</div></div>
+      <div class="cc10-card"><h3>🪙 CP Distributed</h3><div class="cc10-number" id="cc10CP">—</div></div>
+    </div>
+
+    <div class="cc10-card cc10-section">
+      <div class="cc10-section-title">👥 Member Management</div>
+      <input id="cc10MemberSearch" class="cc10-search" type="search" placeholder="Search by name or email…" oninput="cc10RenderMembers()">
+      <div id="cc10MemberStatus" class="cc10-note" style="margin-top:10px">Open the panel to load members.</div>
+      <div id="cc10MemberList" class="cc10-list"></div>
+    </div>
+
+    <div class="cc10-card cc10-section">
+      <div class="cc10-section-title">🎯 Challenge Management</div>
+      <div class="cc10-note">Challenge controls will use the existing challenge tables when those table names and policies are present. No fake challenge data is generated.</div>
+    </div>
+
+    <div class="cc10-card cc10-section">
+      <div class="cc10-section-title">🪙 Reward Center</div>
+      <div class="cc10-note">Reward history is shown only when the existing reward/history table is available. Points are never fabricated by this panel.</div>
+    </div>
+
+    <div class="cc10-card cc10-section">
+      <div class="cc10-section-title">📢 Announcements</div>
+      <div class="cc10-note">Announcement publishing requires the site's existing announcements table and Row Level Security policy. This UI does not bypass Supabase security.</div>
+    </div>
+
+    <div class="cc10-card cc10-section">
+      <div class="cc10-section-title">🔒 Security</div>
+      <div class="cc10-note">Admin actions should remain protected by Supabase Row Level Security and server-side policies. Client-side buttons alone are not treated as authorization.</div>
+    </div>
+  </div>
+</section>
 
 </main>
 
@@ -688,6 +761,105 @@ function toggleAdminDashboard(){
   const open=wrap.classList.toggle('is-open');
   btn.setAttribute('aria-expanded',open?'true':'false');
 }
+
+
+/* THE CHRIS COUNCIL 1.0 — consolidated admin behavior */
+let cc10MembersCache = [];
+
+function cc10Esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function cc10ToggleAdmin(){
+  const shell=document.getElementById("cc10AdminShell");
+  const btn=shell?.querySelector(".cc10-admin-toggle");
+  if(!shell || !btn) return;
+  const open=shell.classList.toggle("open");
+  btn.setAttribute("aria-expanded", open ? "true" : "false");
+  if(open) cc10LoadMembers();
+}
+
+async function cc10LoadMembers(){
+  const status=document.getElementById("cc10MemberStatus");
+  if(!status) return;
+
+  if(typeof supabaseClient === "undefined"){
+    status.textContent="Supabase client was not found on this page. Existing authentication is unchanged; connect the existing client before enabling live member controls.";
+    return;
+  }
+
+  status.textContent="Checking admin access…";
+
+  try{
+    const {data:userData,error:userErr}=await supabaseClient.auth.getUser();
+    if(userErr || !userData?.user){
+      status.textContent="Please sign in first.";
+      return;
+    }
+
+    let adminOK=false;
+    if(typeof supabaseClient.rpc==="function"){
+      const r=await supabaseClient.rpc("is_admin");
+      if(!r.error) adminOK=!!r.data;
+    }
+
+    if(!adminOK){
+      status.textContent="Admin access required.";
+      return;
+    }
+
+    const {data,error}=await supabaseClient
+      .from("profiles")
+      .select("id,username,email,points,role,created_at")
+      .order("created_at",{ascending:false});
+
+    if(error){
+      status.textContent="Members could not be loaded: "+error.message;
+      return;
+    }
+
+    cc10MembersCache=data || [];
+    document.getElementById("cc10Members").textContent=cc10MembersCache.length.toLocaleString();
+    document.getElementById("cc10CP").textContent=
+      cc10MembersCache.reduce((s,m)=>s+Number(m.points||0),0).toLocaleString();
+    status.textContent=`${cc10MembersCache.length.toLocaleString()} member${cc10MembersCache.length===1?"":"s"} found.`;
+    cc10RenderMembers();
+  }catch(e){
+    console.error(e);
+    status.textContent="Could not load member data.";
+  }
+}
+
+function cc10RenderMembers(){
+  const list=document.getElementById("cc10MemberList");
+  const q=(document.getElementById("cc10MemberSearch")?.value||"").trim().toLowerCase();
+  if(!list) return;
+
+  const rows=cc10MembersCache.filter(m=>
+    !q ||
+    String(m.username||"").toLowerCase().includes(q) ||
+    String(m.email||"").toLowerCase().includes(q)
+  );
+
+  if(!rows.length){
+    list.innerHTML='<div class="cc10-note">No members found.</div>';
+    return;
+  }
+
+  list.innerHTML=rows.map(m=>`
+    <div class="cc10-row">
+      <div>
+        <strong>${cc10Esc(m.username||"Unnamed member")}</strong>
+        <div class="cc10-muted">${cc10Esc(m.email||"No email")}</div>
+      </div>
+      <span class="cc10-badge">${cc10Esc(m.role||"user")}</span>
+      <strong>🪙 ${Number(m.points||0).toLocaleString()} CP</strong>
+    </div>
+  `).join("");
+}
+
 </script>
 
 <section id="admin" class="page hidden">
