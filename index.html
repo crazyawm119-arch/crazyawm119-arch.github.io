@@ -125,7 +125,7 @@ const filter=document.getElementById('challengeFilter')?.value||'all';
 let list=tasks.slice();
 if(filter!=='all')list=list.filter(t=>t.status===filter);
 const html=list.map(t=>t.status==='active'
-?'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button onclick="vote(\\''+t.id+'\\')">VOTE</button></div>'
+?'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button onclick="vote(\''+t.id+'\')">VOTE</button></div>'
 :'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+'</span></span><span class="success">✓ COMPLETED</span></div>').join('');
 document.getElementById('allTasks').innerHTML=html||'<p class="muted">No challenges match this filter.</p>';
 }
@@ -141,7 +141,7 @@ await loadLeaderboard();
 if(profile?.role==='admin')renderAdminChallenges();
 }
 function render(){
-const activeHtml=tasks.filter(t=>t.status==='active').map(t=>'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button onclick="vote(\\''+t.id+'\\')">VOTE</button></div>').join('');
+const activeHtml=tasks.filter(t=>t.status==='active').map(t=>'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button onclick="vote(\''+t.id+'\')">VOTE</button></div>').join('');
 document.getElementById('taskList').innerHTML=activeHtml||'<p class="muted">No active challenges.</p>';
 document.getElementById('activeCount').textContent=tasks.filter(t=>t.status==='active').length;
 renderChallengesPage();
