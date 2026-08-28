@@ -19,6 +19,68 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.stats div,.panel,.authbox{background:#0e0f10;border:1px solid #292929;border-radius:8px}.stats div{padding:17px}.stats small{display:block;color:#aaa;margin:5px 0}.stats b{font-size:24px;color:#f11}.grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:12px 0}.panel{padding:16px}.panel h3{margin:0 0 15px;border-bottom:1px solid #292929;padding-bottom:13px}.topchallenge{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center}.top10-item{padding:12px 0;border-bottom:1px solid #222;display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center}.top10-item:last-child{border-bottom:0}.top10-item .num{font-size:20px;font-weight:900;color:#f11}.top10-item b{display:block}.top10-item small{display:block;color:#999;margin-top:5px}.leaderboard-scroll{max-height:650px;overflow:auto}.leaderboard-me{border-color:#a20f0f;background:#160707}.challenge-meta{color:#777;font-size:12px;margin-top:5px}.fakepic{height:130px;border-radius:7px;background:linear-gradient(135deg,#321010,#a30);display:grid;place-items:center;font-size:55px}.topchallenge em{color:#e22;font-style:normal}.topchallenge p{color:#aaa;line-height:1.5}.rank{padding:10px;border-bottom:1px solid #222;display:flex;justify-content:space-between}.challenge{display:grid;grid-template-columns:55px 1fr 70px 70px;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #222}.challenge>div{height:50px;background:#242424;border-radius:6px;display:grid;place-items:center;font-size:25px}.challenge section b,.challenge section small{display:block}.challenge section small{color:#999;margin-top:6px}.challenge strong{text-align:center}.challenge i{font-style:normal;color:#e22;font-size:11px}.challenge button{background:transparent;border:1px solid #e22;color:#f22;padding:9px;border-radius:5px;font-weight:bold;cursor:pointer}.how p{margin:12px 0}.how p b{display:inline-grid;place-items:center;background:#e11;border-radius:50%;width:24px;height:24px;margin-right:8px}.how small{color:#999;margin-left:34px}.form input,.form textarea,.authbox input{display:block;width:100%;padding:14px;margin:12px 0;background:#080808;color:#fff;border:1px solid #333;border-radius:6px}.form textarea{min-height:120px}.authpage{min-height:70vh;display:grid;place-items:center}.authbox{width:min(430px,95%);padding:30px}.authbox h1{color:#f11}.status{color:#f33;font-weight:bold}.admin-card{margin-top:12px}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.admin-grid input,.admin-grid textarea{display:block;width:100%;padding:12px;margin:8px 0;background:#080808;color:#fff;border:1px solid #333;border-radius:6px}.danger{background:#5b0808!important}.success{color:#28d17c}.muted{color:#aaa}
 @media(max-width:900px){.sidebar{width:70px;padding:15px 8px}.logo span,nav button span,.side-points,.profile div{display:none}.logo{margin:0 5px 25px}.topbar{left:70px}main{margin-left:70px;padding:70px 12px}.hero-text{width:70%;padding:35px 20px}.hero h1{font-size:55px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
 @media(max-width:560px){.hero{height:430px}.hero-text{width:100%;background:linear-gradient(90deg,#070707 45%,#070707aa)}.hero img{position:absolute;right:0;width:80%;opacity:.5}.hero h1{font-size:50px}.stats{grid-template-columns:1fr}.topchallenge{grid-template-columns:1fr}.challenge{grid-template-columns:45px 1fr}.challenge strong,.challenge button{grid-column:2}.outline{margin:8px 0 0}}
+
+/* MOBILE-ONLY LAYOUT — desktop remains unchanged */
+@media (max-width: 700px){
+  body{padding-bottom:74px;overflow-x:hidden}
+  .sidebar{position:fixed;left:0;right:0;top:auto;bottom:0;width:100%;height:68px;padding:0 6px;background:#090a0b;border-right:0;border-top:1px solid #292929;display:flex;align-items:center;z-index:20}
+  .logo,.side-points,.profile{display:none}
+  nav{width:100%;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+  nav button{height:58px;margin:0;padding:5px 2px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;font-size:21px;border-left:0!important;border-radius:6px}
+  nav button span{display:block;font-size:9px;line-height:1.1;color:#aaa}
+  nav button:hover,nav .active{background:#480707;border-left:0!important;color:#fff}
+  nav button.active span{color:#fff}
+  #adminNav{display:none!important}
+  .topbar{left:0;right:0;height:54px;padding:0 14px;background:#080808;z-index:19}
+  #accountArea button{font-size:11px;padding:8px 10px;border:1px solid #e22;border-radius:6px}
+  main{margin-left:0;padding:68px 10px 24px;width:100%;}
+  .page{width:100%;max-width:none}
+  .hero{height:auto;min-height:480px;display:block;border-radius:8px;overflow:hidden}
+  .hero-text{width:100%;min-height:480px;padding:32px 20px 25px;background:linear-gradient(180deg,#070707 48%,rgba(7,7,7,.82) 72%,rgba(7,7,7,.35) 100%)}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:.42;z-index:0;object-fit:cover}
+  .hero-text>*{position:relative;z-index:2}
+  .hero h1{font-size:48px;line-height:.86;margin:14px 0}
+  .hero h2{font-size:17px;line-height:1.25}
+  .hero p{font-size:14px;line-height:1.5}
+  .hero .red,.hero .outline{width:100%;margin:7px 0 0;padding:12px 10px;text-align:center}
+  .stats{grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+  .stats div{padding:13px 10px;min-width:0}
+  .stats small{font-size:9px;line-height:1.2}
+  .stats b{font-size:20px}
+  .grid{grid-template-columns:1fr;gap:10px;margin:10px 0}
+  .panel{padding:13px;border-radius:8px;overflow:hidden}
+  .panel h3{font-size:14px}
+  .top10-item{grid-template-columns:30px minmax(0,1fr) auto;gap:8px;padding:11px 0}
+  .top10-item b,.top10-item small{overflow-wrap:anywhere}
+  .top10-item small{font-size:11px}
+  .leaderboard-scroll{max-height:420px}
+  .challenge{grid-template-columns:40px minmax(0,1fr);gap:9px;padding:12px 0}
+  .challenge>div{height:40px;font-size:20px}
+  .challenge section{min-width:0}
+  .challenge section b{font-size:14px;overflow-wrap:anywhere}
+  .challenge section small{font-size:11px;line-height:1.35;overflow-wrap:anywhere}
+  .challenge strong{grid-column:2;text-align:left;font-size:13px}
+  .challenge button{grid-column:2;width:100%;padding:10px}
+  .rank{gap:10px;align-items:center;min-width:0}
+  .rank>span:first-child{min-width:0;overflow-wrap:anywhere}
+  .rank>span:last-child{white-space:nowrap}
+  .admin-grid{grid-template-columns:1fr;gap:10px}
+  .admin-grid input,.admin-grid textarea{font-size:14px}
+  .authpage{min-height:70vh}
+  .authbox{width:100%;padding:22px 16px}
+  .authbox .red{width:100%}
+  .form input,.form textarea{font-size:16px}
+  .form .red{width:100%}
+  #allTasks{overflow:hidden}
+}
+@media (max-width: 380px){
+  nav button{font-size:18px}
+  nav button span{font-size:8px}
+  main{padding-left:8px;padding-right:8px}
+  .hero h1{font-size:42px}
+  .hero-text{padding-left:16px;padding-right:16px}
+  .stats div{padding:11px 8px}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
