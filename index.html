@@ -74,7 +74,7 @@ function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.add(
 function setStatus(id,msg,ok=false){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className=ok?'status success':'status';}
 function requireAdmin(){const role=String(profile?.role||'').trim().toLowerCase();if(!session){show('auth');return false}if(role!=='admin'){alert('Admin access denied.');show('dashboard');return false}return true;}
 async function googleLogin(){setStatus('authStatus','Opening Google sign-in…');const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/'}});if(error)setStatus('authStatus','Login error: '+error.message);}
-async function loadProfile(){if(!session){profile=null;syncUI();return}const {data,error}=await supabaseClient.from('profiles').select('id,points,role').eq('id',session.user.id).single();if(error){console.error(error);setStatus('authStatus','Could not load your profile: '+error.message);return}profile=data;console.log('Supabase profile loaded:',profile);syncUI();if(String(profile.role||'').trim().toLowerCase()==='admin'){document.getElementById('adminNav').style.display='flex';}}
+async function loadProfile(){if(!session){profile=null;syncUI();return}const {data,error}=await supabaseClient.from('profiles').select('id,points,role,display_name,username,name').eq('id',session.user.id).maybeSingle();if(error){console.error(error);setStatus('authStatus','Could not load your profile: '+error.message);return}if(!data){setStatus('authStatus','Your profile was not found. Please contact the site administrator.');return}profile=data;console.log('Supabase profile loaded:',profile);syncUI();if(String(profile.role||'').trim().toLowerCase()==='admin'){document.getElementById('adminNav').style.display='flex';}}
 function syncUI(){
 const points=Number(profile?.points||0);
 document.getElementById('points').textContent=points;
@@ -102,11 +102,11 @@ document.getElementById('dashboardCompleted').textContent=tasks.filter(t=>t.stat
 }
 
 async function loadLeaderboard(){
-const {data,error}=await supabaseClient.from('profiles').select('id,points').order('points',{ascending:false}).limit(100);
+const {data,error}=await supabaseClient.from('profiles').select('id,points,display_name,username,name').order('points',{ascending:false}).limit(100);
 if(error){console.error('Leaderboard error:',error);return}
 const rows=data||[];
 const html=rows.map((u,i)=>{
-const name=u.id===session?.user?.id?(session.user.user_metadata?.full_name||session.user.email||'You'):'Member '+String(u.id).slice(0,8);
+const name=u.display_name||u.username||u.name||(u.id===session?.user?.id?(session.user.user_metadata?.full_name||session.user.email||'You'):'Member');
 const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1);
 return '<div class="rank '+(u.id===session?.user?.id?'leaderboard-me':'')+'"><span>'+medal+' &nbsp; '+esc(name)+'</span><b>'+Number(u.points||0)+' CP</b></div>';
 }).join('');
@@ -131,6 +131,23 @@ document.getElementById('allTasks').innerHTML=html||'<p class="muted">No challen
 }
 
 function showEarnStatus(){if(!session){setStatus('earnStatus','Please sign in first.');show('auth');return}setStatus('earnStatus','Rewarded-ad verification is not simulated here. No CP was added.');}
+async function vote(id){
+ if(!session){show('auth');return}
+ const {error}=await supabaseClient.rpc('vote_challenge',{p_challenge_id:id});
+ if(error){alert('Could not vote: '+error.message);return}
+ await loadChallenges();
+}
+async function createTask(){
+ if(!session){show('auth');return}
+ const title=document.getElementById('title').value.trim(),desc=document.getElementById('desc').value.trim();
+ if(!title){setStatus('createStatus','Enter a challenge title.');return}
+ setStatus('createStatus','Submitting challenge…');
+ const {data,error}=await supabaseClient.rpc('create_challenge',{p_title:title,p_description:desc});
+ if(error){setStatus('createStatus','Could not create challenge: '+error.message);return}
+ setStatus('createStatus','✅ Challenge created.',true);
+ document.getElementById('title').value='';document.getElementById('desc').value='';
+ await loadProfile();await loadChallenges();
+}
 async function loadChallenges(){
 const {data,error}=await supabaseClient.from('challenges').select('id,title,description,created_by,votes,status,created_at,completed_at,completed_by').neq('status','deleted').order('votes',{ascending:false}).order('created_at',{ascending:false});
 if(error){console.error(error);return}
