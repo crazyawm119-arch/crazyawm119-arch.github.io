@@ -136,12 +136,21 @@ function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.add(
 function setStatus(id,msg,ok=false){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className=ok?'status success':'status';}
 function requireAdmin(){const role=String(profile?.role||'').trim().toLowerCase();if(!session){show('auth');return false}if(role!=='admin'){alert('Admin access denied.');show('dashboard');return false}return true;}
 async function googleLogin(){setStatus('authStatus','Opening Google sign-in…');const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/'}});if(error)setStatus('authStatus','Login error: '+error.message);}
-async function loadProfile(){if(!session){profile=null;syncUI();return}const {data,error}=await supabaseClient.from('profiles').select('id,points,role,display_name').eq('id',session.user.id).maybeSingle();if(error){console.error(error);setStatus('authStatus','Could not load your profile: '+error.message);return}if(!data){setStatus('authStatus','Your profile was not found. Please contact the site administrator.');return}profile=data;console.log('Supabase profile loaded:',profile);syncUI();if(String(profile.role||'').trim().toLowerCase()==='admin'){document.getElementById('adminNav').style.display='flex';}}
+async function loadProfile(){
+ if(!session){profile=null;syncUI();return}
+ const {data:ensured,error:ensureError}=await supabaseClient.rpc('ensure_my_profile');
+ if(ensureError){console.error('Profile ensure error:',ensureError);setStatus('authStatus','Could not create/load your profile: '+ensureError.message);return}
+ const {data:row,error:loadError}=await supabaseClient.from('profiles').select('id,points,role,display_name').eq('id',session.user.id).maybeSingle();
+ if(loadError){console.error(loadError);setStatus('authStatus','Could not load your profile: '+loadError.message);return}
+ if(!row){setStatus('authStatus','Your profile could not be created. Please contact the site administrator.');return}
+ profile=row;console.log('Supabase profile loaded:',profile);syncUI();
+ if(String(profile.role||'').trim().toLowerCase()==='admin')document.getElementById('adminNav').style.display='flex';
+}
 function syncUI(){
 const points=Number(profile?.points||0);
 document.getElementById('points').textContent=points;
 document.getElementById('dashboardPoints').textContent=points;
-document.getElementById('memberName').textContent=session?(session.user.user_metadata?.full_name||session.user.email||'Member'):'Guest';
+document.getElementById('memberName').textContent=session?(profile?.display_name||session.user.user_metadata?.full_name||session.user.email||'Member'):'Guest';
 document.getElementById('memberStatus').textContent=session?'Member':'Not signed in';
 document.getElementById('logoutLink').style.display=session?'block':'none';
 document.getElementById('accountArea').innerHTML=session?'<span class="muted">Signed in</span>':'<button onclick="show(\'auth\')">LOGIN / REGISTER</button>';
