@@ -191,12 +191,22 @@ const top=tasks.filter(t=>t.status==='active').slice().sort((a,b)=>Number(b.vote
 document.getElementById('top10Challenges').innerHTML=top.length?top.map((t,i)=>'<div class="top10-item"><div class="num">'+(i+1)+'</div><div><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small></div><strong>'+Number(t.votes||0)+'<br><small>Votes</small></strong></div>').join(''):'<p class="muted">No challenges yet.</p>';
 }
 
+function getVotedChallengeIds(){
+ if(!session?.user?.id)return new Set();
+ try{return new Set(JSON.parse(localStorage.getItem('cc_voted_'+session.user.id)||'[]'));}catch{return new Set();}
+}
+function saveVotedChallenge(id){
+ if(!session?.user?.id)return;
+ const voted=getVotedChallengeIds(); voted.add(id);
+ localStorage.setItem('cc_voted_'+session.user.id,JSON.stringify([...voted]));
+}
 function renderChallengesPage(){
 const filter=document.getElementById('challengeFilter')?.value||'all';
 let list=tasks.slice();
 if(filter!=='all')list=list.filter(t=>t.status===filter);
+const voted=getVotedChallengeIds();
 const html=list.map(t=>t.status==='active'
-?'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button onclick="vote(\''+t.id+'\')">VOTE</button></div>'
+?'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small><small id="voteStatus_'+esc(t.id)+'" class="status"></small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button id="voteBtn_'+esc(t.id)+'" '+(voted.has(t.id)?'disabled':'')+' onclick="vote(\''+t.id+'\')">'+(voted.has(t.id)?'VOTED':'VOTE')+'</button></div>'
 :'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+'</span></span><span class="success">✓ COMPLETED</span></div>').join('');
 document.getElementById('allTasks').innerHTML=html||'<p class="muted">No challenges match this filter.</p>';
 }
@@ -204,8 +214,27 @@ document.getElementById('allTasks').innerHTML=html||'<p class="muted">No challen
 function showEarnStatus(){if(!session){setStatus('earnStatus','Please sign in first.');show('auth');return}setStatus('earnStatus','Rewarded-ad verification is not simulated here. No CP was added.');}
 async function vote(id){
  if(!session){show('auth');return}
+ const voted=getVotedChallengeIds();
+ if(voted.has(id))return;
+ const button=document.getElementById('voteBtn_'+id);
+ if(button){button.disabled=true;button.textContent='VOTING…';}
  const {error}=await supabaseClient.rpc('vote_challenge',{p_challenge_id:id});
- if(error){alert('Could not vote: '+error.message);return}
+ if(error){
+   const msg=String(error.message||'');
+   if(/already voted|duplicate|unique/i.test(msg)){
+     saveVotedChallenge(id);
+     if(button){button.textContent='VOTED';button.disabled=true;}
+     const status=document.getElementById('voteStatus_'+id);
+     if(status){status.textContent='You have voted successfully for this challenge.';status.className='status success';}
+     return;
+   }
+   if(button){button.disabled=false;button.textContent='VOTE';}
+   alert('Could not vote: '+msg);return;
+ }
+ saveVotedChallenge(id);
+ if(button){button.textContent='VOTED';button.disabled=true;}
+ const status=document.getElementById('voteStatus_'+id);
+ if(status){status.textContent='You have voted successfully for this challenge.';status.className='status success';}
  await loadChallenges();
 }
 async function createTask(){
