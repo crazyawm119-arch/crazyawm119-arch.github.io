@@ -132,7 +132,7 @@ let session=null;
 let profile=null;
 let tasks=[];
 let adminChallenges=[];
-function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));window.scrollTo({top:0,behavior:'smooth'});}
+function show(id){if(session&&id==='auth')id='dashboard';document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));window.scrollTo({top:0,behavior:'smooth'});}
 function setStatus(id,msg,ok=false){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className=ok?'status success':'status';}
 function requireAdmin(){const role=String(profile?.role||'').trim().toLowerCase();if(!session){show('auth');return false}if(role!=='admin'){alert('Admin access denied.');show('dashboard');return false}return true;}
 async function googleLogin(){setStatus('authStatus','Opening Google sign-in…');const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/'}});if(error)setStatus('authStatus','Login error: '+error.message);}
@@ -258,11 +258,19 @@ await loadLeaderboard();
 if(profile?.role==='admin')renderAdminChallenges();
 }
 function render(){
-const activeHtml=tasks.filter(t=>t.status==='active').map(t=>'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button onclick="vote(\''+t.id+'\')">VOTE</button></div>').join('');
-document.getElementById('taskList').innerHTML=activeHtml||'<p class="muted">No active challenges.</p>';
-document.getElementById('activeCount').textContent=tasks.filter(t=>t.status==='active').length;
-renderChallengesPage();
-renderTop10();
+ const voted=getVotedChallengeIds();
+ const activeHtml=tasks.filter(t=>t.status==='active').map(t=>{
+   const hasVoted=voted.has(t.id);
+   const voteButton=session
+     ? '<button id=\"voteBtn_'+esc(t.id)+'\" '+(hasVoted?'disabled':'')+' onclick=\"vote(\''+t.id+'\')\">'+(hasVoted?'VOTED':'VOTE')+'</button>'
+     : '<button onclick=\"show(\'auth\')\">VOTE</button>';
+   const voteStatus=hasVoted?' <small class=\"success\">You have voted successfully for this challenge.</small>':'';
+   return '<div class=\"challenge\"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small>'+voteStatus+'</section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong>'+voteButton+'</div>';
+ }).join('');
+ document.getElementById('taskList').innerHTML=activeHtml||'<p class=\"muted\">No active challenges.</p>';
+ document.getElementById('activeCount').textContent=tasks.filter(t=>t.status==='active').length;
+ renderChallengesPage();
+ renderTop10();
 }
 
 function renderAdminChallenges(){if(!requireAdmin())return;const q=(document.getElementById('adminChallengeSearch')?.value||'').toLowerCase().trim();const active=adminChallenges.filter(t=>t.status==='active'&&(!q||t.title.toLowerCase().includes(q)||(t.description||'').toLowerCase().includes(q)));const completed=adminChallenges.filter(t=>t.status==='completed');document.getElementById('adminStatActive').textContent=active.length;document.getElementById('adminStatCompleted').textContent=completed.length;document.getElementById('adminChallenges').innerHTML=active.length?active.map(t=>'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Created '+esc(new Date(t.created_at).toLocaleString())+'</span></span><span><input id="votes_'+t.id+'" type="number" min="0" value="'+Number(t.votes||0)+'" style="width:90px;padding:9px;background:#080808;color:#fff;border:1px solid #333;border-radius:5px" title="Set votes"><button class="red" onclick="editVotes(\''+t.id+'\')">SET VOTES</button> <button class="red" onclick="completeChallenge(\''+t.id+'\')">MARK COMPLETE</button> <button class="red danger" onclick="deleteChallenge(\''+t.id+'\')">DELETE</button></span></div>').join(''):'<p class="muted">No active challenges match your search.</p>';document.getElementById('adminCompletedChallenges').innerHTML=completed.length?completed.map(t=>'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Created '+esc(new Date(t.created_at).toLocaleString())+' · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+' · Completed by '+esc(t.completed_by||'—')+'</span></span><span class="success">✓ COMPLETED</span></div>').join(''):'<p class="muted">No completed challenges yet.</p>';}
