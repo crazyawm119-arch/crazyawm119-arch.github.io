@@ -209,7 +209,26 @@ function saveVotedChallenge(id){
 function openChat(){show('chat');syncChatVisibility();if(session)loadChatMessages();}
 function syncChatVisibility(){const guest=document.getElementById('chatGuest'),member=document.getElementById('chatMember');if(!guest||!member)return;if(session){guest.classList.add('hidden');member.classList.remove('hidden');}else{guest.classList.remove('hidden');member.classList.add('hidden');}}
 function formatChatTime(v){try{return new Date(v).toLocaleString([], {dateStyle:'short',timeStyle:'short'});}catch{return '';}}
-async function loadChatMessages(){if(!session)return;const {data,error}=await supabaseClient.from('chat_messages').select('id,user_id,message,created_at,profiles(display_name)').order('created_at',{ascending:true}).limit(200);if(error){setStatus('chatStatus','Could not load chat: '+error.message);return;}const box=document.getElementById('chatMessages');if(!data?.length){box.innerHTML='<p class="muted">No messages yet. Start the conversation!</p>';return;}box.innerHTML=data.map(m=>{const name=m.profiles?.display_name||'Member';const own=m.user_id===session.user.id;return '<div class="chat-message"><b>'+esc(name)+'</b><small>'+esc(formatChatTime(m.created_at))+'</small><div>'+esc(m.message)+'</div>'+(own?'<button class="chat-delete" onclick="deleteChatMessage(\''+esc(m.id)+'\')">Delete</button>':'')+'</div>';}).join('');box.scrollTop=box.scrollHeight;}
+async function loadChatMessages(){
+ if(!session)return;
+ const {data:messages,error:messageError}=await supabaseClient.from('chat_messages').select('id,user_id,message,created_at').order('created_at',{ascending:true}).limit(200);
+ if(messageError){setStatus('chatStatus','Could not load chat: '+messageError.message);return;}
+ const box=document.getElementById('chatMessages');
+ if(!messages?.length){box.innerHTML='<p class="muted">No messages yet. Start the conversation!</p>';return;}
+ const userIds=[...new Set(messages.map(m=>m.user_id).filter(Boolean))];
+ let profilesById={};
+ if(userIds.length){
+   const {data:profiles,error:profileError}=await supabaseClient.from('profiles').select('id,display_name').in('id',userIds);
+   if(profileError){console.warn('Could not load chat profile names:',profileError);}
+   (profiles||[]).forEach(p=>{profilesById[p.id]=p.display_name;});
+ }
+ box.innerHTML=messages.map(m=>{
+   const name=profilesById[m.user_id]||((m.user_id===session.user.id)?(session.user.user_metadata?.full_name||session.user.email||'You'):'Member');
+   const own=m.user_id===session.user.id;
+   return '<div class="chat-message"><b>'+esc(name)+'</b><small>'+esc(formatChatTime(m.created_at))+'</small><div>'+esc(m.message)+'</div>'+(own?'<button class="chat-delete" onclick="deleteChatMessage(\''+esc(m.id)+'\')">Delete</button>':'')+'</div>';
+ }).join('');
+ box.scrollTop=box.scrollHeight;
+}
 async function sendChatMessage(){if(!session){syncChatVisibility();return}const input=document.getElementById('chatInput'),message=input.value.trim();if(!message){setStatus('chatStatus','Write a message first.');return}if(message.length>500){setStatus('chatStatus','Message is too long.');return}setStatus('chatStatus','Sending…');const {data,error}=await supabaseClient.rpc('send_chat_message',{p_message:message});if(error){setStatus('chatStatus','Could not send message: '+error.message);return}input.value='';setStatus('chatStatus','Message sent.',true);await loadChatMessages();}
 async function deleteChatMessage(id){if(!session)return;const {error}=await supabaseClient.from('chat_messages').delete().eq('id',id);if(error){setStatus('chatStatus','Could not delete message: '+error.message);return}await loadChatMessages();}
 function renderChallengesPage(){
