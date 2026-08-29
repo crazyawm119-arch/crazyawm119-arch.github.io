@@ -275,7 +275,7 @@ async function createTask(){
  setStatus('createStatus','Submitting challenge…');
  const {data,error}=await supabaseClient.rpc('create_challenge',{p_title:title,p_description:desc});
  if(error){setStatus('createStatus','Could not create challenge: '+error.message);return}
- setStatus('createStatus','✅ Challenge created.',true);
+ setStatus('createStatus','✅ Challenge created — 20 CP deducted.',true);
  document.getElementById('title').value='';document.getElementById('desc').value='';
  await loadProfile();await loadChallenges();
 }
