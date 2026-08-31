@@ -81,6 +81,49 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
   .hero-text{padding-left:16px;padding-right:16px}
   .stats div{padding:11px 8px}
 }
+
+/* PRODUCT IDEAS */
+.product-hero{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:12px}
+.product-hero p{max-width:760px;color:#aaa;line-height:1.5}
+.product-actions{display:flex;gap:8px;flex-wrap:wrap}
+.product-form{margin:12px 0}
+.product-form-grid{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+.product-idea-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.product-idea{
+  display:grid;grid-template-columns:48px minmax(0,1fr) 90px 92px;
+  gap:12px;align-items:center;padding:13px;
+  background:#0a0b0c;border:1px solid #292929;border-radius:8px;
+}
+.product-idea:hover{border-color:#5b1010;background:#0d0e0f}
+.product-rank{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  background:#191a1c;border:1px solid #3a3a3a;color:#f11;font-weight:900
+}
+.product-idea section{min-width:0}
+.product-idea section b{display:block;font-size:15px}
+.product-idea section small{display:block;color:#999;margin-top:5px;line-height:1.35}
+.product-votes{text-align:center;font-weight:900}
+.product-votes small{display:block;color:#e22;font-size:10px}
+.product-like{background:transparent;border:1px solid #e22;color:#f22;padding:9px;border-radius:5px;font-weight:bold;cursor:pointer}
+.product-like:disabled{opacity:.55;cursor:not-allowed}
+.product-status{margin-top:8px}
+.product-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.product-tabs button{background:#111;color:#ddd;border:1px solid #333;padding:9px 12px;border-radius:6px;cursor:pointer}
+.product-tabs button.active{background:#480707;border-color:#f11;color:#fff}
+@media(max-width:700px){
+  .product-hero{display:block}
+  .product-actions{margin-top:10px}
+  .product-form-grid{grid-template-columns:1fr}
+  .product-idea{grid-template-columns:40px minmax(0,1fr);gap:9px}
+  .product-votes,.product-like{grid-column:2}
+  .product-votes{text-align:left}
+  .product-like{width:100%}
+}
+
+.nav-icon{width:22px;height:22px;object-fit:contain;display:inline-block;flex:0 0 22px}
+
+.challenge-number{width:38px!important;height:38px!important;border-radius:50%!important;background:#191a1c!important;border:1px solid #3a3a3a!important;display:grid!important;place-items:center!important;font-size:16px!important;font-weight:900!important;color:#f11!important}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -91,9 +134,10 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <button class="active" onclick="show('dashboard')">⌂ <span>Dashboard</span></button>
 <button onclick="show('earn')">▶ <span>Earn Points</span></button>
 <button onclick="show('create')">◎ <span>Create Challenge</span></button>
-<button onclick="show('challenges')">◉ <span>Challenges</span></button>
-<button onclick="show('leaderboard')">🏆 <span>Leaderboard</span></button>
-<button onclick="openChat()">💬 <span>Community Chat</span></button>
+<button onclick="show('challenges')"><img class="nav-icon" src="https://assets-ds.chess.com/color-icons/communication-bubbles.svg" alt=""> <span>Challenges</span></button>
+<button onclick="show('products')">💡 <span>Product Ideas</span></button>
+<button onclick="show('leaderboard')"><img class="nav-icon" src="https://assets-ds.chess.com/color-icons/leaderboard.svg" alt=""> <span>Leaderboard</span></button>
+<button onclick="openChat()"><img class="nav-icon" src="https://assets-ds.chess.com/color-icons/friends.svg" alt=""> <span>Community Chat</span></button>
 <button id="adminNav" onclick="show('admin');loadAdminChallenges()" style="display:none">⚙️ <span>Admin</span></button>
 </nav>
 <div class="side-points"><small>COUNCIL POINTS</small><strong>🪙 <span id="points">0</span></strong><button class="red" onclick="show('earn')">EARN POINTS</button></div>
@@ -117,6 +161,40 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <option value="all">All Challenges</option><option value="active">Active</option><option value="completed">Completed</option>
 </select></div>
 <div id="allTasks" style="margin-top:15px"></div></div></section>
+
+<section id="products" class="page hidden">
+  <h1>Product Ideas</h1>
+  <div class="panel">
+    <div class="product-hero">
+      <div>
+        <h3 style="margin-bottom:5px">💡 COMMUNITY PRODUCT IDEAS</h3>
+        <p style="margin:0">Suggest products the community could create, make your own version, or support ideas you would like to see become real.</p>
+      </div>
+      <div class="product-actions">
+        <button class="red" onclick="showProductForm()">＋ CREATE IDEA</button>
+      </div>
+    </div>
+
+    <div id="productForm" class="panel product-form hidden">
+      <h3>CREATE A PRODUCT IDEA</h3>
+      <p class="muted">Submitting a product idea costs <b>20 CP</b>. You must be logged in.</p>
+      <div class="product-form-grid">
+        <input id="productTitle" maxlength="120" placeholder="Example: Make keychains">
+        <textarea id="productDesc" maxlength="500" placeholder="Describe the product idea, what it could look like, or why people might want it."></textarea>
+      </div>
+      <button id="productCreateButton" class="red" onclick="createProductIdea()">SUBMIT IDEA FOR 20 CP</button>
+      <button class="outline" onclick="hideProductForm()">CANCEL</button>
+      <p id="productCreateStatus" class="status"></p>
+    </div>
+
+    <div class="product-tabs">
+      <button id="productTopBtn" class="active" onclick="setProductView('top')">TOP 50</button>
+      <button id="productNewestBtn" onclick="setProductView('newest')">NEWEST</button>
+    </div>
+    <div id="productIdeas" class="product-idea-list"><p class="muted">Loading product ideas…</p></div>
+  </div>
+</section>
+
 <section id="leaderboard" class="page hidden"><h1>Top 100 Council Members</h1><div class="panel"><div id="fullLeaderboard"><p class="muted">Loading leaderboard…</p></div></div></section>
 <section id="chat" class="page hidden"><h1>Community Chat</h1><div id="chatGuest" class="panel chat-guest hidden"><h2>PLEASE LOG IN TO SEE THE COMMUNITY CHAT</h2><p class="muted">Only logged-in Council members can view and participate in the community chat.</p><button class="red" onclick="show('auth')">LOGIN / REGISTER</button></div><div id="chatMember" class="panel chat-box hidden"><p class="chat-notice">Be respectful. Messages are limited to help prevent spam.</p><div id="chatMessages" class="chat-messages"><p class="muted">Loading chat…</p></div><div class="chat-compose"><textarea id="chatInput" maxlength="500" placeholder="Write a message…"></textarea><button class="red" onclick="sendChatMessage()">SEND</button></div><p id="chatStatus" class="status"></p></div></section>
 <section id="admin" class="page hidden"><h1>Admin Dashboard</h1><div class="stats"><div><small>YOUR CP</small><b id="adminStatCp">0</b></div><div><small>ACTIVE CHALLENGES</small><b id="adminStatActive">—</b></div><div><small>COMPLETED</small><b id="adminStatCompleted">—</b></div><div><small>ROLE</small><b id="adminStatRole">—</b></div></div><div class="panel admin-card"><h2>⚙️ Council Administration</h2>
@@ -134,7 +212,7 @@ let session=null;
 let profile=null;
 let tasks=[];
 let adminChallenges=[];
-function show(id){if(session&&id==='auth')id='dashboard';if(session&&id==='login')id='dashboard';document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));const target=document.getElementById(id);if(target)target.classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(session)document.querySelectorAll('.guest-only').forEach(x=>x.style.display='none');window.scrollTo({top:0,behavior:'smooth'});}
+function show(id){if(session&&id==='auth')id='dashboard';if(session&&id==='login')id='dashboard';document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));const target=document.getElementById(id);if(target)target.classList.remove('hidden');if(id==='products')loadProductIdeas();document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(session)document.querySelectorAll('.guest-only').forEach(x=>x.style.display='none');window.scrollTo({top:0,behavior:'smooth'});}
 function setStatus(id,msg,ok=false){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className=ok?'status success':'status';}
 function requireAdmin(){const role=String(profile?.role||'').trim().toLowerCase();if(!session){show('auth');return false}if(role!=='admin'){alert('Admin access denied.');show('dashboard');return false}return true;}
 async function googleLogin(){setStatus('authStatus','Opening Google sign-in…');const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/'}});if(error)setStatus('authStatus','Login error: '+error.message);}
@@ -237,7 +315,7 @@ let list=tasks.slice();
 if(filter!=='all')list=list.filter(t=>t.status===filter);
 const voted=getVotedChallengeIds();
 const html=list.map(t=>t.status==='active'
-?'<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small><small id="voteStatus_'+esc(t.id)+'" class="status"></small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button id="voteBtn_'+esc(t.id)+'" '+(voted.has(t.id)?'disabled':'')+' onclick="vote(\''+t.id+'\')">'+(voted.has(t.id)?'VOTED':'VOTE')+'</button></div>'
+?'<div class="challenge"><div class="challenge-number">'+(list.filter(x=>x.status==='active').indexOf(t)+1)+'</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small><small id="voteStatus_'+esc(t.id)+'" class="status"></small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button id="voteBtn_'+esc(t.id)+'" '+(voted.has(t.id)?'disabled':'')+' onclick="vote(\''+t.id+'\')">'+(voted.has(t.id)?'VOTED':'VOTE')+'</button></div>'
 :'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+'</span></span><span class="success">✓ COMPLETED</span></div>').join('');
 document.getElementById('allTasks').innerHTML=html||'<p class="muted">No challenges match this filter.</p>';
 }
@@ -308,6 +386,93 @@ function renderAdminChallenges(){if(!requireAdmin())return;const q=(document.get
 async function loadAdminChallenges(){if(!requireAdmin())return;const {data:s}=await supabaseClient.from('site_settings').select('member_count').eq('id',1).maybeSingle();if(s)document.getElementById('adminMemberCount').value=Number(s.member_count||0);const {data,error}=await supabaseClient.from('challenges').select('id,title,description,created_by,votes,status,created_at,completed_at,completed_by').order('created_at',{ascending:false}).limit(500);if(error){setStatus('adminChallengeStatusMsg','Could not load challenges: '+error.message);return}adminChallenges=data||[];renderAdminChallenges();}
 async function completeChallenge(id){if(!requireAdmin())return;if(!confirm('Mark this challenge as completed?'))return;setStatus('adminChallengeStatusMsg','Marking challenge complete…');const {data,error}=await supabaseClient.rpc('admin_complete_challenge',{p_challenge_id:id});if(error){setStatus('adminChallengeStatusMsg','Could not complete challenge: '+error.message);return}setStatus('adminChallengeStatusMsg','✅ Challenge marked completed.',true);await loadAdminChallenges();await loadChallenges();}
 async function deleteChallenge(id){if(!requireAdmin())return;if(!confirm('Delete this challenge from the active challenge system?'))return;setStatus('adminChallengeStatusMsg','Deleting challenge…');const {error}=await supabaseClient.rpc('admin_delete_challenge',{p_challenge_id:id});if(error){setStatus('adminChallengeStatusMsg','Could not delete challenge: '+error.message);return}setStatus('adminChallengeStatusMsg','✅ Challenge deleted.',true);await loadAdminChallenges();await loadChallenges();}
+
+let productIdeas=[];
+let productView='top';
+
+function showProductForm(){
+  if(!session){show('auth');return}
+  document.getElementById('productForm').classList.remove('hidden');
+  document.getElementById('productTitle').focus();
+}
+function hideProductForm(){
+  document.getElementById('productForm').classList.add('hidden');
+  setStatus('productCreateStatus','');
+}
+function setProductView(view){
+  productView=view;
+  document.getElementById('productTopBtn').classList.toggle('active',view==='top');
+  document.getElementById('productNewestBtn').classList.toggle('active',view==='newest');
+  renderProductIdeas();
+}
+async function loadProductIdeas(){
+  const {data,error}=await supabaseClient
+    .from('product_ideas')
+    .select('id,title,description,created_by,votes,created_at')
+    .order(productView==='top'?'votes':'created_at',{ascending:false})
+    .limit(50);
+  if(error){
+    console.error('Product ideas error:',error);
+    document.getElementById('productIdeas').innerHTML='<p class="status">Could not load product ideas: '+esc(error.message)+'</p>';
+    return;
+  }
+  productIdeas=data||[];
+  renderProductIdeas();
+}
+async function getProductVotedIds(){
+  if(!session?.user?.id)return new Set();
+  const {data,error}=await supabaseClient.from('product_idea_votes').select('idea_id').eq('user_id',session.user.id);
+  if(error){console.warn('Product vote lookup failed:',error);return new Set();}
+  return new Set((data||[]).map(x=>x.idea_id));
+}
+async function renderProductIdeas(){
+  const box=document.getElementById('productIdeas');
+  if(!box)return;
+  const voted=await getProductVotedIds();
+  let list=productIdeas.slice(0,50);
+  if(productView==='top')list.sort((a,b)=>Number(b.votes||0)-Number(a.votes||0));
+  else list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  if(!list.length){box.innerHTML='<p class="muted">No product ideas yet. Be the first to suggest one!</p>';return;}
+  box.innerHTML=list.map((idea,i)=>{
+    const didVote=voted.has(idea.id);
+    return '<div class="product-idea">'+
+      '<div class="product-rank">'+(i+1)+'</div>'+
+      '<section><b>'+esc(idea.title)+'</b><small>'+esc(idea.description||'')+'</small><small>Created '+esc(idea.created_at?new Date(idea.created_at).toLocaleString():'—')+'</small></section>'+
+      '<div class="product-votes">'+Number(idea.votes||0)+'<small>SUPPORT</small></div>'+
+      '<button class="product-like" '+(didVote?'disabled':'')+' onclick="voteProductIdea(\''+esc(idea.id)+'\')">'+(didVote?'SUPPORTED':'SUPPORT IDEA')+'</button>'+
+      '</div>';
+  }).join('');
+}
+async function voteProductIdea(id){
+  if(!session){show('auth');return}
+  const {data,error}=await supabaseClient.rpc('vote_product_idea',{p_idea_id:id});
+  if(error){
+    if(/already|duplicate|unique/i.test(String(error.message||''))){await loadProductIdeas();return;}
+    alert('Could not support idea: '+error.message);return;
+  }
+  await loadProductIdeas();
+}
+async function createProductIdea(){
+  if(!session){show('auth');return}
+  const title=document.getElementById('productTitle').value.trim();
+  const desc=document.getElementById('productDesc').value.trim();
+  if(!title){setStatus('productCreateStatus','Enter a product idea.');return}
+  setStatus('productCreateStatus','Submitting product idea…');
+  const btn=document.getElementById('productCreateButton');
+  btn.disabled=true;
+  const {data,error}=await supabaseClient.rpc('create_product_idea',{p_title:title,p_description:desc});
+  btn.disabled=false;
+  if(error){
+    setStatus('productCreateStatus','Could not create idea: '+error.message);
+    return;
+  }
+  setStatus('productCreateStatus','✅ Product idea created — 20 CP deducted.',true);
+  document.getElementById('productTitle').value='';
+  document.getElementById('productDesc').value='';
+  await loadProfile();
+  await loadProductIdeas();
+}
+
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
 async function saveMemberCount(){
 if(!requireAdmin())return;
@@ -336,11 +501,12 @@ async function logout(){await supabaseClient.auth.signOut();if(chatChannel)await
 let chatChannel=null;
 function subscribeChat(){if(chatChannel)supabaseClient.removeChannel(chatChannel);if(!session)return;chatChannel=supabaseClient.channel('council-chat').on('postgres_changes',{event:'*',schema:'public',table:'chat_messages'},()=>loadChatMessages()).subscribe();}
 
-supabaseClient.auth.getSession().then(async({data})=>{session=data.session;await loadProfile();await loadChallenges();subscribeChat();if(session&&String(profile?.role||'').trim().toLowerCase()==='admin')await loadAdminChallenges();});
-supabaseClient.auth.onAuthStateChange(async(_event,newSession)=>{session=newSession;await loadProfile();await loadChallenges();subscribeChat();if(newSession)show('dashboard');});
+supabaseClient.auth.getSession().then(async({data})=>{session=data.session;await loadProfile();await loadChallenges();await loadProductIdeas();subscribeChat();if(session&&String(profile?.role||'').trim().toLowerCase()==='admin')await loadAdminChallenges();});
+supabaseClient.auth.onAuthStateChange(async(_event,newSession)=>{session=newSession;await loadProfile();await loadChallenges();await loadProductIdeas();subscribeChat();if(newSession)show('dashboard');});
 syncUI();
 loadDashboardStats();
 loadLeaderboard();
+loadProductIdeas();
 </script>
 </body>
 </html>
