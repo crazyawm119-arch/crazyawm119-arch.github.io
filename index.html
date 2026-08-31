@@ -388,25 +388,45 @@ function renderAdminChallenges(){if(!requireAdmin())return;const q=(document.get
 async function completeChallenge(id){if(!requireAdmin())return;if(!confirm('Mark this challenge as completed?'))return;setStatus('adminChallengeStatusMsg','Marking challenge complete…');const {data,error}=await supabaseClient.rpc('admin_complete_challenge',{p_challenge_id:id});if(error){setStatus('adminChallengeStatusMsg','Could not complete challenge: '+error.message);return}setStatus('adminChallengeStatusMsg','✅ Challenge marked completed.',true);await loadAdminChallenges();await loadChallenges();}
 async function deleteChallenge(id){if(!requireAdmin())return;if(!confirm('Delete this challenge from the active challenge system?'))return;setStatus('adminChallengeStatusMsg','Deleting challenge…');const {error}=await supabaseClient.rpc('admin_delete_challenge',{p_challenge_id:id});if(error){setStatus('adminChallengeStatusMsg','Could not delete challenge: '+error.message);return}setStatus('adminChallengeStatusMsg','✅ Challenge deleted.',true);await loadAdminChallenges();await loadChallenges();}
 
+
 let productIdeas=[];
 let productView='top';
 
 function showProductForm(){
-  if(!session){show('auth');return}
-  document.getElementById('productForm').classList.remove('hidden');
-  document.getElementById('productTitle').focus();
+  if(!session){show('auth');return;}
+  const form=document.getElementById('productForm');
+  if(form) form.classList.remove('hidden');
+  const title=document.getElementById('productTitle');
+  if(title) title.focus();
 }
 function hideProductForm(){
-  document.getElementById('productForm').classList.add('hidden');
+  const form=document.getElementById('productForm');
+  if(form) form.classList.add('hidden');
   setStatus('productCreateStatus','');
 }
 function setProductView(view){
   productView=view;
-  document.getElementById('productTopBtn').classList.toggle('active',view==='top');
-  document.getElementById('productNewestBtn').classList.toggle('active',view==='newest');
-  renderProductIdeas();
+  const top=document.getElementById('productTopBtn');
+  const newest=document.getElementById('productNewestBtn');
+  if(top) top.classList.toggle('active',view==='top');
+  if(newest) newest.classList.toggle('active',view==='newest');
+  loadProductIdeas();
+}
+async function getProductVotedIds(){
+  if(!session?.user?.id) return new Set();
+  const {data,error}=await supabaseClient
+    .from('product_idea_votes')
+    .select('idea_id')
+    .eq('user_id',session.user.id);
+  if(error){
+    console.warn('Product vote lookup failed:',error);
+    return new Set();
+  }
+  return new Set((data||[]).map(x=>x.idea_id));
 }
 async function loadProductIdeas(){
+  const box=document.getElementById('productIdeas');
+  if(!box) return;
   const {data,error}=await supabaseClient
     .from('product_ideas')
     .select('id,title,description,created_by,votes,created_at')
@@ -414,62 +434,73 @@ async function loadProductIdeas(){
     .limit(50);
   if(error){
     console.error('Product ideas error:',error);
-    document.getElementById('productIdeas').innerHTML='<p class="status">Could not load product ideas: '+esc(error.message)+'</p>';
+    box.innerHTML='<p class="status">Could not load product ideas: '+esc(error.message)+'</p>';
     return;
   }
   productIdeas=data||[];
   renderProductIdeas();
 }
-async function getProductVotedIds(){
-  if(!session?.user?.id)return new Set();
-  const {data,error}=await supabaseClient.from('product_idea_votes').select('idea_id').eq('user_id',session.user.id);
-  if(error){console.warn('Product vote lookup failed:',error);return new Set();}
-  return new Set((data||[]).map(x=>x.idea_id));
-}
 async function renderProductIdeas(){
   const box=document.getElementById('productIdeas');
-  if(!box)return;
+  if(!box) return;
   const voted=await getProductVotedIds();
   let list=productIdeas.slice(0,50);
-  if(productView==='top')list.sort((a,b)=>Number(b.votes||0)-Number(a.votes||0));
-  else list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
-  if(!list.length){box.innerHTML='<p class="muted">No product ideas yet. Be the first to suggest one!</p>';return;}
+  if(productView==='top'){
+    list.sort((a,b)=>Number(b.votes||0)-Number(a.votes||0));
+  }else{
+    list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  }
+  if(!list.length){
+    box.innerHTML='<p class="muted">No product ideas yet. Be the first to suggest one!</p>';
+    return;
+  }
   box.innerHTML=list.map((idea,i)=>{
     const didVote=voted.has(idea.id);
     return '<div class="product-idea">'+
       '<div class="product-rank">'+(i+1)+'</div>'+
       '<section><b>'+esc(idea.title)+'</b><small>'+esc(idea.description||'')+'</small><small>Created '+esc(idea.created_at?new Date(idea.created_at).toLocaleString():'—')+'</small></section>'+
       '<div class="product-votes">'+Number(idea.votes||0)+'<small>LIKES</small></div>'+
-      '<button class="product-like" '+(didVote?'disabled':'')+' onclick="voteProductIdea(\''+esc(idea.id)+'\')">'+(didVote?'LIKED':'LIKE IDEA')+'</button>'+
+      '<button class="product-like" '+(didVote?'disabled':'')+' onclick="voteProductIdea(\''+idea.id+'\')">'+(didVote?'LIKED':'LIKE')+'</button>'+
       '</div>';
   }).join('');
 }
 async function voteProductIdea(id){
-  if(!session){show('auth');return}
-  const {data,error}=await supabaseClient.rpc('vote_product_idea',{p_idea_id:id});
+  if(!session){show('auth');return;}
+  const {error}=await supabaseClient.rpc('vote_product_idea',{p_idea_id:id});
   if(error){
-    if(/already|duplicate|unique/i.test(String(error.message||''))){await loadProductIdeas();return;}
-    alert('Could not like idea: '+error.message);return;
+    if(/already|duplicate|unique/i.test(String(error.message||''))){
+      await loadProductIdeas();
+      return;
+    }
+    alert('Could not like idea: '+error.message);
+    return;
   }
   await loadProductIdeas();
 }
 async function createProductIdea(){
-  if(!session){show('auth');return}
+  if(!session){show('auth');return;}
   const title=document.getElementById('productTitle').value.trim();
   const desc=document.getElementById('productDesc').value.trim();
-  if(!title){setStatus('productCreateStatus','Enter a product idea.');return}
+  if(!title){
+    setStatus('productCreateStatus','Enter a product idea.');
+    return;
+  }
   setStatus('productCreateStatus','Submitting product idea…');
   const btn=document.getElementById('productCreateButton');
-  btn.disabled=true;
-  const {data,error}=await supabaseClient.rpc('create_product_idea',{p_title:title,p_description:desc});
-  btn.disabled=false;
+  if(btn) btn.disabled=true;
+  const {error}=await supabaseClient.rpc('create_product_idea',{
+    p_title:title,
+    p_description:desc
+  });
+  if(btn) btn.disabled=false;
   if(error){
     setStatus('productCreateStatus','Could not create idea: '+error.message);
     return;
   }
-  setStatus('productCreateStatus','✅ Product idea created — 20 CP deducted.',true);
+  setStatus('productCreateStatus','Product idea created — 20 CP deducted.',true);
   document.getElementById('productTitle').value='';
   document.getElementById('productDesc').value='';
+  hideProductForm();
   await loadProfile();
   await loadProductIdeas();
 }
@@ -508,6 +539,6 @@ syncUI();
 loadDashboardStats();
 loadLeaderboard();
 loadProductIdeas();
-</script>
+
 </body>
 </html>
