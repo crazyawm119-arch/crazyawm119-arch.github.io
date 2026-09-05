@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Council</title>
+<title>The Chris Council</title>
+<meta name="description" content="Learn how The Chris Council works, how Council Points are used, how community challenges are created and voted on, and how completed challenges are recorded.">
 <style>
 *{box-sizing:border-box}body{margin:0;background:#070708;color:#eee;font-family:Arial,Helvetica,sans-serif}
 .sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#090a0b;border-right:1px solid #292929;padding:24px 18px;z-index:5}
@@ -14,116 +15,57 @@ nav button:hover,nav .active{background:#480707;border-left:3px solid #f11;color
 .red{display:inline-block;background:#ed1010;color:white;border:0;border-radius:6px;padding:13px 20px;font-weight:bold;cursor:pointer;text-decoration:none}.red:disabled{opacity:.5;cursor:not-allowed}
 .profile{position:absolute;bottom:20px;left:18px;right:18px;border:1px solid #292929;padding:14px;border-radius:8px;display:flex;gap:10px}.profile div{flex:1}.profile small{display:block;color:#e22}.profile a{color:#f22;cursor:pointer}
 .topbar{height:58px;position:fixed;left:245px;right:0;top:0;border-bottom:1px solid #252525;background:#080808;z-index:4;display:flex;justify-content:space-between;align-items:center;padding:0 25px}.topbar button{background:none;border:0;color:#f22;cursor:pointer}
-main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto}.hidden{display:none}.chat-guest{max-width:620px;margin:80px auto;text-align:center;padding:40px 24px}.chat-guest h2{color:#f11}.chat-box{display:flex;flex-direction:column;height:650px}.chat-messages{flex:1;overflow:auto;padding:10px;background:#090a0b;border:1px solid #292929;border-radius:8px;margin-bottom:12px}.chat-message{padding:10px 12px;border-bottom:1px solid #222}.chat-message:last-child{border-bottom:0}.chat-message b{color:#f11}.chat-message small{color:#777;margin-left:8px}.chat-compose{display:flex;gap:10px}.chat-compose textarea{flex:1;min-height:55px;max-height:130px;resize:vertical;margin:0}.chat-compose button{white-space:nowrap}.chat-actions{display:flex;gap:8px}.chat-delete{background:none;border:0;color:#777;cursor:pointer;font-size:12px}.chat-delete:hover{color:#f11}.chat-notice{margin:0 0 12px;color:#999}@media(max-width:700px){.chat-box{height:calc(100vh - 170px);min-height:430px}.chat-compose{flex-direction:column}.chat-compose button{width:100%}.chat-guest{margin:45px auto;padding:28px 18px}.chat-messages{padding:6px}}
+main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto}.hidden{display:none}
 .hero{height:410px;background:#080404;border:1px solid #250707;display:flex;overflow:hidden;position:relative}.hero-text{padding:45px 30px 20px 55px;width:55%;position:relative;z-index:2;background:linear-gradient(90deg,#070707 70%,transparent)}.hero h1{font-size:72px;line-height:.82;margin:10px 0;color:#e00}.hero h1 span{color:#fff}.hero h2{font-size:20px}.hero h2 b{color:#f01818}.hero p{color:#bbb;line-height:1.55}.outline{display:inline-block;background:#0b0b0b;color:#fff;border:1px solid #777;padding:12px 18px;border-radius:6px;margin-left:10px;font-weight:bold;cursor:pointer}.hero img{width:58%;height:100%;object-fit:cover;object-position:center;margin-left:-8%}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.stats div,.panel,.authbox{background:#0e0f10;border:1px solid #292929;border-radius:8px}.stats div{padding:17px}.stats small{display:block;color:#aaa;margin:5px 0}.stats b{font-size:24px;color:#f11}.grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:12px 0}.panel{padding:16px}.panel h3{margin:0 0 15px;border-bottom:1px solid #292929;padding-bottom:13px}.topchallenge{display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center}.top10-item{padding:12px 0;border-bottom:1px solid #222;display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center}.top10-item:last-child{border-bottom:0}.top10-item .num{font-size:20px;font-weight:900;color:#f11}.top10-item b{display:block}.top10-item small{display:block;color:#999;margin-top:5px}.leaderboard-scroll{max-height:650px;overflow:auto}.leaderboard-me{border-color:#a20f0f;background:#160707}.challenge-meta{color:#777;font-size:12px;margin-top:5px}.fakepic{height:130px;border-radius:7px;background:linear-gradient(135deg,#321010,#a30);display:grid;place-items:center;font-size:55px}.topchallenge em{color:#e22;font-style:normal}.topchallenge p{color:#aaa;line-height:1.5}.rank{padding:10px;border-bottom:1px solid #222;display:flex;justify-content:space-between}.challenge{display:grid;grid-template-columns:55px 1fr 70px 70px;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #222}.challenge>div{height:50px;background:#242424;border-radius:6px;display:grid;place-items:center;font-size:25px}.challenge section b,.challenge section small{display:block}.challenge section small{color:#999;margin-top:6px}.challenge strong{text-align:center}.challenge i{font-style:normal;color:#e22;font-size:11px}.challenge button{background:transparent;border:1px solid #e22;color:#f22;padding:9px;border-radius:5px;font-weight:bold;cursor:pointer}.how p{margin:12px 0}.how p b{display:inline-grid;place-items:center;background:#e11;border-radius:50%;width:24px;height:24px;margin-right:8px}.how small{color:#999;margin-left:34px}.form input,.form textarea,.authbox input{display:block;width:100%;padding:14px;margin:12px 0;background:#080808;color:#fff;border:1px solid #333;border-radius:6px}.form textarea{min-height:120px}.authpage{min-height:70vh;display:grid;place-items:center}.authbox{width:min(430px,95%);padding:30px}.authbox h1{color:#f11}.status{color:#f33;font-weight:bold}.admin-card{margin-top:12px}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.admin-grid input,.admin-grid textarea{display:block;width:100%;padding:12px;margin:8px 0;background:#080808;color:#fff;border:1px solid #333;border-radius:6px}.danger{background:#5b0808!important}.success{color:#28d17c}.muted{color:#aaa}
 @media(max-width:900px){.sidebar{width:70px;padding:15px 8px}.logo span,nav button span,.side-points,.profile div{display:none}.logo{margin:0 5px 25px}.topbar{left:70px}main{margin-left:70px;padding:70px 12px}.hero-text{width:70%;padding:35px 20px}.hero h1{font-size:55px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}}
 @media(max-width:560px){.hero{height:430px}.hero-text{width:100%;background:linear-gradient(90deg,#070707 45%,#070707aa)}.hero img{position:absolute;right:0;width:80%;opacity:.5}.hero h1{font-size:50px}.stats{grid-template-columns:1fr}.topchallenge{grid-template-columns:1fr}.challenge{grid-template-columns:45px 1fr}.challenge strong,.challenge button{grid-column:2}.outline{margin:8px 0 0}}
 
-/* MOBILE-ONLY LAYOUT — desktop remains unchanged */
-@media (max-width: 700px){
-  body{padding-bottom:74px;overflow-x:hidden}
-  .sidebar{position:fixed;left:0;right:0;top:auto;bottom:0;width:100%;height:68px;padding:0 6px;background:#090a0b;border-right:0;border-top:1px solid #292929;display:flex;align-items:center;z-index:20}
-  .logo,.side-points,.profile{display:none}
-  nav{width:100%;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
-  nav button{height:58px;margin:0;padding:5px 2px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;font-size:21px;border-left:0!important;border-radius:6px}
-  nav button span{display:block;font-size:9px;line-height:1.1;color:#aaa}
-  nav button:hover,nav .active{background:#480707;border-left:0!important;color:#fff}
-  nav button.active span{color:#fff}
-  #adminNav{display:none!important}
-  .topbar{left:0;right:0;height:54px;padding:0 14px;background:#080808;z-index:19}
-  #accountArea button{font-size:11px;padding:8px 10px;border:1px solid #e22;border-radius:6px}
-  main{margin-left:0;padding:68px 10px 24px;width:100%;}
-  .page{width:100%;max-width:none}
-  .hero{height:auto;min-height:480px;display:block;border-radius:8px;overflow:hidden}
-  .hero-text{width:100%;min-height:480px;padding:32px 20px 25px;background:linear-gradient(180deg,#070707 48%,rgba(7,7,7,.82) 72%,rgba(7,7,7,.35) 100%)}
-  .hero img{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:.42;z-index:0;object-fit:cover}
-  .hero-text>*{position:relative;z-index:2}
-  .hero h1{font-size:48px;line-height:.86;margin:14px 0}
-  .hero h2{font-size:17px;line-height:1.25}
-  .hero p{font-size:14px;line-height:1.5}
-  .hero .red,.hero .outline{width:100%;margin:7px 0 0;padding:12px 10px;text-align:center}
-  .stats{grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
-  .stats div{padding:13px 10px;min-width:0}
-  .stats small{font-size:9px;line-height:1.2}
-  .stats b{font-size:20px}
-  .grid{grid-template-columns:1fr;gap:10px;margin:10px 0}
-  .panel{padding:13px;border-radius:8px;overflow:hidden}
-  .panel h3{font-size:14px}
-  .top10-item{grid-template-columns:30px minmax(0,1fr) auto;gap:8px;padding:11px 0}
-  .top10-item b,.top10-item small{overflow-wrap:anywhere}
-  .top10-item small{font-size:11px}
-  .leaderboard-scroll{max-height:420px}
-  .challenge{grid-template-columns:40px minmax(0,1fr);gap:9px;padding:12px 0}
-  .challenge>div{height:40px;font-size:20px}
-  .challenge section{min-width:0}
-  .challenge section b{font-size:14px;overflow-wrap:anywhere}
-  .challenge section small{font-size:11px;line-height:1.35;overflow-wrap:anywhere}
-  .challenge strong{grid-column:2;text-align:left;font-size:13px}
-  .challenge button{grid-column:2;width:100%;padding:10px}
-  .rank{gap:10px;align-items:center;min-width:0}
-  .rank>span:first-child{min-width:0;overflow-wrap:anywhere}
-  .rank>span:last-child{white-space:nowrap}
-  .admin-grid{grid-template-columns:1fr;gap:10px}
-  .admin-grid input,.admin-grid textarea{font-size:14px}
-  .authpage{min-height:70vh}
-  .authbox{width:100%;padding:22px 16px}
-  .authbox .red{width:100%}
-  .form input,.form textarea{font-size:16px}
-  .form .red{width:100%}
-  #allTasks{overflow:hidden}
-}
-@media (max-width: 380px){
-  nav button{font-size:18px}
-  nav button span{font-size:8px}
-  main{padding-left:8px;padding-right:8px}
-  .hero h1{font-size:42px}
-  .hero-text{padding-left:16px;padding-right:16px}
-  .stats div{padding:11px 8px}
-}
+.about-page{max-width:1100px}
+.about-hero{background:linear-gradient(135deg,#120303,#080808);border:1px solid #3a0a0a;border-radius:10px;padding:38px;margin-bottom:14px}
+.about-kicker{color:#f01818;font-weight:900;letter-spacing:2px;font-size:12px}
+.about-hero h1{font-size:48px;line-height:1;margin:10px 0 14px;color:#fff}
+.about-hero h1 span{color:#f01818}
+.about-hero p{max-width:820px;color:#bbb;font-size:17px;line-height:1.7;margin:0}
+.about-actions{margin-top:22px}
+.about-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.about-card{background:#0e0f10;border:1px solid #292929;border-radius:8px;padding:22px}
+.about-card h2{margin:0 0 10px;color:#f01818;font-size:20px}
+.about-card h3{margin:18px 0 7px;color:#fff;font-size:16px}
+.about-card p,.about-card li{color:#bdbdbd;line-height:1.7}
+.about-card ul{padding-left:21px;margin-bottom:0}
+.about-step{display:flex;gap:13px;align-items:flex-start;margin:15px 0}
+.about-number{flex:0 0 32px;height:32px;border-radius:50%;background:#ed1010;color:#fff;display:grid;place-items:center;font-weight:900}
+.about-step strong{display:block;color:#fff;margin-bottom:4px}
+.about-step p{margin:0}
+.about-wide{grid-column:1/-1}
+.about-note{border-left:3px solid #f01818;padding:12px 15px;background:#160707;color:#bbb;line-height:1.7;margin-top:15px}
+.about-faq{border-top:1px solid #292929;padding-top:14px;margin-top:14px}
+.about-faq:first-of-type{border-top:0;padding-top:0}
+.about-faq strong{display:block;color:#fff;margin-bottom:5px}
+
+.join-page{max-width:1050px}
+.join-hero{background:#0e0f10;border:1px solid #292929;border-radius:10px;padding:28px;margin-bottom:14px}
+.join-hero .about-kicker{color:#f01818;font-weight:900;letter-spacing:1px;font-size:12px}
+.join-hero h1{font-size:46px;line-height:1;margin:10px 0;color:#fff}
+.join-hero h1 span{color:#f01818}
+.join-hero>p{color:#aaa;line-height:1.7;max-width:800px}
+.join-step{display:grid;grid-template-columns:70px 1fr 260px;gap:22px;align-items:center;background:#0e0f10;border:1px solid #292929;border-radius:10px;padding:22px;margin:12px 0}
+.join-number{width:58px;height:58px;border-radius:50%;background:#e11;color:#fff;display:grid;place-items:center;font-size:25px;font-weight:900}
+.join-step h2{margin:0 0 8px;color:#fff}
+.join-step p{margin:0;color:#aaa;line-height:1.65}
+.join-example{width:100%;height:220px;object-fit:cover;object-position:center;border-radius:8px;border:1px solid #3a3a3a;background:#000}
+.join-note{background:#160707;border:1px solid #6d0c0c;border-radius:8px;padding:15px;color:#bbb;line-height:1.6;margin-top:14px}
+.join-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.join-actions .outline{margin-left:0}
+@media(max-width:700px){.join-step{grid-template-columns:55px 1fr}.join-example{grid-column:1/-1;height:240px}.join-hero h1{font-size:36px}}
+
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}.about-wide{grid-column:auto}}
+@media(max-width:560px){.about-hero{padding:24px}.about-hero h1{font-size:36px}.about-hero p{font-size:15px}}
 
 /* PRODUCT IDEAS */
-.product-hero{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:12px}
-.product-hero p{max-width:760px;color:#aaa;line-height:1.5}
-.product-actions{display:flex;gap:8px;flex-wrap:wrap}
-.product-form{margin:12px 0}
-.product-form-grid{display:grid;grid-template-columns:1fr 2fr;gap:10px}
-.product-idea-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
-.product-idea{
-  display:grid;grid-template-columns:48px minmax(0,1fr) 90px 92px;
-  gap:12px;align-items:center;padding:13px;
-  background:#0a0b0c;border:1px solid #292929;border-radius:8px;
-}
-.product-idea:hover{border-color:#5b1010;background:#0d0e0f}
-.product-rank{
-  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
-  background:#191a1c;border:1px solid #3a3a3a;color:#f11;font-weight:900
-}
-.product-idea section{min-width:0}
-.product-idea section b{display:block;font-size:15px}
-.product-idea section small{display:block;color:#999;margin-top:5px;line-height:1.35}
-.product-votes{text-align:center;font-weight:900}
-.product-votes small{display:block;color:#e22;font-size:10px}
-.product-like{background:transparent;border:1px solid #e22;color:#f22;padding:9px;border-radius:5px;font-weight:bold;cursor:pointer}
-.product-like:disabled{opacity:.55;cursor:not-allowed}
-.product-status{margin-top:8px}
-.product-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.product-tabs button{background:#111;color:#ddd;border:1px solid #333;padding:9px 12px;border-radius:6px;cursor:pointer}
-.product-tabs button.active{background:#480707;border-color:#f11;color:#fff}
-@media(max-width:700px){
-  .product-hero{display:block}
-  .product-actions{margin-top:10px}
-  .product-form-grid{grid-template-columns:1fr}
-  .product-idea{grid-template-columns:40px minmax(0,1fr);gap:9px}
-  .product-votes,.product-like{grid-column:2}
-  .product-votes{text-align:left}
-  .product-like{width:100%}
-}
-
-.nav-icon{width:22px;height:22px;object-fit:contain;display:inline-block;flex:0 0 22px}
-
-.challenge-number{width:38px!important;height:38px!important;border-radius:50%!important;background:#191a1c!important;border:1px solid #3a3a3a!important;display:grid!important;place-items:center!important;font-size:16px!important;font-weight:900!important;color:#f11!important}
-
+.product-hero{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:12px}.product-hero p{max-width:760px;color:#aaa;line-height:1.5}.product-actions{display:flex;gap:8px;flex-wrap:wrap}.product-form{margin:12px 0}.product-form-grid{display:grid;grid-template-columns:1fr 2fr;gap:10px}.product-idea-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}.product-idea{display:grid;grid-template-columns:48px minmax(0,1fr) 90px 92px;gap:12px;align-items:center;padding:13px;background:#0a0b0c;border:1px solid #292929;border-radius:8px}.product-idea:hover{border-color:#5b1010;background:#0d0e0f}.product-rank{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#191a1c;border:1px solid #3a3a3a;color:#f11;font-weight:900}.product-idea section{min-width:0}.product-idea section b{display:block;font-size:15px}.product-idea section small{display:block;color:#999;margin-top:5px;line-height:1.35}.product-votes{text-align:center;font-weight:900}.product-votes small{display:block;color:#e22;font-size:10px}.product-like{background:transparent;border:1px solid #e22;color:#f22;padding:9px;border-radius:5px;font-weight:bold;cursor:pointer}.product-like:disabled{opacity:.55;cursor:not-allowed}.product-status{margin-top:8px}.product-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.product-tabs button{background:#111;color:#ddd;border:1px solid #333;padding:9px 12px;border-radius:6px;cursor:pointer}.product-tabs button.active{background:#480707;border-color:#f11;color:#fff}.nav-icon{width:22px;height:22px;object-fit:contain;display:inline-block;flex:0 0 22px}.challenge-number{width:38px!important;height:38px!important;border-radius:50%!important;background:#191a1c!important;border:1px solid #3a3a3a!important;display:grid!important;place-items:center!important;font-size:16px!important;font-weight:900!important;color:#f11!important}.chat-box{display:flex;flex-direction:column;height:650px}.chat-messages{flex:1;overflow:auto;padding:10px;background:#090a0b;border:1px solid #292929;border-radius:8px;margin-bottom:12px}.chat-message{padding:10px 12px;border-bottom:1px solid #222}.chat-message:last-child{border-bottom:0}.chat-message b{color:#f11}.chat-message small{color:#777;margin-left:8px}.chat-compose{display:flex;gap:10px}.chat-compose textarea{flex:1;min-height:55px;max-height:130px;resize:vertical;margin:0}.chat-compose button{white-space:nowrap}.chat-delete{background:none;border:0;color:#777;cursor:pointer;font-size:12px}.chat-delete:hover{color:#f11}.chat-notice{margin:0 0 12px;color:#999}.chat-guest{max-width:620px;margin:80px auto;text-align:center;padding:40px 24px}.chat-guest h2{color:#f11}.success{color:#28d17c}.muted{color:#aaa}
+@media(max-width:700px){.chat-box{height:calc(100vh - 170px);min-height:430px}.chat-compose{flex-direction:column}.chat-compose button{width:100%}.chat-guest{margin:45px auto;padding:28px 18px}.chat-messages{padding:6px}.product-hero{display:block}.product-actions{margin-top:10px}.product-form-grid{grid-template-columns:1fr}.product-idea{grid-template-columns:40px minmax(0,1fr);gap:9px}.product-votes,.product-like{grid-column:2}.product-votes{text-align:left}.product-like{width:100%}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -131,7 +73,7 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <aside class="sidebar">
 <div class="logo">🏛️ <span>THE<br><b>COUNCIL</b></span></div>
 <nav>
-<button class="active" onclick="show('dashboard')">⌂ <span>Dashboard</span></button>
+<button onclick="show('dashboard')">⌂ <span>Dashboard</span></button>
 <button onclick="show('earn')">▶ <span>Earn Points</span></button>
 <button onclick="show('create')">◎ <span>Create Challenge</span></button>
 <button onclick="show('challenges')"><img class="nav-icon" src="https://assets-ds.chess.com/color-icons/communication-bubbles.svg" alt=""> <span>Challenges</span></button>
@@ -145,11 +87,135 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 </aside>
 <header class="topbar"><div></div><div id="accountArea"><button onclick="show('auth')">LOGIN / REGISTER</button></div></header>
 <main>
-<section id="dashboard" class="page">
+<section id="about" class="page about-page">
+<div class="about-hero">
+<div class="about-kicker">WELCOME TO THE CHRIS COUNCIL</div>
+<h1>HOW <span>THE COUNCIL</span> WORKS</h1>
+<p>The Chris Council is a community-driven platform where members use Council Points (CP) to propose challenges, vote on the challenges they want to see fulfilled, and follow completed challenges in a permanent public history. This page explains the system before you enter the interactive Council.</p>
+<div class="about-actions">
+<button class="red" onclick="show('joinInstructions')">JOIN THE COUNCIL</button>
+<button class="outline" onclick="show('auth')">LOGIN / REGISTER</button>
+</div>
+</div>
+
+<div class="about-grid">
+<div class="about-card about-wide">
+<h2>What is The Chris Council?</h2>
+<p>The Council gives the community a structured way to suggest things Chris should do. Instead of challenges being selected randomly, members participate through Council Points, challenge submissions, and community voting. The active challenge list shows what the community is currently considering, while completed challenges remain part of the Council's history.</p>
+<p class="about-note"><b>The basic idea:</b> earn or receive CP → submit a challenge → the community votes → the highest eligible challenge rises to the top → Chris fulfills it → the challenge is marked completed.</p>
+</div>
+
+<div class="about-card">
+<h2>How the Council Works</h2>
+<div class="about-step"><div class="about-number">1</div><div><strong>Get Council Points</strong><p>CP are the points used inside the Council. New members can receive the one-time login bonus, while future rewarded-ad earning can add CP after proper verification.</p></div></div>
+<div class="about-step"><div class="about-number">2</div><div><strong>Create a Challenge</strong><p>A member can use 20 CP to submit a challenge with a title and description.</p></div></div>
+<div class="about-step"><div class="about-number">3</div><div><strong>Community Voting</strong><p>Members vote for active challenges they want Chris to fulfill.</p></div></div>
+<div class="about-step"><div class="about-number">4</div><div><strong>Fulfillment</strong><p>The highest-voted eligible challenge can rise to the top for fulfillment by Chris.</p></div></div>
+<div class="about-step"><div class="about-number">5</div><div><strong>Permanent History</strong><p>Once completed, a challenge is recorded as completed and does not return to the active voting list.</p></div></div>
+</div>
+
+<div class="about-card">
+<h2>How Council Points (CP) Work</h2>
+<p>CP are the Council's internal participation points. They are used to take actions within the platform rather than representing cash or a promise of monetary value.</p>
+<ul>
+<li><b>New-member bonus:</b> eligible new members receive the one-time 60 CP login bonus.</li>
+<li><b>Challenge creation:</b> submitting a challenge costs 20 CP.</li>
+<li><b>Rewarded ads:</b> the site currently displays “Rewarded Ads Coming Soon”; CP should only be credited when the future ad system verifies a valid reward.</li>
+<li><b>Administration:</b> authorized administrators can make controlled CP adjustments through the admin system.</li>
+</ul>
+</div>
+
+<div class="about-card">
+<h2>How Challenges Are Created</h2>
+<p>A signed-in member opens <b>Create Challenge</b>, enters a clear challenge title and description, and submits it for 20 CP. The creation request is handled through the Council's Supabase database function rather than simply changing a number in the browser.</p>
+<h3>Good challenge submissions</h3>
+<ul>
+<li>Clearly explain what the challenge is.</li>
+<li>Give enough detail for the community to understand the idea.</li>
+<li>Keep the proposal appropriate for the Council community.</li>
+<li>Avoid duplicate or previously completed challenges.</li>
+</ul>
+</div>
+
+<div class="about-card">
+<h2>How Community Voting Works</h2>
+<p>Active challenges are displayed in the Challenge Hub. Signed-in members can vote for the active proposals they support. The dashboard's <b>Top 10 Challenges</b> list is based on active challenges with the most votes.</p>
+<p>Voting is handled through the Council's database system so the vote action is not supposed to depend on a fake browser-only counter.</p>
+</div>
+
+<div class="about-card">
+<h2>What Happens When a Challenge Is Completed?</h2>
+<p>When an authorized administrator marks a challenge as completed, it leaves the active challenge system and appears in the completed history. Its completion information can be retained with the challenge record.</p>
+<p>This keeps the active list focused on proposals that can still receive community attention and gives the Council a permanent record of what has already happened.</p>
+</div>
+
+<div class="about-card">
+<h2>Product Ideas</h2>
+<p>The Council can also collect community ideas for products or creations. Members can propose an idea, and the community can use likes to show which ideas are most interesting.</p>
+<p>Product Ideas are separate from challenges: a product idea is a community suggestion for something to create, while a challenge is a proposal for something Chris should do.</p>
+</div>
+
+<div class="about-card">
+<h2>Community Chat</h2>
+<p>Community Chat is the place for members to discuss Council activity and ideas. Keep conversations constructive and respectful, and do not use the chat to bypass Council rules or moderation.</p>
+</div>
+
+<div class="about-card about-wide">
+<h2>Rules &amp; Community Standards</h2>
+<ul>
+<li>Use the Council honestly. Do not attempt to manipulate votes, CP balances, or database records.</li>
+<li>Only submit challenges and ideas that are appropriate for the community.</li>
+<li>Do not spam duplicate submissions.</li>
+<li>Respect other members when voting, chatting, or discussing ideas.</li>
+<li>Administrative controls are reserved for authorized administrators.</li>
+<li>Completed challenges remain historical records and are not intended to be returned to active voting.</li>
+</ul>
+</div>
+
+<div class="about-card about-wide">
+<h2>Frequently Asked Questions</h2>
+<div class="about-faq"><strong>Do I need an account to vote?</strong><p>Yes. Voting and challenge creation require you to be signed in.</p></div>
+<div class="about-faq"><strong>How much does it cost to create a challenge?</strong><p>Creating a challenge costs 20 CP.</p></div>
+<div class="about-faq"><strong>Can I create a challenge without CP?</strong><p>No. The Council requires the 20 CP creation cost before a challenge can be submitted.</p></div>
+<div class="about-faq"><strong>What does the Top 10 list show?</strong><p>It shows active challenges ranked by their current vote count.</p></div>
+<div class="about-faq"><strong>Can a completed challenge come back?</strong><p>No. Completed challenges are intended to remain in the permanent history rather than returning to active voting.</p></div>
+<div class="about-faq"><strong>Are rewarded ads available right now?</strong><p>Not yet. The current site says “Rewarded Ads Coming Soon” until the ad system is properly approved and connected.</p></div>
+</div>
+
+<div class="about-card about-wide">
+<h2>Ready to Explore?</h2>
+<p>Use the interactive Council to see active challenges, review the leaderboard, learn about Council Points, and sign in when you are ready to participate.</p>
+<button class="red" onclick="show('dashboard')">OPEN THE DASHBOARD</button>
+</div>
+</div>
+</section>
+
+<section id="joinInstructions" class="page hidden join-page">
+<div class="join-hero">
+<div class="about-kicker">JOIN THE CHRIS COUNCIL</div>
+<h1>HOW TO <span>JOIN THE COUNCIL</span></h1>
+<p>Follow these steps to become part of the Council community. These instructions are for joining the community; after completing them, you can log in and use the Council website.</p>
+</div>
+<div class="join-step">
+<div class="join-number">1</div>
+<div><h2>SUBSCRIBE TO CHRIS KING</h2><p>Subscribe to Chris King's channel so you can follow the content and stay connected with the Council community.</p></div>
+</div>
+<div class="join-step">
+<div class="join-number">2</div>
+<div><h2>CHANGE YOUR PROFILE PICTURE</h2><p>Change your profile picture to a picture with a style similar to the example shown here. Use an image you are allowed to use.</p></div>
+<img class="join-example" src="data:image/jpeg;base64,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" alt="Example profile picture style">
+</div>
+<div class="join-note"><b>Next step:</b> Once you have followed the joining instructions, return to the Council and use <b>LOGIN / REGISTER</b> to enter the interactive Council.</div>
+<div class="join-actions">
+<button class="red" onclick="show('auth')">LOGIN / REGISTER</button>
+<button class="outline" onclick="show('about')">BACK TO ABOUT</button>
+</div>
+</section>
+<section id="dashboard" class="page hidden">
 <div class="hero"><div class="hero-text"><div class="eyebrow">THE COUNCIL IS IN SESSION</div><h1><span>THE</span><br>COUNCIL</h1><h2>TURN POINTS INTO <b>REAL CHALLENGES.</b></h2><p>Earn Council Points by watching rewarded ads.<br>Create challenges. The community votes.<br>The highest eligible challenge gets fulfilled by Chris.</p><button class="red" onclick="show('earn')">▶ EARN POINTS</button><button class="outline" onclick="show('create')">＋ CREATE CHALLENGE</button></div><img src="chris-council-hero.jpg" alt="Chris Council"></div>
 <div class="stats"><div>🪙<small>YOUR COUNCIL POINTS</small><b id="dashboardPoints">0</b></div><div>👥<small>TOTAL MEMBERS</small><b id="dashboardMembers">0</b></div><div>🔥<small>CHALLENGES COMPLETED</small><b id="dashboardCompleted">0</b></div><div>▣<small>CHALLENGES ACTIVE</small><b id="activeCount">0</b></div></div>
 <div class="grid"><div class="panel"><h3>🔥 TOP 10 CHALLENGES</h3><div id="top10Challenges"><p class="muted">Loading top challenges…</p></div></div><div class="panel"><h3>🏆 TOP 100 LEADERBOARD</h3><div id="dashboardLeaderboard"><p class="muted">Loading leaderboard…</p></div></div></div>
-<div class="grid"><div class="panel"><h3>RECENT CHALLENGES</h3><div id="taskList"></div></div><div class="panel how"><h3>HOW IT WORKS</h3><p><b>1</b> Earn Council Points<br><small>Rewarded ads can earn CP after valid server-side verification.</small></p><p><b>2</b> Create Challenges<br><small>Use 20 CP to submit a challenge.</small></p><p><b>3</b> Community Votes<br><small>Members vote for eligible challenges.</small></p><p><b>4</b> Chris Fulfills<br><small>The highest eligible challenge rises to the top.</small></p><p><b>5</b> Permanent History<br><small>Completed challenges cannot return to voting.</small></p></div></div>
+<div class="grid"><div class="panel"><h3>RECENT CHALLENGES</h3><div id="taskList"></div></div><div class="panel how"><h3>HOW IT WORKS</h3><p><b>1</b> Earn Council Points<br><small>Rewarded ads can earn CP after valid server-side verification.</small></p><p><b>2</b> Create Challenges<br><small>Use 20 CP to submit a challenge.</small></p><p><b>3</b> Community Votes<br><small>Members vote for eligible challenges.</small></p><p><b>4</b> Chris Fulfills<br><small>The highest eligible challenge rises to the top.</small></p><p><b>5</b> Permanent History<br><small>Completed challenges cannot return to voting.</small></p><p><button class="outline" onclick="show('about')">ℹ️ ABOUT THE COUNCIL</button></p></div></div>
 </section>
 <section id="earn" class="page hidden"><h1>Earn Points</h1><div class="panel"><h2>📺 Rewarded Ad</h2><p class="muted">REWARDED ADS COMING SOON</p><p>Rewarded ads will be added after the ad system is approved and properly connected. Until then, new members can use their one-time 60 CP login bonus.</p><p id="earnStatus" class="status"></p></div></section>
 <section id="create" class="page hidden"><h1>Create Challenge</h1><div class="panel form"><p>Submitting a challenge costs <b>20 CP</b>.</p><input id="title" maxlength="120" placeholder="What should Chris do?"><textarea id="desc" maxlength="400" placeholder="Describe your challenge"></textarea><button id="createButton" class="red" onclick="createTask()">SUBMIT FOR 20 CP</button><p id="createStatus" class="status"></p></div></section>
@@ -161,356 +227,76 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <option value="all">All Challenges</option><option value="active">Active</option><option value="completed">Completed</option>
 </select></div>
 <div id="allTasks" style="margin-top:15px"></div></div></section>
-
 <section id="products" class="page hidden">
-  <h1>Product Ideas</h1>
-  <div class="panel">
-    <div class="product-hero">
-      <div>
-        <h3 style="margin-bottom:5px">💡 COMMUNITY PRODUCT IDEAS</h3>
-        <p style="margin:0">Suggest products the community could create, make your own version, or like ideas you would like to see become real.</p>
-      </div>
-      <div class="product-actions">
-        <button class="red" onclick="showProductForm()">＋ CREATE IDEA</button>
-      </div>
-    </div>
-
-    <div id="productForm" class="panel product-form hidden">
-      <h3>CREATE A PRODUCT IDEA</h3>
-      <p class="muted">Submitting a product idea costs <b>20 CP</b>. You must be logged in.</p>
-      <div class="product-form-grid">
-        <input id="productTitle" maxlength="120" placeholder="Example: Make keychains">
-        <textarea id="productDesc" maxlength="500" placeholder="Describe the product idea, what it could look like, or why people might want it."></textarea>
-      </div>
-      <button id="productCreateButton" class="red" onclick="createProductIdea()">SUBMIT IDEA FOR 20 CP</button>
-      <button class="outline" onclick="hideProductForm()">CANCEL</button>
-      <p id="productCreateStatus" class="status"></p>
-    </div>
-
-    <div class="product-tabs">
-      <button id="productTopBtn" class="active" onclick="setProductView('top')">TOP 50</button>
-      <button id="productNewestBtn" onclick="setProductView('newest')">NEWEST</button>
-    </div>
-    <div id="productIdeas" class="product-idea-list"><p class="muted">Loading product ideas…</p></div>
-  </div>
-</section>
-
-<section id="leaderboard" class="page hidden"><h1>Top 100 Council Members</h1><div class="panel"><div id="fullLeaderboard"><p class="muted">Loading leaderboard…</p></div></div></section>
+<h1>Product Ideas</h1>
+<div class="panel">
+<div class="product-hero"><div><h3 style="margin-bottom:5px">💡 COMMUNITY PRODUCT IDEAS</h3><p style="margin:0">Suggest products the community could create, make your own version, or like ideas you would like to see become real.</p></div><div class="product-actions"><button class="red" onclick="showProductForm()">＋ CREATE IDEA</button></div></div>
+<div id="productForm" class="panel product-form hidden"><h3>CREATE A PRODUCT IDEA</h3><p class="muted">Submitting a product idea costs <b>20 CP</b>. You must be logged in.</p><div class="product-form-grid"><input id="productTitle" maxlength="120" placeholder="Example: Make keychains"><textarea id="productDesc" maxlength="500" placeholder="Describe the product idea, what it could look like, or why people might want it."></textarea></div><button id="productCreateButton" class="red" onclick="createProductIdea()">SUBMIT IDEA FOR 20 CP</button> <button class="outline" onclick="hideProductForm()">CANCEL</button><p id="productCreateStatus" class="status"></p></div>
+<div class="product-tabs"><button id="productTopBtn" class="active" onclick="setProductView('top')">TOP 50</button><button id="productNewestBtn" onclick="setProductView('newest')">NEWEST</button></div>
+<div id="productIdeas" class="product-idea-list"><p class="muted">Loading product ideas…</p></div>
+</div></section>
 <section id="chat" class="page hidden"><h1>Community Chat</h1><div id="chatGuest" class="panel chat-guest hidden"><h2>PLEASE LOG IN TO SEE THE COMMUNITY CHAT</h2><p class="muted">Only logged-in Council members can view and participate in the community chat.</p><button class="red" onclick="show('auth')">LOGIN / REGISTER</button></div><div id="chatMember" class="panel chat-box hidden"><p class="chat-notice">Be respectful. Messages are limited to help prevent spam.</p><div id="chatMessages" class="chat-messages"><p class="muted">Loading chat…</p></div><div class="chat-compose"><textarea id="chatInput" maxlength="500" placeholder="Write a message…"></textarea><button class="red" onclick="sendChatMessage()">SEND</button></div><p id="chatStatus" class="status"></p></div></section>
+<section id="leaderboard" class="page hidden"><h1>Top 100 Council Members</h1><div class="panel"><div id="fullLeaderboard"><p class="muted">Loading leaderboard…</p></div></div></section>
 <section id="admin" class="page hidden"><h1>Admin Dashboard</h1><div class="stats"><div><small>YOUR CP</small><b id="adminStatCp">0</b></div><div><small>ACTIVE CHALLENGES</small><b id="adminStatActive">—</b></div><div><small>COMPLETED</small><b id="adminStatCompleted">—</b></div><div><small>ROLE</small><b id="adminStatRole">—</b></div></div><div class="panel admin-card"><h2>⚙️ Council Administration</h2>
 <div class="admin-grid">
 <div><h3>👥 Dashboard Member Count</h3><input id="adminMemberCount" type="number" min="0" placeholder="Number shown on Dashboard"><button class="red" onclick="saveMemberCount()">SAVE MEMBER COUNT</button><p id="adminMemberStatus" class="status"></p></div>
 <div><h3>ℹ️ Dashboard Stats</h3><p class="muted">Completed challenges and your CP are calculated from the database. The member count can be manually controlled here.</p></div>
-</div><p class="muted">Server-side challenge moderation. Completion and deletion are protected by Supabase admin checks.</p><div class="admin-grid"><div><h3>🪙 Adjust Council Points</h3><input id="adminUserId" placeholder="Target user's UUID"><input id="adminAmount" type="number" min="1" placeholder="Amount"><input id="adminReason" maxlength="120" placeholder="Reason"><button class="red" onclick="adminAward()">AWARD CP</button> <button class="red danger" onclick="adminDeduct()">DEDUCT CP</button><p id="adminCpStatus" class="status"></p></div><div><h3>👤 Current Admin</h3><p><b>User ID:</b> <code id="adminCurrentUser">—</code></p><p><b>Role:</b> <span id="adminCurrentRole">—</span></p><p><b>Your CP:</b> <span id="adminCurrentCp">0</span></p><button class="outline" onclick="loadProfile()">REFRESH PROFILE</button><button class="outline" onclick="loadLedger()">VIEW LEDGER</button></div></div></div><div class="panel admin-card"><h3>💡 Product Ideas — Admin</h3><p class="muted">Admins can change the like count for any product idea.</p><div id="adminProductIdeas" style="margin-top:12px"></div><p id="adminProductStatus" class="status"></p></div>
-<div class="panel admin-card"><h3>📝 Active Challenges</h3><div class="admin-grid"><input id="adminChallengeSearch" placeholder="Search active challenges" oninput="renderAdminChallenges()"></div><div id="adminChallenges" style="margin-top:12px"></div><p id="adminChallengeStatusMsg" class="status"></p></div><div class="panel admin-card"><h3>✅ Completed Challenges</h3><p class="muted">Completed challenges stay here permanently for admin history.</p><div id="adminCompletedChallenges" style="margin-top:12px"></div></div><div class="panel admin-card"><h3>📒 CP Ledger</h3><div id="adminLedger" class="muted">Click “VIEW LEDGER”.</div></div></section>
+</div><p class="muted">Server-side challenge moderation. Completion and deletion are protected by Supabase admin checks.</p><div class="admin-grid"><div><h3>🪙 Adjust Council Points</h3><input id="adminUserId" placeholder="Target user's UUID"><input id="adminAmount" type="number" min="1" placeholder="Amount"><input id="adminReason" maxlength="120" placeholder="Reason"><button class="red" onclick="adminAward()">AWARD CP</button> <button class="red danger" onclick="adminDeduct()">DEDUCT CP</button><p id="adminCpStatus" class="status"></p></div><div><h3>👤 Current Admin</h3><p><b>User ID:</b> <code id="adminCurrentUser">—</code></p><p><b>Role:</b> <span id="adminCurrentRole">—</span></p><p><b>Your CP:</b> <span id="adminCurrentCp">0</span></p><button class="outline" onclick="loadProfile()">REFRESH PROFILE</button><button class="outline" onclick="loadLedger()">VIEW LEDGER</button></div></div></div><div class="panel admin-card"><h3>💡 Product Ideas — Admin</h3><p class="muted">Admins can change the like count for any product idea.</p><div id="adminProductIdeas" style="margin-top:12px"></div><p id="adminProductStatus" class="status"></p></div><div class="panel admin-card"><h3>📝 Active Challenges</h3><div class="admin-grid"><input id="adminChallengeSearch" placeholder="Search active challenges" oninput="renderAdminChallenges()"></div><div id="adminChallenges" style="margin-top:12px"></div><p id="adminChallengeStatusMsg" class="status"></p></div><div class="panel admin-card"><h3>✅ Completed Challenges</h3><p class="muted">Completed challenges stay here permanently for admin history.</p><div id="adminCompletedChallenges" style="margin-top:12px"></div></div><div class="panel admin-card"><h3>📒 CP Ledger</h3><div id="adminLedger" class="muted">Click “VIEW LEDGER”.</div></div></section>
 <section id="auth" class="page hidden authpage"><div class="authbox"><h1>THE COUNCIL</h1><h2>Login / Register</h2><p class="muted">LOG IN TO VOTE AND CREATE A CHALLENGE</p><button class="red" onclick="googleLogin()">CONTINUE WITH GOOGLE</button><p id="authStatus" class="status"></p></div></section>
 </main>
 <script>
 const SUPABASE_URL='https://wxsjttouasmvinjlrayk.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_UW-FqBWnc4IjNAk5Kuu6vA_jFV0tMqX';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-let session=null;
-let profile=null;
-let tasks=[];
-let adminChallenges=[];
-function show(id){if(session&&id==='auth')id='dashboard';if(session&&id==='login')id='dashboard';document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));const target=document.getElementById(id);if(target)target.classList.remove('hidden');if(id==='products')loadProductIdeas();document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(session)document.querySelectorAll('.guest-only').forEach(x=>x.style.display='none');window.scrollTo({top:0,behavior:'smooth'});}
+let session=null,profile=null,tasks=[],adminChallenges=[];
+function show(id){if(session&&id==='auth')id='dashboard';if(session&&id==='login')id='dashboard';document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));const target=document.getElementById(id);if(target)target.classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(session)document.querySelectorAll('.guest-only').forEach(x=>x.style.display='none');window.scrollTo({top:0,behavior:'smooth'});}
 function setStatus(id,msg,ok=false){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className=ok?'status success':'status';}
 function requireAdmin(){const role=String(profile?.role||'').trim().toLowerCase();if(!session){show('auth');return false}if(role!=='admin'){alert('Admin access denied.');show('dashboard');return false}return true;}
 async function googleLogin(){setStatus('authStatus','Opening Google sign-in…');const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/'}});if(error)setStatus('authStatus','Login error: '+error.message);}
-async function loadProfile(){
- if(!session){profile=null;syncUI();return}
- const {data:ensured,error:ensureError}=await supabaseClient.rpc('ensure_my_profile');
- if(ensureError){console.error('Profile ensure error:',ensureError);setStatus('authStatus','Could not create/load your profile: '+ensureError.message);return}
- const {data:row,error:loadError}=await supabaseClient.from('profiles').select('id,points,role,display_name').eq('id',session.user.id).maybeSingle();
- if(loadError){console.error(loadError);setStatus('authStatus','Could not load your profile: '+loadError.message);return}
- if(!row){setStatus('authStatus','Your profile could not be created. Please contact the site administrator.');return}
- profile=row;console.log('Supabase profile loaded:',profile);syncUI();
- if(String(profile.role||'').trim().toLowerCase()==='admin')document.getElementById('adminNav').style.display='flex';
-}
-function syncUI(){
-// Remove every guest-only/login prompt immediately after authentication.
-document.querySelectorAll('.guest-only').forEach(x=>x.style.display=session?'none':'');
-const points=Number(profile?.points||0);
-document.getElementById('points').textContent=points;
-document.getElementById('dashboardPoints').textContent=points;
-document.getElementById('memberName').textContent=session?(profile?.display_name||session.user.user_metadata?.full_name||session.user.email||'Member'):'Guest';
-document.getElementById('memberStatus').textContent=session?'Member':'Not signed in';
-document.getElementById('logoutLink').style.display=session?'block':'none';
-document.getElementById('accountArea').innerHTML=session?'<span class="muted">Signed in</span>':'<button onclick="show(\'auth\')">LOGIN / REGISTER</button>';
-if(session){const auth=document.getElementById('auth');if(auth)auth.classList.add('hidden');document.querySelectorAll('.login-to-vote,.login-register-prompt').forEach(x=>x.remove());}
-const role=String(profile?.role||'').trim().toLowerCase();
-const isAdmin=!!session&&role==='admin';
-document.getElementById('adminNav').style.display=isAdmin?'flex':'none';
-document.getElementById('adminCurrentUser').textContent=session?.user?.id||'—';
-document.getElementById('adminCurrentRole').textContent=profile?.role||'—';
-document.getElementById('adminCurrentCp').textContent=points;
-document.getElementById('adminStatCp').textContent=points;
-document.getElementById('adminStatRole').textContent=profile?.role||'—';
-document.getElementById('createButton').disabled=!session;
-syncChatVisibility();
-render();
-}
-
-async function loadDashboardStats(){
-const {data:settings,error}=await supabaseClient.from('site_settings').select('member_count').eq('id',1).maybeSingle();
-if(!error)document.getElementById('dashboardMembers').textContent=Number(settings?.member_count||0);
-document.getElementById('dashboardCompleted').textContent=tasks.filter(t=>t.status==='completed').length;
-}
-
-async function loadLeaderboard(){
-const {data,error}=await supabaseClient.from('profiles').select('id,points,display_name').order('points',{ascending:false}).limit(100);
-if(error){console.error('Leaderboard error:',error);return}
-const rows=data||[];
-const html=rows.map((u,i)=>{
-const name=u.display_name||(u.id===session?.user?.id?(session.user.user_metadata?.full_name||session.user.email||'You'):'Member');
-const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1);
-return '<div class="rank '+(u.id===session?.user?.id?'leaderboard-me':'')+'"><span>'+medal+' &nbsp; '+esc(name)+'</span><b>'+Number(u.points||0)+' CP</b></div>';
-}).join('');
-const result=html||'<p class="muted">No members found.</p>';
-document.getElementById('dashboardLeaderboard').innerHTML='<div class="leaderboard-scroll">'+result+'</div>';
-document.getElementById('fullLeaderboard').innerHTML='<div class="leaderboard-scroll">'+result+'</div>';
-}
-
-function renderTop10(){
-const top=tasks.filter(t=>t.status==='active').slice().sort((a,b)=>Number(b.votes||0)-Number(a.votes||0)).slice(0,10);
-document.getElementById('top10Challenges').innerHTML=top.length?top.map((t,i)=>'<div class="top10-item"><div class="num">'+(i+1)+'</div><div><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small></div><strong>'+Number(t.votes||0)+'<br><small>Votes</small></strong></div>').join(''):'<p class="muted">No challenges yet.</p>';
-}
-
-function getVotedChallengeIds(){
- if(!session?.user?.id)return new Set();
- try{return new Set(JSON.parse(localStorage.getItem('cc_voted_'+session.user.id)||'[]'));}catch{return new Set();}
-}
-function saveVotedChallenge(id){
- if(!session?.user?.id)return;
- const voted=getVotedChallengeIds(); voted.add(id);
- localStorage.setItem('cc_voted_'+session.user.id,JSON.stringify([...voted]));
-}
+async function loadProfile(){if(!session){profile=null;syncUI();return}const {error:ensureError}=await supabaseClient.rpc('ensure_my_profile');if(ensureError){console.error('Profile ensure error:',ensureError);setStatus('authStatus','Could not create/load your profile: '+ensureError.message);return}const {data:row,error:loadError}=await supabaseClient.from('profiles').select('id,points,role,display_name').eq('id',session.user.id).maybeSingle();if(loadError){console.error(loadError);setStatus('authStatus','Could not load your profile: '+loadError.message);return}if(!row){setStatus('authStatus','Your profile could not be created. Please contact the site administrator.');return}profile=row;syncUI();if(String(profile.role||'').trim().toLowerCase()==='admin')document.getElementById('adminNav').style.display='flex';}
+function syncUI(){const points=Number(profile?.points||0);document.getElementById('points').textContent=points;document.getElementById('dashboardPoints').textContent=points;document.getElementById('memberName').textContent=session?(profile?.display_name||session.user.user_metadata?.full_name||session.user.email||'Member'):'Guest';document.getElementById('memberStatus').textContent=session?'Member':'Not signed in';document.getElementById('logoutLink').style.display=session?'block':'none';document.getElementById('accountArea').innerHTML=session?'<span class="muted">Signed in</span>':'<button onclick="show(\'auth\')">LOGIN / REGISTER</button>';if(session){const auth=document.getElementById('auth');if(auth)auth.classList.add('hidden');document.querySelectorAll('.login-to-vote,.login-register-prompt').forEach(x=>x.remove());}const role=String(profile?.role||'').trim().toLowerCase(),isAdmin=!!session&&role==='admin';document.getElementById('adminNav').style.display=isAdmin?'flex':'none';document.getElementById('adminCurrentUser').textContent=session?.user?.id||'—';document.getElementById('adminCurrentRole').textContent=profile?.role||'—';document.getElementById('adminCurrentCp').textContent=points;document.getElementById('adminStatCp').textContent=points;document.getElementById('adminStatRole').textContent=profile?.role||'—';document.getElementById('createButton').disabled=!session;syncChatVisibility();render();}
+async function loadDashboardStats(){const {data:settings,error}=await supabaseClient.from('site_settings').select('member_count').eq('id',1).maybeSingle();if(!error)document.getElementById('dashboardMembers').textContent=Number(settings?.member_count||0);document.getElementById('dashboardCompleted').textContent=tasks.filter(t=>t.status==='completed').length;}
+async function loadLeaderboard(){const {data,error}=await supabaseClient.from('profiles').select('id,points,display_name').order('points',{ascending:false}).limit(100);if(error){console.error('Leaderboard error:',error);return}const rows=data||[];const html=rows.map((u,i)=>{const name=u.display_name||(u.id===session?.user?.id?(session.user.user_metadata?.full_name||session.user.email||'You'):'Member');const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1);return '<div class="rank '+(u.id===session?.user?.id?'leaderboard-me':'')+'"><span>'+medal+' &nbsp; '+esc(name)+'</span><b>'+Number(u.points||0)+' CP</b></div>';}).join('');const result=html||'<p class="muted">No members found.</p>';document.getElementById('dashboardLeaderboard').innerHTML='<div class="leaderboard-scroll">'+result+'</div>';document.getElementById('fullLeaderboard').innerHTML='<div class="leaderboard-scroll">'+result+'</div>';}
+function renderTop10(){const top=tasks.filter(t=>t.status==='active').slice().sort((a,b)=>Number(b.votes||0)-Number(a.votes||0)).slice(0,10);document.getElementById('top10Challenges').innerHTML=top.length?top.map((t,i)=>'<div class="top10-item"><div class="num">'+(i+1)+'</div><div><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small></div><strong>'+Number(t.votes||0)+'<br><small>Votes</small></strong></div>').join(''):'<p class="muted">No challenges yet.</p>';}
+function getVotedChallengeIds(){if(!session?.user?.id)return new Set();try{return new Set(JSON.parse(localStorage.getItem('cc_voted_'+session.user.id)||'[]'));}catch{return new Set();}}
+function saveVotedChallenge(id){if(!session?.user?.id)return;const voted=getVotedChallengeIds();voted.add(id);localStorage.setItem('cc_voted_'+session.user.id,JSON.stringify([...voted]));}
 function openChat(){show('chat');syncChatVisibility();if(session)loadChatMessages();}
 function syncChatVisibility(){const guest=document.getElementById('chatGuest'),member=document.getElementById('chatMember');if(!guest||!member)return;if(session){guest.classList.add('hidden');member.classList.remove('hidden');}else{guest.classList.remove('hidden');member.classList.add('hidden');}}
 function formatChatTime(v){try{return new Date(v).toLocaleString([], {dateStyle:'short',timeStyle:'short'});}catch{return '';}}
-async function loadChatMessages(){
- if(!session)return;
- const {data:messages,error:messageError}=await supabaseClient.from('chat_messages').select('id,user_id,message,created_at').order('created_at',{ascending:true}).limit(200);
- if(messageError){setStatus('chatStatus','Could not load chat: '+messageError.message);return;}
- const box=document.getElementById('chatMessages');
- if(!messages?.length){box.innerHTML='<p class="muted">No messages yet. Start the conversation!</p>';return;}
- const userIds=[...new Set(messages.map(m=>m.user_id).filter(Boolean))];
- let profilesById={};
- if(userIds.length){
-   const {data:profiles,error:profileError}=await supabaseClient.from('profiles').select('id,display_name').in('id',userIds);
-   if(profileError){console.warn('Could not load chat profile names:',profileError);}
-   (profiles||[]).forEach(p=>{profilesById[p.id]=p.display_name;});
- }
- box.innerHTML=messages.map(m=>{
-   const name=profilesById[m.user_id]||((m.user_id===session.user.id)?(session.user.user_metadata?.full_name||session.user.email||'You'):'Member');
-   const own=m.user_id===session.user.id;
-   return '<div class="chat-message"><b>'+esc(name)+'</b><small>'+esc(formatChatTime(m.created_at))+'</small><div>'+esc(m.message)+'</div>'+(own?'<button class="chat-delete" onclick="deleteChatMessage(\''+esc(m.id)+'\')">Delete</button>':'')+'</div>';
- }).join('');
- box.scrollTop=box.scrollHeight;
-}
-async function sendChatMessage(){if(!session){syncChatVisibility();return}const input=document.getElementById('chatInput'),message=input.value.trim();if(!message){setStatus('chatStatus','Write a message first.');return}if(message.length>500){setStatus('chatStatus','Message is too long.');return}setStatus('chatStatus','Sending…');const {data,error}=await supabaseClient.rpc('send_chat_message',{p_message:message});if(error){setStatus('chatStatus','Could not send message: '+error.message);return}input.value='';setStatus('chatStatus','Message sent.',true);await loadChatMessages();}
+async function loadChatMessages(){if(!session)return;const {data:messages,error:messageError}=await supabaseClient.from('chat_messages').select('id,user_id,message,created_at').order('created_at',{ascending:true}).limit(200);if(messageError){setStatus('chatStatus','Could not load chat: '+messageError.message);return}const box=document.getElementById('chatMessages');if(!messages?.length){box.innerHTML='<p class="muted">No messages yet. Start the conversation!</p>';return}const userIds=[...new Set(messages.map(m=>m.user_id).filter(Boolean))];let profilesById={};if(userIds.length){const {data:profiles,error:profileError}=await supabaseClient.from('profiles').select('id,display_name').in('id',userIds);if(profileError)console.warn('Could not load chat profile names:',profileError);(profiles||[]).forEach(p=>{profilesById[p.id]=p.display_name;});}box.innerHTML=messages.map(m=>{const name=profilesById[m.user_id]||((m.user_id===session.user.id)?(session.user.user_metadata?.full_name||session.user.email||'You'):'Member');const own=m.user_id===session.user.id;return '<div class="chat-message"><b>'+esc(name)+'</b><small>'+esc(formatChatTime(m.created_at))+'</small><div>'+esc(m.message)+'</div>'+(own?'<button class="chat-delete" onclick="deleteChatMessage(\''+esc(m.id)+'\')">Delete</button>':'')+'</div>';}).join('');box.scrollTop=box.scrollHeight;}
+async function sendChatMessage(){if(!session){syncChatVisibility();return}const input=document.getElementById('chatInput'),message=input.value.trim();if(!message){setStatus('chatStatus','Write a message first.');return}if(message.length>500){setStatus('chatStatus','Message is too long.');return}setStatus('chatStatus','Sending…');const {error}=await supabaseClient.rpc('send_chat_message',{p_message:message});if(error){setStatus('chatStatus','Could not send message: '+error.message);return}input.value='';setStatus('chatStatus','Message sent.',true);await loadChatMessages();}
 async function deleteChatMessage(id){if(!session)return;const {error}=await supabaseClient.from('chat_messages').delete().eq('id',id);if(error){setStatus('chatStatus','Could not delete message: '+error.message);return}await loadChatMessages();}
-function renderChallengesPage(){
-const filter=document.getElementById('challengeFilter')?.value||'all';
-let list=tasks.slice();
-if(filter!=='all')list=list.filter(t=>t.status===filter);
-const voted=getVotedChallengeIds();
-const html=list.map(t=>t.status==='active'
-?'<div class="challenge"><div class="challenge-number">'+(list.filter(x=>x.status==='active').indexOf(t)+1)+'</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small><small id="voteStatus_'+esc(t.id)+'" class="status"></small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button id="voteBtn_'+esc(t.id)+'" '+(voted.has(t.id)?'disabled':'')+' onclick="vote(\''+t.id+'\')">'+(voted.has(t.id)?'VOTED':'VOTE')+'</button></div>'
-:'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+'</span></span><span class="success">✓ COMPLETED</span></div>').join('');
-document.getElementById('allTasks').innerHTML=html||'<p class="muted">No challenges match this filter.</p>';
-}
-
-function showEarnStatus(){if(!session){setStatus('earnStatus','Please sign in first.');show('auth');return}setStatus('earnStatus','Rewarded-ad verification is not simulated here. No CP was added.');}
-async function vote(id){
- if(!session){show('auth');return}
- const voted=getVotedChallengeIds();
- if(voted.has(id))return;
- const button=document.getElementById('voteBtn_'+id);
- if(button){button.disabled=true;button.textContent='VOTING…';}
- const {error}=await supabaseClient.rpc('vote_challenge',{p_challenge_id:id});
- if(error){
-   const msg=String(error.message||'');
-   if(/already voted|duplicate|unique/i.test(msg)){
-     saveVotedChallenge(id);
-     if(button){button.textContent='VOTED';button.disabled=true;}
-     const status=document.getElementById('voteStatus_'+id);
-     if(status){status.textContent='You have voted successfully for this challenge.';status.className='status success';}
-     return;
-   }
-   if(button){button.disabled=false;button.textContent='VOTE';}
-   alert('Could not vote: '+msg);return;
- }
- saveVotedChallenge(id);
- if(button){button.textContent='VOTED';button.disabled=true;}
- const status=document.getElementById('voteStatus_'+id);
- if(status){status.textContent='You have voted successfully for this challenge.';status.className='status success';}
- await loadChallenges();
-}
-async function createTask(){
- if(!session){show('auth');return}
- const title=document.getElementById('title').value.trim(),desc=document.getElementById('desc').value.trim();
- if(!title){setStatus('createStatus','Enter a challenge title.');return}
- setStatus('createStatus','Submitting challenge…');
- const {data,error}=await supabaseClient.rpc('create_challenge',{p_title:title,p_description:desc});
- if(error){setStatus('createStatus','Could not create challenge: '+error.message);return}
- setStatus('createStatus','✅ Challenge created — 20 CP deducted.',true);
- document.getElementById('title').value='';document.getElementById('desc').value='';
- await loadProfile();await loadChallenges();
-}
-async function loadChallenges(){
-const {data,error}=await supabaseClient.from('challenges').select('id,title,description,created_by,votes,status,created_at,completed_at,completed_by').neq('status','deleted').order('votes',{ascending:false}).order('created_at',{ascending:false});
-if(error){console.error(error);return}
-tasks=data||[];
-render();
-await loadDashboardStats();
-await loadLeaderboard();
-if(profile?.role==='admin')renderAdminChallenges();
-}
-function render(){
- const voted=getVotedChallengeIds();
- const activeHtml=tasks.filter(t=>t.status==='active').map(t=>{
-   const hasVoted=voted.has(t.id);
-   const voteButton=session
-     ? '<button id=\"voteBtn_'+esc(t.id)+'\" '+(hasVoted?'disabled':'')+' onclick=\"vote(\''+t.id+'\')\">'+(hasVoted?'VOTED':'VOTE')+'</button>'
-     : '<button onclick=\"show(\'auth\')\">VOTE</button>';
-   const voteStatus=hasVoted?' <small class=\"success\">You have voted successfully for this challenge.</small>':'';
-   return '<div class=\"challenge\"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small>'+voteStatus+'</section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong>'+voteButton+'</div>';
- }).join('');
- document.getElementById('taskList').innerHTML=activeHtml||'<p class=\"muted\">No active challenges.</p>';
- document.getElementById('activeCount').textContent=tasks.filter(t=>t.status==='active').length;
- renderChallengesPage();
- renderTop10();
-}
-
+function renderChallengesPage(){const filter=document.getElementById('challengeFilter')?.value||'all';let list=tasks.slice();if(filter!=='all')list=list.filter(t=>t.status===filter);const voted=getVotedChallengeIds();const active=tasks.filter(x=>x.status==='active');const html=list.map(t=>t.status==='active'?'<div class="challenge"><div class="challenge-number">'+(active.indexOf(t)+1)+'</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small><small id="voteStatus_'+esc(t.id)+'" class="status"></small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button id="voteBtn_'+esc(t.id)+'" '+(voted.has(t.id)?'disabled':'')+' onclick="vote(\''+t.id+'\')">'+(voted.has(t.id)?'VOTED':'VOTE')+'</button></div>':'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+'</span></span><span class="success">✓ COMPLETED</span></div>').join('');document.getElementById('allTasks').innerHTML=html||'<p class="muted">No challenges match this filter.</p>';}
+async function vote(id){if(!session){show('auth');return}const voted=getVotedChallengeIds();if(voted.has(id))return;const button=document.getElementById('voteBtn_'+id);if(button){button.disabled=true;button.textContent='VOTING…'}const {error}=await supabaseClient.rpc('vote_challenge',{p_challenge_id:id});if(error){const msg=String(error.message||'');if(/already voted|duplicate|unique/i.test(msg)){saveVotedChallenge(id);if(button){button.textContent='VOTED';button.disabled=true}const status=document.getElementById('voteStatus_'+id);if(status){status.textContent='You have voted successfully for this challenge.';status.className='status success'}return}if(button){button.disabled=false;button.textContent='VOTE'}alert('Could not vote: '+msg);return}saveVotedChallenge(id);if(button){button.textContent='VOTED';button.disabled=true}const status=document.getElementById('voteStatus_'+id);if(status){status.textContent='You have voted successfully for this challenge.';status.className='status success'}await loadChallenges();}
+async function createTask(){if(!session){show('auth');return}const title=document.getElementById('title').value.trim(),desc=document.getElementById('desc').value.trim();if(!title){setStatus('createStatus','Enter a challenge title.');return}setStatus('createStatus','Submitting challenge…');const {error}=await supabaseClient.rpc('create_challenge',{p_title:title,p_description:desc});if(error){setStatus('createStatus','Could not create challenge: '+error.message);return}setStatus('createStatus','✅ Challenge created — 20 CP deducted.',true);document.getElementById('title').value='';document.getElementById('desc').value='';await loadProfile();await loadChallenges();}
+async function loadChallenges(){const {data,error}=await supabaseClient.from('challenges').select('id,title,description,created_by,votes,status,created_at,completed_at,completed_by').neq('status','deleted').order('votes',{ascending:false}).order('created_at',{ascending:false});if(error){console.error(error);return}tasks=data||[];render();await loadDashboardStats();await loadLeaderboard();if(profile?.role==='admin')renderAdminChallenges();}
+function render(){const voted=getVotedChallengeIds();const activeHtml=tasks.filter(t=>t.status==='active').map(t=>{const hasVoted=voted.has(t.id);const voteButton=session?'<button id="voteBtn_'+esc(t.id)+'" '+(hasVoted?'disabled':'')+' onclick="vote(\''+t.id+'\')">'+(hasVoted?'VOTED':'VOTE')+'</button>':'<button onclick="show(\'auth\')">VOTE</button>';const voteStatus=hasVoted?' <small class="success">You have voted successfully for this challenge.</small>':'';return '<div class="challenge"><div>🎯</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small>'+voteStatus+'</section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong>'+voteButton+'</div>';}).join('');document.getElementById('taskList').innerHTML=activeHtml||'<p class="muted">No active challenges.</p>';document.getElementById('activeCount').textContent=tasks.filter(t=>t.status==='active').length;renderChallengesPage();renderTop10();}
 function renderAdminChallenges(){if(!requireAdmin())return;const q=(document.getElementById('adminChallengeSearch')?.value||'').toLowerCase().trim();const active=adminChallenges.filter(t=>t.status==='active'&&(!q||t.title.toLowerCase().includes(q)||(t.description||'').toLowerCase().includes(q)));const completed=adminChallenges.filter(t=>t.status==='completed');document.getElementById('adminStatActive').textContent=active.length;document.getElementById('adminStatCompleted').textContent=completed.length;document.getElementById('adminChallenges').innerHTML=active.length?active.map(t=>'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Created '+esc(new Date(t.created_at).toLocaleString())+'</span></span><span><input id="votes_'+t.id+'" type="number" min="0" value="'+Number(t.votes||0)+'" style="width:90px;padding:9px;background:#080808;color:#fff;border:1px solid #333;border-radius:5px" title="Set votes"><button class="red" onclick="editVotes(\''+t.id+'\')">SET VOTES</button> <button class="red" onclick="completeChallenge(\''+t.id+'\')">MARK COMPLETE</button> <button class="red danger" onclick="deleteChallenge(\''+t.id+'\')">DELETE</button></span></div>').join(''):'<p class="muted">No active challenges match your search.</p>';document.getElementById('adminCompletedChallenges').innerHTML=completed.length?completed.map(t=>'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Created '+esc(new Date(t.created_at).toLocaleString())+' · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+' · Completed by '+esc(t.completed_by||'—')+'</span></span><span class="success">✓ COMPLETED</span></div>').join(''):'<p class="muted">No completed challenges yet.</p>';}
-async function loadAdminProductIdeas(){if(!requireAdmin())return;const box=document.getElementById('adminProductIdeas');if(!box)return;const {data,error}=await supabaseClient.from('product_ideas').select('id,title,description,votes,created_at').order('votes',{ascending:false}).limit(200);if(error){box.innerHTML='<p class="status">Could not load product ideas: '+esc(error.message)+'</p>';return}if(!data?.length){box.innerHTML='<p class="muted">No product ideas yet.</p>';return}box.innerHTML=data.map(x=>'<div class="rank"><span><b>'+esc(x.title)+'</b><br><small>'+esc(x.description||'')+'</small><br><span class="muted">Current likes: '+Number(x.votes||0)+'</span></span><span><input id="productVotes_'+x.id+'" type="number" min="0" value="'+Number(x.votes||0)+'" style="width:90px;padding:9px;background:#080808;color:#fff;border:1px solid #333;border-radius:5px"><button class="red" onclick="adminSetProductLikes(\''+x.id+'\')">SET LIKES</button></span></div>').join('')}
-async function adminSetProductLikes(id){if(!requireAdmin())return;const input=document.getElementById('productVotes_'+id);const likes=Number(input?.value);if(!Number.isInteger(likes)||likes<0){setStatus('adminProductStatus','Enter a whole number of 0 or more.');return}setStatus('adminProductStatus','Updating likes securely…');const {data,error}=await supabaseClient.rpc('admin_set_product_likes',{p_idea_id:id,p_likes:likes});if(error){setStatus('adminProductStatus','Could not change likes: '+error.message);return}setStatus('adminProductStatus','✅ Likes updated to '+data+'.',true);await loadAdminProductIdeas();await loadProductIdeas();}
+async function loadAdminProductIdeas(){if(!requireAdmin())return;const box=document.getElementById('adminProductIdeas');if(!box)return;const {data,error}=await supabaseClient.from('product_ideas').select('id,title,description,votes,created_at').order('votes',{ascending:false}).limit(200);if(error){box.innerHTML='<p class="status">Could not load product ideas: '+esc(error.message)+'</p>';return}if(!data?.length){box.innerHTML='<p class="muted">No product ideas yet.</p>';return}box.innerHTML=data.map(x=>'<div class="rank"><span><b>'+esc(x.title)+'</b><br><small>'+esc(x.description||'')+'</small><br><span class="muted">Current likes: '+Number(x.votes||0)+'</span></span><span><input id="productVotes_'+x.id+'" type="number" min="0" value="'+Number(x.votes||0)+'" style="width:90px;padding:9px;background:#080808;color:#fff;border:1px solid #333;border-radius:5px"><button class="red" onclick="adminSetProductLikes(\''+x.id+'\')">SET LIKES</button></span></div>').join('');}
+async function adminSetProductLikes(id){if(!requireAdmin())return;const input=document.getElementById('productVotes_'+id),likes=Number(input?.value);if(!Number.isInteger(likes)||likes<0){setStatus('adminProductStatus','Enter a whole number of 0 or more.');return}setStatus('adminProductStatus','Updating likes securely…');const {data,error}=await supabaseClient.rpc('admin_set_product_likes',{p_idea_id:id,p_likes:likes});if(error){setStatus('adminProductStatus','Could not change likes: '+error.message);return}setStatus('adminProductStatus','✅ Likes updated to '+data+'.',true);await loadAdminProductIdeas();await loadProductIdeas();}
 async function loadAdminChallenges(){if(!requireAdmin())return;const {data:s}=await supabaseClient.from('site_settings').select('member_count').eq('id',1).maybeSingle();if(s)document.getElementById('adminMemberCount').value=Number(s.member_count||0);const {data,error}=await supabaseClient.from('challenges').select('id,title,description,created_by,votes,status,created_at,completed_at,completed_by').order('created_at',{ascending:false}).limit(500);if(error){setStatus('adminChallengeStatusMsg','Could not load challenges: '+error.message);return}adminChallenges=data||[];renderAdminChallenges();await loadAdminProductIdeas();}
-async function completeChallenge(id){if(!requireAdmin())return;if(!confirm('Mark this challenge as completed?'))return;setStatus('adminChallengeStatusMsg','Marking challenge complete…');const {data,error}=await supabaseClient.rpc('admin_complete_challenge',{p_challenge_id:id});if(error){setStatus('adminChallengeStatusMsg','Could not complete challenge: '+error.message);return}setStatus('adminChallengeStatusMsg','✅ Challenge marked completed.',true);await loadAdminChallenges();await loadChallenges();}
+async function completeChallenge(id){if(!requireAdmin())return;if(!confirm('Mark this challenge as completed?'))return;setStatus('adminChallengeStatusMsg','Marking challenge complete…');const {error}=await supabaseClient.rpc('admin_complete_challenge',{p_challenge_id:id});if(error){setStatus('adminChallengeStatusMsg','Could not complete challenge: '+error.message);return}setStatus('adminChallengeStatusMsg','✅ Challenge marked completed.',true);await loadAdminChallenges();await loadChallenges();}
 async function deleteChallenge(id){if(!requireAdmin())return;if(!confirm('Delete this challenge from the active challenge system?'))return;setStatus('adminChallengeStatusMsg','Deleting challenge…');const {error}=await supabaseClient.rpc('admin_delete_challenge',{p_challenge_id:id});if(error){setStatus('adminChallengeStatusMsg','Could not delete challenge: '+error.message);return}setStatus('adminChallengeStatusMsg','✅ Challenge deleted.',true);await loadAdminChallenges();await loadChallenges();}
-
-let productIdeas=[];
-let productView='top';
-
-function showProductForm(){
-  if(!session){show('auth');return}
-  document.getElementById('productForm').classList.remove('hidden');
-  document.getElementById('productTitle').focus();
-}
-function hideProductForm(){
-  document.getElementById('productForm').classList.add('hidden');
-  setStatus('productCreateStatus','');
-}
-function setProductView(view){
-  productView=view;
-  document.getElementById('productTopBtn').classList.toggle('active',view==='top');
-  document.getElementById('productNewestBtn').classList.toggle('active',view==='newest');
-  renderProductIdeas();
-}
-async function loadProductIdeas(){
-  const {data,error}=await supabaseClient
-    .from('product_ideas')
-    .select('id,title,description,created_by,votes,created_at')
-    .order(productView==='top'?'votes':'created_at',{ascending:false})
-    .limit(50);
-  if(error){
-    console.error('Product ideas error:',error);
-    document.getElementById('productIdeas').innerHTML='<p class="status">Could not load product ideas: '+esc(error.message)+'</p>';
-    return;
-  }
-  productIdeas=data||[];
-  renderProductIdeas();
-}
-async function getProductVotedIds(){
-  if(!session?.user?.id)return new Set();
-  const {data,error}=await supabaseClient.from('product_idea_votes').select('idea_id').eq('user_id',session.user.id);
-  if(error){console.warn('Product vote lookup failed:',error);return new Set();}
-  return new Set((data||[]).map(x=>x.idea_id));
-}
-async function renderProductIdeas(){
-  const box=document.getElementById('productIdeas');
-  if(!box)return;
-  const voted=await getProductVotedIds();
-  let list=productIdeas.slice(0,50);
-  if(productView==='top')list.sort((a,b)=>Number(b.votes||0)-Number(a.votes||0));
-  else list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
-  if(!list.length){box.innerHTML='<p class="muted">No product ideas yet. Be the first to suggest one!</p>';return;}
-  box.innerHTML=list.map((idea,i)=>{
-    const didVote=voted.has(idea.id);
-    return '<div class="product-idea">'+
-      '<div class="product-rank">'+(i+1)+'</div>'+
-      '<section><b>'+esc(idea.title)+'</b><small>'+esc(idea.description||'')+'</small><small>Created '+esc(idea.created_at?new Date(idea.created_at).toLocaleString():'—')+'</small></section>'+
-      '<div class="product-votes">'+Number(idea.votes||0)+'<small>LIKES</small></div>'+
-      '<button class="product-like" '+(didVote?'disabled':'')+' onclick="voteProductIdea(\''+esc(idea.id)+'\')">'+(didVote?'LIKED':'LIKE IDEA')+'</button>'+
-      '</div>';
-  }).join('');
-}
-async function voteProductIdea(id){
-  if(!session){show('auth');return}
-  const {data,error}=await supabaseClient.rpc('vote_product_idea',{p_idea_id:id});
-  if(error){
-    if(/already|duplicate|unique/i.test(String(error.message||''))){await loadProductIdeas();return;}
-    alert('Could not like idea: '+error.message);return;
-  }
-  await loadProductIdeas();
-}
-async function createProductIdea(){
-  if(!session){show('auth');return}
-  const title=document.getElementById('productTitle').value.trim();
-  const desc=document.getElementById('productDesc').value.trim();
-  if(!title){setStatus('productCreateStatus','Enter a product idea.');return}
-  setStatus('productCreateStatus','Submitting product idea…');
-  const btn=document.getElementById('productCreateButton');
-  btn.disabled=true;
-  const {data,error}=await supabaseClient.rpc('create_product_idea',{p_title:title,p_description:desc});
-  btn.disabled=false;
-  if(error){
-    setStatus('productCreateStatus','Could not create idea: '+error.message);
-    return;
-  }
-  setStatus('productCreateStatus','✅ Product idea created — 20 CP deducted.',true);
-  document.getElementById('productTitle').value='';
-  document.getElementById('productDesc').value='';
-  await loadProfile();
-  await loadProductIdeas();
-}
-
+let productIdeas=[],productView='top';
+function showProductForm(){if(!session){show('auth');return}document.getElementById('productForm').classList.remove('hidden');document.getElementById('productTitle').focus();}
+function hideProductForm(){document.getElementById('productForm').classList.add('hidden');setStatus('productCreateStatus','');}
+function setProductView(view){productView=view;document.getElementById('productTopBtn').classList.toggle('active',view==='top');document.getElementById('productNewestBtn').classList.toggle('active',view==='newest');renderProductIdeas();}
+async function loadProductIdeas(){const {data,error}=await supabaseClient.from('product_ideas').select('id,title,description,created_by,votes,created_at').order(productView==='top'?'votes':'created_at',{ascending:false}).limit(50);if(error){console.error('Product ideas error:',error);document.getElementById('productIdeas').innerHTML='<p class="status">Could not load product ideas: '+esc(error.message)+'</p>';return}productIdeas=data||[];renderProductIdeas();}
+async function getProductVotedIds(){if(!session?.user?.id)return new Set();const {data,error}=await supabaseClient.from('product_idea_votes').select('idea_id').eq('user_id',session.user.id);if(error){console.warn('Product vote lookup failed:',error);return new Set()}return new Set((data||[]).map(x=>x.idea_id));}
+async function renderProductIdeas(){const box=document.getElementById('productIdeas');if(!box)return;const voted=await getProductVotedIds();let list=productIdeas.slice(0,50);if(productView==='top')list.sort((a,b)=>Number(b.votes||0)-Number(a.votes||0));else list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));if(!list.length){box.innerHTML='<p class="muted">No product ideas yet. Be the first to suggest one!</p>';return}box.innerHTML=list.map((idea,i)=>{const didVote=voted.has(idea.id);return '<div class="product-idea"><div class="product-rank">'+(i+1)+'</div><section><b>'+esc(idea.title)+'</b><small>'+esc(idea.description||'')+'</small><small>Created '+esc(idea.created_at?new Date(idea.created_at).toLocaleString():'—')+'</small></section><div class="product-votes">'+Number(idea.votes||0)+'<small>LIKES</small></div><button class="product-like" '+(didVote?'disabled':'')+' onclick="voteProductIdea(\''+esc(idea.id)+'\')">'+(didVote?'LIKED':'LIKE IDEA')+'</button></div>';}).join('');}
+async function voteProductIdea(id){if(!session){show('auth');return}const {error}=await supabaseClient.rpc('vote_product_idea',{p_idea_id:id});if(error){if(/already|duplicate|unique/i.test(String(error.message||''))){await loadProductIdeas();return}alert('Could not like idea: '+error.message);return}await loadProductIdeas();}
+async function createProductIdea(){if(!session){show('auth');return}const title=document.getElementById('productTitle').value.trim(),desc=document.getElementById('productDesc').value.trim();if(!title){setStatus('productCreateStatus','Enter a product idea.');return}setStatus('productCreateStatus','Submitting product idea…');const btn=document.getElementById('productCreateButton');btn.disabled=true;const {error}=await supabaseClient.rpc('create_product_idea',{p_title:title,p_description:desc});btn.disabled=false;if(error){setStatus('productCreateStatus','Could not create idea: '+error.message);return}setStatus('productCreateStatus','✅ Product idea created — 20 CP deducted.',true);document.getElementById('productTitle').value='';document.getElementById('productDesc').value='';await loadProfile();await loadProductIdeas();}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
-async function saveMemberCount(){
-if(!requireAdmin())return;
-const value=Math.floor(Number(document.getElementById('adminMemberCount').value));
-if(!Number.isFinite(value)||value<0){setStatus('adminMemberStatus','Enter a valid non-negative member count.');return}
-const {error}=await supabaseClient.from('site_settings').upsert({id:1,member_count:value});
-if(error){setStatus('adminMemberStatus','Could not save member count: '+error.message);return}
-document.getElementById('dashboardMembers').textContent=value;
-setStatus('adminMemberStatus','✅ Dashboard member count updated.',true);
-}
-async function editVotes(id){
-if(!requireAdmin())return;
-const votes=Math.floor(Number(document.getElementById('votes_'+id)?.value));
-if(!Number.isFinite(votes)||votes<0){setStatus('adminChallengeStatusMsg','Votes must be 0 or greater.');return}
-const {error}=await supabaseClient.rpc('admin_set_challenge_votes',{p_challenge_id:id,p_votes:votes});
-if(error){setStatus('adminChallengeStatusMsg','Could not update votes: '+error.message);return}
-const i=tasks.findIndex(x=>x.id===id);if(i>=0)tasks[i].votes=votes;
-const j=adminChallenges.findIndex(x=>x.id===id);if(j>=0)adminChallenges[j].votes=votes;
-setStatus('adminChallengeStatusMsg','✅ Votes updated to '+votes+'.',true);
-render();renderAdminChallenges();
-}
+async function saveMemberCount(){if(!requireAdmin())return;const value=Math.floor(Number(document.getElementById('adminMemberCount').value));if(!Number.isFinite(value)||value<0){setStatus('adminMemberStatus','Enter a valid non-negative member count.');return}const {error}=await supabaseClient.from('site_settings').upsert({id:1,member_count:value});if(error){setStatus('adminMemberStatus','Could not save member count: '+error.message);return}document.getElementById('dashboardMembers').textContent=value;setStatus('adminMemberStatus','✅ Dashboard member count updated.',true);}
+async function editVotes(id){if(!requireAdmin())return;const votes=Math.floor(Number(document.getElementById('votes_'+id)?.value));if(!Number.isFinite(votes)||votes<0){setStatus('adminChallengeStatusMsg','Votes must be 0 or greater.');return}const {error}=await supabaseClient.rpc('admin_set_challenge_votes',{p_challenge_id:id,p_votes:votes});if(error){setStatus('adminChallengeStatusMsg','Could not update votes: '+error.message);return}const i=tasks.findIndex(x=>x.id===id);if(i>=0)tasks[i].votes=votes;const j=adminChallenges.findIndex(x=>x.id===id);if(j>=0)adminChallenges[j].votes=votes;setStatus('adminChallengeStatusMsg','✅ Votes updated to '+votes+'.',true);render();renderAdminChallenges();}
 async function adminAward(){if(!requireAdmin())return;const uid=document.getElementById('adminUserId').value.trim(),amount=Number(document.getElementById('adminAmount').value),reason=document.getElementById('adminReason').value.trim();if(!uid||!amount||amount<1||!reason){setStatus('adminCpStatus','Enter user UUID, a positive amount, and a reason.');return}setStatus('adminCpStatus','Awarding CP securely…');const {data,error}=await supabaseClient.rpc('admin_adjust_cp',{p_user_id:uid,p_amount:amount,p_reason:reason});if(error){setStatus('adminCpStatus','Admin action failed: '+error.message);return}setStatus('adminCpStatus','✅ New balance: '+data+' CP',true);if(uid===session.user.id){profile.points=Number(data);syncUI();}}
 async function adminDeduct(){if(!requireAdmin())return;const uid=document.getElementById('adminUserId').value.trim(),amount=Number(document.getElementById('adminAmount').value),reason=document.getElementById('adminReason').value.trim();if(!uid||!amount||amount<1||!reason){setStatus('adminCpStatus','Enter user UUID, a positive amount, and a reason.');return}setStatus('adminCpStatus','Deducting CP securely…');const {data,error}=await supabaseClient.rpc('admin_adjust_cp',{p_user_id:uid,p_amount:-amount,p_reason:reason});if(error){setStatus('adminCpStatus','Admin action failed: '+error.message);return}setStatus('adminCpStatus','✅ New balance: '+data+' CP',true);if(uid===session.user.id){profile.points=Number(data);syncUI();}}
 async function loadLedger(){if(!requireAdmin())return;const {data,error}=await supabaseClient.from('cp_ledger').select('created_at,amount,reason,reference_id').order('created_at',{ascending:false}).limit(50);if(error){document.getElementById('adminLedger').textContent='Could not load ledger: '+error.message;return}if(!data.length){document.getElementById('adminLedger').textContent='No ledger entries yet.';return}document.getElementById('adminLedger').innerHTML=data.map(x=>'<div class="rank"><span>'+esc(new Date(x.created_at).toLocaleString())+' — '+esc(x.reason)+'</span><b>'+Number(x.amount)+' CP</b></div>').join('');}
-async function logout(){await supabaseClient.auth.signOut();if(chatChannel)await supabaseClient.removeChannel(chatChannel);chatChannel=null;session=null;profile=null;syncUI();show('dashboard');}
-let chatChannel=null;
-function subscribeChat(){if(chatChannel)supabaseClient.removeChannel(chatChannel);if(!session)return;chatChannel=supabaseClient.channel('council-chat').on('postgres_changes',{event:'*',schema:'public',table:'chat_messages'},()=>loadChatMessages()).subscribe();}
-
-supabaseClient.auth.getSession().then(async({data})=>{session=data.session;await loadProfile();await loadChallenges();await loadProductIdeas();subscribeChat();if(session&&String(profile?.role||'').trim().toLowerCase()==='admin')await loadAdminChallenges();});
+async function logout(){await supabaseClient.auth.signOut();session=null;profile=null;syncUI();show('about');}
+let chatChannel=null;function subscribeChat(){if(chatChannel)supabaseClient.removeChannel(chatChannel);if(!session)return;chatChannel=supabaseClient.channel('council-chat').on('postgres_changes',{event:'*',schema:'public',table:'chat_messages'},()=>loadChatMessages()).subscribe();}
+supabaseClient.auth.getSession().then(async({data})=>{session=data.session;await loadProfile();await loadChallenges();await loadProductIdeas();subscribeChat();if(session&&String(profile?.role||'').trim().toLowerCase()==='admin')await loadAdminChallenges();show(session?'dashboard':'about');});
 supabaseClient.auth.onAuthStateChange(async(_event,newSession)=>{session=newSession;await loadProfile();await loadChallenges();await loadProductIdeas();subscribeChat();if(newSession)show('dashboard');});
-syncUI();
-loadDashboardStats();
-loadLeaderboard();
-loadProductIdeas();
-
+syncUI();loadDashboardStats();loadLeaderboard();loadProductIdeas();
 </script>
 </body>
 </html>
