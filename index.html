@@ -99,6 +99,117 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 .admin-joined-row b{overflow-wrap:anywhere}.admin-joined-row small{color:#aaa;text-align:right}
 @media(max-width:560px){.challenge{grid-template-columns:42px minmax(0,1fr);gap:9px;padding:12px}.challenge strong,.challenge button{grid-column:2}.challenge strong{text-align:left;width:max-content;min-width:80px;padding:7px 10px}.challenge button{width:100%}.chat-message{max-width:94%}.admin-joined-row{align-items:flex-start;flex-direction:column}.admin-joined-row small{text-align:left}}
 
+
+
+/* MOBILE-FIRST POLISH: preserve desktop layout; replace the cramped icon rail on phones. */
+.mobile-bottom-nav{display:none}
+@media (max-width:700px){
+  html{width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%}
+  body{width:100%;min-width:0;overflow-x:hidden;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  .sidebar{display:none!important}
+  .topbar{left:0!important;right:0;width:100%;height:58px;padding:0 14px;gap:8px;background:rgba(8,8,8,.97);backdrop-filter:blur(12px);border-bottom:1px solid #321010}
+  .topbar>div:first-child{display:none}
+  #accountArea{margin-left:auto;display:flex;align-items:center;justify-content:flex-end;min-width:0}
+  #accountArea button{font-size:11px;letter-spacing:.3px;padding:10px 12px;border:1px solid #762020;border-radius:9px;background:#190707;color:#ff7777;white-space:nowrap}
+  main{margin:0!important;width:100%;max-width:none;padding:72px 12px 26px!important;min-width:0}
+  .page{width:100%;max-width:none;min-width:0}
+  .about-page,.join-page{max-width:none}
+  .about-hero{padding:23px 18px;border-radius:14px;margin-bottom:12px}
+  .about-kicker{font-size:10px;letter-spacing:1.2px;line-height:1.5}
+  .about-hero h1{font-size:clamp(29px,8vw,38px);line-height:1.06;overflow-wrap:anywhere}
+  .about-hero p{font-size:14px;line-height:1.65}
+  .about-grid{grid-template-columns:minmax(0,1fr);gap:10px}
+  .about-card{padding:17px;border-radius:12px;min-width:0}
+  .about-card h2{font-size:18px;line-height:1.3}
+  .about-card p,.about-card li{font-size:14px;line-height:1.65;overflow-wrap:anywhere}
+  .about-step{gap:10px}
+  .about-number{flex-basis:29px;height:29px}
+  .join-hero{padding:20px 17px;border-radius:13px}
+  .join-hero h1{font-size:clamp(28px,7.5vw,36px);line-height:1.08;overflow-wrap:anywhere}
+  .join-step{grid-template-columns:38px minmax(0,1fr)!important;gap:12px;padding:15px;border-radius:12px;min-width:0}
+  .join-number{width:36px;height:36px;font-size:17px}
+  .join-step h2{font-size:17px;line-height:1.3}
+  .join-step p{font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+  .join-example{grid-column:1/-1;height:auto;max-height:240px;object-fit:contain}
+  .join-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+  .join-actions button,.join-actions a,.about-actions button{width:100%;margin:0!important}
+  .hero{height:auto;min-height:0;display:block;border-radius:14px;isolation:isolate}
+  .hero-text{width:100%;padding:27px 19px 24px;background:linear-gradient(90deg,#070707ed,#070707b8);min-height:340px}
+  .hero h1{font-size:clamp(43px,13vw,58px);line-height:.92;overflow-wrap:anywhere}
+  .hero h2{font-size:16px;line-height:1.4}
+  .hero p{font-size:14px;line-height:1.65;max-width:34ch}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;margin:0;object-fit:cover;object-position:center;opacity:.27;z-index:-1}
+  .hero .red,.hero .outline{display:flex;align-items:center;justify-content:center;width:100%;margin:10px 0 0;min-height:45px;padding:12px;border-radius:10px;font-size:13px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+  .stats div{min-width:0;padding:13px;border-radius:12px}
+  .stats b{font-size:21px;overflow-wrap:anywhere}
+  .stats small{font-size:11px;line-height:1.4}
+  .grid{grid-template-columns:minmax(0,1fr);gap:10px;margin:10px 0}
+  .panel{padding:13px;border-radius:12px;min-width:0}
+  .panel h3{font-size:16px;line-height:1.35}
+  .topchallenge{grid-template-columns:minmax(0,1fr);gap:10px}
+  .topchallenge p{font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+  .top10-item{grid-template-columns:30px minmax(0,1fr) auto;gap:9px;padding:12px 0}
+  .top10-item b{font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+  .top10-item small{font-size:11px;line-height:1.4}
+  .challenge{grid-template-columns:36px minmax(0,1fr)!important;gap:9px;padding:12px;margin:8px 0;border-radius:12px;min-width:0}
+  .challenge>div{width:34px;height:34px;font-size:13px}
+  .challenge section{min-width:0;overflow-wrap:anywhere}
+  .challenge section b{font-size:14px;line-height:1.45}
+  .challenge section small{font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+  .challenge strong,.challenge button{grid-column:2;justify-self:start;max-width:100%}
+  .challenge strong{font-size:14px}
+  .challenge button{width:100%;min-height:40px}
+  .topchallenge .fakepic{height:100px}
+  .form,.authbox,.admin-card{min-width:0;max-width:100%}
+  .form input,.form textarea,.form select,.authbox input,.admin-grid input,.admin-grid textarea,.bug-report-panel input,.bug-report-panel select,.bug-report-panel textarea{font-size:16px;max-width:100%;min-width:0}
+  .form button,.authbox button,.admin-card button,.bug-report-panel button{max-width:100%;min-height:42px}
+  .authpage{min-height:0;padding:12px 0}
+  .authbox{width:100%;padding:21px 17px;border-radius:13px}
+  .admin-grid{grid-template-columns:minmax(0,1fr)}
+  .leaderboard-scroll{max-height:none;overflow:visible}
+  .rank{gap:10px;align-items:flex-start;font-size:13px;overflow-wrap:anywhere}
+  .product-hero{display:block;min-width:0}
+  .product-hero h1{font-size:25px;line-height:1.2;overflow-wrap:anywhere}
+  .product-hero p{font-size:14px;line-height:1.6}
+  .product-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+  .product-actions button{width:100%;margin:0}
+  .product-form-grid{grid-template-columns:minmax(0,1fr)}
+  .product-idea{grid-template-columns:32px minmax(0,1fr)!important;gap:9px;padding:11px;border-radius:12px;min-width:0}
+  .product-rank{width:30px;height:30px;font-size:13px}
+  .product-idea section b{font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+  .product-idea section small{font-size:12px;overflow-wrap:anywhere}
+  .product-votes,.product-like{grid-column:2}
+  .product-votes{text-align:left}
+  .product-like{width:100%;min-height:40px}
+  .chat-box{height:calc(100dvh - 185px);min-height:360px;max-height:720px}
+  .chat-messages{padding:10px;gap:8px;min-width:0}
+  .chat-message{max-width:95%;padding:10px 11px;font-size:14px}
+  .chat-compose{flex-direction:column;gap:8px}
+  .chat-compose textarea{width:100%;min-height:58px;font-size:16px}
+  .chat-compose button{width:100%;min-height:43px}
+  .chat-guest{margin:20px auto;padding:22px 15px}
+  .bug-report-item{padding:12px;min-width:0;overflow-wrap:anywhere}
+  .admin-joined-row{align-items:flex-start;flex-direction:column;gap:6px}
+  .admin-joined-row small{text-align:left;overflow-wrap:anywhere}
+  .mobile-bottom-nav{position:fixed;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));left:0;right:0;bottom:0;z-index:50;padding:7px 5px calc(7px + env(safe-area-inset-bottom));background:rgba(9,9,10,.97);border-top:1px solid #3a1717;box-shadow:0 -8px 24px #0008;backdrop-filter:blur(14px)}
+  .mobile-bottom-nav button{min-width:0;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 1px;background:transparent;border:0;border-radius:9px;color:#aaa;font:inherit;font-size:10px;line-height:1.2;cursor:pointer}
+  .mobile-bottom-nav button:active,.mobile-bottom-nav button:focus-visible{background:#260909;color:#fff;outline:1px solid #8b2424}
+  .mobile-nav-icon{font-size:21px;line-height:1;color:#ff4545;font-weight:700}
+  body,button,input,textarea,select{touch-action:manipulation}
+}
+@media(max-width:380px){
+  main{padding-left:9px!important;padding-right:9px!important}
+  .about-hero{padding:20px 15px}
+  .hero-text{padding-left:15px;padding-right:15px}
+  .hero h1{font-size:42px}
+  .stats div{padding:11px}
+  .stats b{font-size:19px}
+  .panel{padding:11px}
+  .mobile-bottom-nav button{font-size:9px}
+  .mobile-nav-icon{font-size:19px}
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -120,6 +231,14 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <div class="profile">🔴 <div><b id="memberName">Guest</b><small id="memberStatus">Not signed in</small></div><a id="logoutLink" onclick="logout()" style="display:none">Logout</a></div>
 </aside>
 <header class="topbar"><div></div><div id="accountArea"><button onclick="show('auth')">LOGIN / REGISTER</button></div></header>
+
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <button type="button" onclick="show('dashboard')"><span class="mobile-nav-icon">⌂</span><span>Home</span></button>
+  <button type="button" onclick="show('challenges')"><span class="mobile-nav-icon">◎</span><span>Challenges</span></button>
+  <button type="button" onclick="show('products')"><span class="mobile-nav-icon">✦</span><span>Ideas</span></button>
+  <button type="button" onclick="openChat()"><span class="mobile-nav-icon">☷</span><span>Chat</span></button>
+  <button type="button" onclick="show('leaderboard')"><span class="mobile-nav-icon">♛</span><span>Ranks</span></button>
+</nav>
 <main>
 <section id="about" class="page about-page">
 <div class="about-hero">
