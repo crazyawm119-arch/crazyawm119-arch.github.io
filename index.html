@@ -276,6 +276,57 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
   .mobile-bottom-nav { display: none !important; }
 }
 
+
+/* Final responsive/navigation and message-layout refinements */
+.account-label{font-size:11px;letter-spacing:.08em}
+#accountArea{display:flex;align-items:center;gap:9px}
+#accountArea button{border:1px solid #6f2020;background:#1b0808;color:#ff7777;padding:9px 12px;border-radius:8px;font-weight:800;cursor:pointer}
+.mobile-bottom-nav{gap:2px;overflow-x:auto;overflow-y:hidden;grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:minmax(64px,1fr);scrollbar-width:none}
+.mobile-bottom-nav::-webkit-scrollbar{display:none}
+.mobile-bottom-nav button{white-space:nowrap}
+.mobile-bottom-nav button.active{background:#2a0b0b;color:#fff}
+.chat-box{background:#0d1210;border:1px solid #26372e;border-radius:16px;padding:14px;min-height:0}
+.chat-messages{min-height:260px;overflow-y:auto;overscroll-behavior:contain;background-color:#0b100e;background-image:radial-gradient(#ffffff08 1px,transparent 1px);background-size:18px 18px;border:1px solid #26372e;border-radius:14px}
+.chat-message{width:fit-content;min-width:110px;max-width:min(78%,620px);padding:9px 12px;margin:1px 0;border:1px solid #344139;border-radius:5px 14px 14px 14px;background:#202a24}
+.chat-message.is-own{align-self:flex-end;background:#164b36;border-color:#24664a;border-radius:14px 5px 14px 14px}
+.chat-message-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.chat-message-head b{margin:0;color:#d7f3e2;font-size:12px}
+.chat-message.is-own .chat-message-head b{color:#b7f4d1}
+.chat-message-head time{font-size:10px;color:#aebbb2;white-space:nowrap}
+.chat-message .chat-message-text{margin-top:5px;line-height:1.48;white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-compose{align-items:flex-end;background:#111a15;border:1px solid #2a3c31;border-radius:14px;padding:8px}
+.chat-compose textarea{min-height:48px;max-height:120px;border:0;background:transparent;outline:none;box-shadow:none}
+.chat-compose button{min-height:44px;padding:0 18px;border-radius:12px}
+.chat-empty{margin:auto;text-align:center}
+.completed-challenge{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px;margin:9px 0;background:#101112;border:1px solid #292b2d;border-radius:12px}
+.completed-challenge-copy{display:flex;flex-direction:column;gap:6px;min-width:0}
+.completed-challenge-copy b{overflow-wrap:anywhere}
+.completed-challenge-copy small{color:#aaa;line-height:1.5;overflow-wrap:anywhere}
+.completed-pill{white-space:nowrap;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border:1px solid #276447;border-radius:999px;background:#10271c;font-size:11px;letter-spacing:.04em}
+@media(max-width:900px){
+  #accountArea{gap:5px}
+  #accountArea button{font-size:10px;padding:8px 9px}
+  .mobile-bottom-nav{display:grid!important;grid-auto-columns:68px!important;justify-content:start!important}
+}
+@media(max-width:700px){
+  .mobile-bottom-nav{padding:7px 6px calc(7px + env(safe-area-inset-bottom))!important}
+  .mobile-bottom-nav button{min-height:48px;font-size:10px}
+  .mobile-nav-icon{font-size:19px}
+  .chat-box{height:calc(100dvh - 190px);max-height:none;padding:9px}
+  .chat-messages{flex:1;min-height:180px;padding:10px}
+  .chat-message{max-width:88%}
+  .chat-compose{flex-direction:row;align-items:flex-end}
+  .chat-compose textarea{width:auto;min-width:0;flex:1}
+  .chat-compose button{width:auto;min-width:66px}
+  .completed-challenge{align-items:flex-start;flex-direction:column}
+  .completed-pill{align-self:flex-start}
+  .account-label{display:none}
+}
+@media(max-width:380px){
+  #accountArea button{font-size:9px;padding:7px}
+  .mobile-bottom-nav{grid-auto-columns:64px!important}
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -300,7 +351,10 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 
 <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
   <button type="button" onclick="show('dashboard')"><span class="mobile-nav-icon">⌂</span><span>Home</span></button>
+  <button type="button" onclick="show('earn')"><span class="mobile-nav-icon">＋</span><span>Earn CP</span></button>
+  <button type="button" onclick="show('create')"><span class="mobile-nav-icon">✚</span><span>Create</span></button>
   <button type="button" onclick="show('challenges')"><span class="mobile-nav-icon">◎</span><span>Challenges</span></button>
+  <button type="button" onclick="show('bugReports');loadMyBugReports()"><span class="mobile-nav-icon">🐛</span><span>Report Bug</span></button>
   <button type="button" onclick="show('products')"><span class="mobile-nav-icon">✦</span><span>Ideas</span></button>
   <button type="button" onclick="openChat()"><span class="mobile-nav-icon">☷</span><span>Chat</span></button>
   <button type="button" onclick="show('leaderboard')"><span class="mobile-nav-icon">♛</span><span>Ranks</span></button>
@@ -337,7 +391,7 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <h2>How Council Points (CP) Work</h2>
 <p>CP are the Council's internal participation points. They are used to take actions within the platform rather than representing cash or a promise of monetary value.</p>
 <ul>
-<li><b>New-member bonus:</b> eligible new members receive the one-time 60 CP login bonus.</li>
+<li><b>New-member bonus:</b> eligible new members receive the one-time 80 CP login bonus.</li>
 <li><b>Challenge creation:</b> submitting a challenge costs 20 CP.</li>
 <li><b>Rewarded ads:</b> the site currently displays “Rewarded Ads Coming Soon”; CP should only be credited when the future ad system verifies a valid reward.</li>
 <li><b>Administration:</b> authorized administrators can make controlled CP adjustments through the admin system.</li>
@@ -436,7 +490,7 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <div class="grid"><div class="panel"><h3>🔥 TOP 10 CHALLENGES</h3><div id="top10Challenges"><p class="muted">Loading top challenges…</p></div></div><div class="panel"><h3>🏆 TOP 100 LEADERBOARD</h3><div id="dashboardLeaderboard"><p class="muted">Loading leaderboard…</p></div></div></div>
 <div class="grid"><div class="panel"><h3>RECENT CHALLENGES</h3><div id="taskList"></div></div><div class="panel how"><h3>HOW IT WORKS</h3><p><b>1</b> Earn Council Points<br><small>Rewarded ads can earn CP after valid server-side verification.</small></p><p><b>2</b> Create Challenges<br><small>Use 20 CP to submit a challenge.</small></p><p><b>3</b> Community Votes<br><small>Members vote for eligible challenges.</small></p><p><b>4</b> Chris Fulfills<br><small>The highest eligible challenge rises to the top.</small></p><p><b>5</b> Permanent History<br><small>Completed challenges cannot return to voting.</small></p><p><button class="outline" onclick="show('about')">ℹ️ ABOUT THE COUNCIL</button></p></div></div>
 </section>
-<section id="earn" class="page hidden"><h1>Earn Points</h1><div class="panel"><h2>📺 Rewarded Ad</h2><p class="muted">REWARDED ADS COMING SOON</p><p>Rewarded ads will be added after the ad system is approved and properly connected. Until then, new members can use their one-time 60 CP login bonus.</p><p id="earnStatus" class="status"></p></div></section>
+<section id="earn" class="page hidden"><h1>Earn Points</h1><div class="panel"><h2>📺 Rewarded Ad</h2><p class="muted">REWARDED ADS COMING SOON</p><p>Rewarded ads will be added after the ad system is approved and properly connected. Until then, new members can use their one-time 80 CP login bonus.</p><p id="earnStatus" class="status"></p></div></section>
 <section id="create" class="page hidden"><h1>Create Challenge</h1><div class="panel form"><p>Submitting a challenge costs <b>20 CP</b>.</p><input id="title" maxlength="120" placeholder="What should Chris do?"><textarea id="desc" maxlength="400" placeholder="Describe your challenge"></textarea><button id="createButton" class="red" onclick="createTask()">SUBMIT FOR 20 CP</button><p id="createStatus" class="status"></p></div></section>
 <section id="challenges" class="page hidden"><h1>Challenges</h1>
 <div class="panel">
@@ -479,12 +533,53 @@ const SUPABASE_URL='https://wxsjttouasmvinjlrayk.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_UW-FqBWnc4IjNAk5Kuu6vA_jFV0tMqX';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 let session=null,profile=null,tasks=[],adminChallenges=[];
-function show(id){if(session&&id==='auth')id='dashboard';if(session&&id==='login')id='dashboard';document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));const target=document.getElementById(id);if(target)target.classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(session)document.querySelectorAll('.guest-only').forEach(x=>x.style.display='none');syncLoginPrompts();window.scrollTo({top:0,behavior:'smooth'});}
+function show(id){
+  if(session&&id==='auth')id='dashboard';
+  if(session&&id==='login')id='dashboard';
+  const target=document.getElementById(id);
+  if(!target){console.warn('Unknown page:',id);return;}
+  document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
+  target.classList.remove('hidden');
+  document.querySelectorAll('.mobile-bottom-nav button').forEach(b=>b.classList.remove('active'));
+  const routeMap={dashboard:0,earn:1,create:2,challenges:3,bugReports:4,products:5,chat:6,leaderboard:7};
+  const index=routeMap[id];
+  if(index!==undefined)document.querySelectorAll('.mobile-bottom-nav button')[index]?.classList.add('active');
+  if(id==='chat'&&session)loadChatMessages();
+  if(id==='bugReports'&&session)loadMyBugReports();
+  if(session)document.querySelectorAll('.guest-only').forEach(x=>x.style.display='none');
+  syncLoginPrompts();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 function setStatus(id,msg,ok=false){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className=ok?'status success':'status';}
 function requireAdmin(){const role=String(profile?.role||'').trim().toLowerCase();if(!session){show('auth');return false}if(role!=='admin'){alert('Admin access denied.');show('dashboard');return false}return true;}
 async function googleLogin(){setStatus('authStatus','Opening Google sign-in…');const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/'}});if(error)setStatus('authStatus','Login error: '+error.message);}
-async function loadProfile(){if(!session){profile=null;syncUI();return}const {error:ensureError}=await supabaseClient.rpc('ensure_my_profile');if(ensureError){console.error('Profile ensure error:',ensureError);setStatus('authStatus',/JWT issued at future/i.test(ensureError.message||'')?'Your sign-in token appears to be dated in the future. In Windows, open Settings → Time & language → Date & time, turn on Set time automatically, click Sync now, then sign out and sign in again.':'Could not create/load your profile: '+ensureError.message);return}const {data:row,error:loadError}=await supabaseClient.from('profiles').select('id,points,role,display_name').eq('id',session.user.id).maybeSingle();if(loadError){console.error(loadError);setStatus('authStatus',/JWT issued at future/i.test(loadError.message||'')?'Your sign-in token appears to be dated in the future. In Windows, open Settings → Time & language → Date & time, turn on Set time automatically, click Sync now, then sign out and sign in again.':'Could not load your profile: '+loadError.message);return}if(!row){setStatus('authStatus','Your profile could not be created. Please contact the site administrator.');return}profile=row;syncUI();if(String(profile.role||'').trim().toLowerCase()==='admin')document.getElementById('adminNav').style.display='flex';}
-function syncUI(){const points=Number(profile?.points||0);document.getElementById('points').textContent=points;document.getElementById('dashboardPoints').textContent=points;document.getElementById('memberName').textContent=session?(profile?.display_name||session.user.user_metadata?.full_name||session.user.email||'Member'):'Guest';document.getElementById('memberStatus').textContent=session?'Member':'Not signed in';document.getElementById('logoutLink').style.display=session?'block':'none';document.getElementById('accountArea').innerHTML=session?'<span class="muted">Signed in</span>':'<button onclick="show(\'auth\')">LOGIN / REGISTER</button>';if(session){const auth=document.getElementById('auth');if(auth)auth.classList.add('hidden');document.querySelectorAll('.login-to-vote,.login-register-prompt').forEach(x=>x.style.display='none');}const role=String(profile?.role||'').trim().toLowerCase(),isAdmin=!!session&&role==='admin';document.getElementById('adminNav').style.display=isAdmin?'flex':'none';document.getElementById('adminCurrentUser').textContent=session?.user?.id||'—';document.getElementById('adminCurrentRole').textContent=profile?.role||'—';document.getElementById('adminCurrentCp').textContent=points;document.getElementById('adminStatCp').textContent=points;document.getElementById('adminStatRole').textContent=profile?.role||'—';document.getElementById('createButton').disabled=!session;syncChatVisibility();syncLoginPrompts();syncChatPauseUI();render();}
+async function loadProfile(){if(!session){profile=null;syncUI();return}const {error:ensureError}=await supabaseClient.rpc('ensure_my_profile');if(ensureError){console.error('Profile ensure error:',ensureError);profile=null;syncUI();setStatus('authStatus',/JWT issued at future/i.test(ensureError.message||'')?'Your sign-in token appears to be dated in the future. In Windows, open Settings → Time & language → Date & time, turn on Set time automatically, click Sync now, then sign out and sign in again.':'Could not create/load your profile: '+ensureError.message);return}const {data:row,error:loadError}=await supabaseClient.from('profiles').select('id,points,role,display_name').eq('id',session.user.id).maybeSingle();if(loadError){console.error(loadError);profile=null;syncUI();setStatus('authStatus',/JWT issued at future/i.test(loadError.message||'')?'Your sign-in token appears to be dated in the future. In Windows, open Settings → Time & language → Date & time, turn on Set time automatically, click Sync now, then sign out and sign in again.':'Could not load your profile: '+loadError.message);return}if(!row){profile=null;syncUI();setStatus('authStatus','Your profile could not be created. Please contact the site administrator.');return}profile=row;syncUI();if(String(profile.role||'').trim().toLowerCase()==='admin')document.getElementById('adminNav').style.display='flex';}
+function syncUI(){
+  const points=Number(profile?.points||0);
+  document.getElementById('points').textContent=points;
+  document.getElementById('dashboardPoints').textContent=points;
+  document.getElementById('memberName').textContent=session?(profile?.display_name||session.user.user_metadata?.full_name||session.user.email||'Member'):'Guest';
+  document.getElementById('memberStatus').textContent=session?'Member':'Not signed in';
+  document.getElementById('logoutLink').style.display=session?'block':'none';
+  const isAdmin=!!session&&String(profile?.role||'').trim().toLowerCase()==='admin';
+  document.getElementById('accountArea').innerHTML=session
+    ? '<span class="muted account-label">SIGNED IN</span>'+(isAdmin?'<button type="button" onclick="show(\'admin\');loadAdminChallenges();loadBugReports();loadJoinedToday();loadChatPauseState()">ADMIN</button>':'')+'<button type="button" onclick="logout()">LOG OUT</button>'
+    : '<button type="button" onclick="show(\'auth\')">LOGIN / REGISTER</button>';
+  const auth=document.getElementById('auth');
+  if(session&&auth)auth.classList.add('hidden');
+  document.querySelectorAll('.login-to-vote,.login-register-prompt').forEach(x=>x.style.display=session?'none':'');
+  document.getElementById('adminNav').style.display=isAdmin?'flex':'none';
+  document.getElementById('adminCurrentUser').textContent=session?.user?.id||'—';
+  document.getElementById('adminCurrentRole').textContent=profile?.role||'—';
+  document.getElementById('adminCurrentCp').textContent=points;
+  document.getElementById('adminStatCp').textContent=points;
+  document.getElementById('adminStatRole').textContent=profile?.role||'—';
+  document.getElementById('createButton').disabled=!session;
+  syncChatVisibility();
+  syncLoginPrompts();
+  syncChatPauseUI();
+  render();
+}
 function syncLoginPrompts(){document.querySelectorAll('button').forEach(button=>{const action=button.getAttribute('onclick')||'';if(action.includes("show('auth')")||action.includes('show("auth")'))button.style.display=session?'none':'';});const auth=document.getElementById('auth');if(session&&auth)auth.classList.add('hidden');}
 async function loadJoinedToday(){if(!requireAdmin())return;const box=document.getElementById('joinedTodayList'),count=document.getElementById('joinedTodayCount');if(!box||!count)return;box.innerHTML='<p class="muted">Loading today’s members…</p>';count.textContent='Checking…';setStatus('joinedTodayStatus','');const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),now.getDate()),end=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);const {data,error}=await supabaseClient.from('profiles').select('id,display_name,created_at').gte('created_at',start.toISOString()).lt('created_at',end.toISOString()).order('created_at',{ascending:false}).limit(500);if(error){count.textContent='Could not load today’s count.';box.innerHTML='<p class="status">Could not load joined-today members: '+esc(error.message)+'</p>';setStatus('joinedTodayStatus','If created_at is missing, apply the supplied SQL setup file.');return}const rows=data||[];count.textContent=rows.length+' member'+(rows.length===1?'':'s')+' joined today';box.innerHTML=rows.length?rows.map((u,i)=>'<div class="admin-joined-row"><b>'+(i+1)+'. '+esc(u.display_name||'Member')+'</b><small>'+esc(u.created_at?new Date(u.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'Time unavailable')+'</small></div>').join(''):'<p class="muted">No new members found for today.</p>';}
 async function loadDashboardStats(){const {data:settings,error}=await supabaseClient.from('site_settings').select('member_count').eq('id',1).maybeSingle();if(!error)document.getElementById('dashboardMembers').textContent=Number(settings?.member_count||0);document.getElementById('dashboardCompleted').textContent=tasks.filter(t=>t.status==='completed').length;}
@@ -495,15 +590,42 @@ function saveVotedChallenge(id){if(!session?.user?.id)return;const voted=getVote
 function openChat(){show('chat');syncChatVisibility();if(session)loadChatMessages();}
 function syncChatVisibility(){const guest=document.getElementById('chatGuest'),member=document.getElementById('chatMember');if(!guest||!member)return;if(session){guest.classList.add('hidden');member.classList.remove('hidden');}else{guest.classList.remove('hidden');member.classList.add('hidden');}}
 function formatChatTime(v){try{return new Date(v).toLocaleString([], {dateStyle:'short',timeStyle:'short'});}catch{return '';}}
-async function loadChatMessages(){if(!session)return;const {data:messages,error:messageError}=await supabaseClient.from('chat_messages').select('id,user_id,message,created_at').order('created_at',{ascending:true}).limit(200);if(messageError){setStatus('chatStatus','Could not load chat: '+messageError.message);return}const box=document.getElementById('chatMessages');if(!messages?.length){box.innerHTML='<p class="muted">No messages yet. Start the conversation!</p>';return}const userIds=[...new Set(messages.map(m=>m.user_id).filter(Boolean))];let profilesById={};if(userIds.length){const {data:profiles,error:profileError}=await supabaseClient.from('profiles').select('id,display_name').in('id',userIds);if(profileError)console.warn('Could not load chat profile names:',profileError);(profiles||[]).forEach(p=>{profilesById[p.id]=p.display_name;});}box.innerHTML=messages.map(m=>{const name=profilesById[m.user_id]||((m.user_id===session.user.id)?(session.user.user_metadata?.full_name||session.user.email||'You'):'Member');const own=m.user_id===session.user.id;return '<div class="chat-message '+(own?'is-own':'')+'"><b>'+esc(name)+'</b><small>'+esc(formatChatTime(m.created_at))+'</small><div class="chat-message-text">'+esc(m.message)+'</div>'+(own?'<button class="chat-delete" onclick="deleteChatMessage(\''+esc(m.id)+'\')">Delete</button>':'')+'</div>';}).join('');box.scrollTop=box.scrollHeight;}
+async function loadChatMessages(){
+  const box=document.getElementById('chatMessages');
+  if(!box)return;
+  if(!session){box.innerHTML='<p class="muted">Log in to view messages.</p>';return;}
+  box.innerHTML='<p class="muted">Loading messages…</p>';
+  const {data:messages,error:messageError}=await supabaseClient.from('chat_messages')
+    .select('id,user_id,message,created_at').order('created_at',{ascending:true}).limit(200);
+  if(messageError){
+    console.error('Chat load failed:',messageError);
+    box.innerHTML='<p class="status">Could not load chat: '+esc(messageError.message)+'</p>';
+    return;
+  }
+  if(!messages?.length){box.innerHTML='<p class="muted chat-empty">No messages yet. Start the conversation!</p>';return;}
+  const userIds=[...new Set(messages.map(m=>m.user_id).filter(Boolean))];
+  const profilesById={};
+  if(userIds.length){
+    const {data:profiles,error:profileError}=await supabaseClient.from('profiles')
+      .select('id,display_name').in('id',userIds);
+    if(profileError)console.warn('Chat profile lookup failed:',profileError);
+    (profiles||[]).forEach(p=>profilesById[p.id]=p.display_name);
+  }
+  box.innerHTML=messages.map(m=>{
+    const own=m.user_id===session.user.id;
+    const name=profilesById[m.user_id]||(own?(session.user.user_metadata?.full_name||session.user.email||'You'):'Council Member');
+    return '<article class="chat-message '+(own?'is-own':'')+'"><div class="chat-message-head"><b>'+esc(name)+'</b><time>'+esc(formatChatTime(m.created_at))+'</time></div><div class="chat-message-text">'+esc(m.message)+'</div>'+(own?'<button class="chat-delete" onclick="deleteChatMessage(\''+esc(m.id)+'\')">Delete</button>':'')+'</article>';
+  }).join('');
+  box.scrollTop=box.scrollHeight;
+}
 async function sendChatMessage(){if(!session){syncChatVisibility();return}if(chatPaused&&String(profile?.role||'').trim().toLowerCase()!=='admin'){setStatus('chatStatus','Chat is paused by an admin. You can still read messages.');return}const input=document.getElementById('chatInput'),message=input.value.trim();if(!message){setStatus('chatStatus','Write a message first.');return}if(message.length>500){setStatus('chatStatus','Message is too long.');return}setStatus('chatStatus','Sending…');const {error}=await supabaseClient.rpc('send_chat_message',{p_message:message});if(error){setStatus('chatStatus','Could not send message: '+error.message);return}input.value='';setStatus('chatStatus','Message sent.',true);await loadChatMessages();}
 async function deleteChatMessage(id){if(!session)return;const {error}=await supabaseClient.from('chat_messages').delete().eq('id',id);if(error){setStatus('chatStatus','Could not delete message: '+error.message);return}await loadChatMessages();}
-function renderChallengesPage(){const filter=document.getElementById('challengeFilter')?.value||'all';let list=tasks.slice();if(filter!=='all')list=list.filter(t=>t.status===filter);const voted=getVotedChallengeIds();const active=tasks.filter(x=>x.status==='active');const html=list.map(t=>t.status==='active'?'<div class="challenge"><div class="challenge-number">'+(active.indexOf(t)+1)+'</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small><small id="voteStatus_'+esc(t.id)+'" class="status"></small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button id="voteBtn_'+esc(t.id)+'" '+(voted.has(t.id)?'disabled':'')+' onclick="vote(\''+t.id+'\')">'+(voted.has(t.id)?'VOTED':'VOTE')+'</button></div>':'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+'</span></span><span class="success">✓ COMPLETED</span></div>').join('');document.getElementById('allTasks').innerHTML=html||'<p class="muted">No challenges match this filter.</p>';}
+function renderChallengesPage(){const filter=document.getElementById('challengeFilter')?.value||'all';let list=tasks.slice();if(filter!=='all')list=list.filter(t=>t.status===filter);const voted=getVotedChallengeIds();const active=tasks.filter(x=>x.status==='active');const html=list.map(t=>t.status==='active'?'<div class="challenge"><div class="challenge-number">'+(active.indexOf(t)+1)+'</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><small class="challenge-meta">Created '+esc(t.created_at?new Date(t.created_at).toLocaleString():'—')+'</small><small id="voteStatus_'+esc(t.id)+'" class="status"></small></section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong><button id="voteBtn_'+esc(t.id)+'" '+(voted.has(t.id)?'disabled':'')+' onclick="vote(\''+t.id+'\')">'+(voted.has(t.id)?'VOTED':'VOTE')+'</button></div>':'<article class="completed-challenge"><div class="completed-challenge-copy"><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small><span class="muted">'+Number(t.votes||0)+' votes · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+'</span></div><span class="success completed-pill">✓ COMPLETED</span></article>').join('');document.getElementById('allTasks').innerHTML=html||'<p class="muted">No challenges match this filter.</p>';}
 async function vote(id){if(!session){show('auth');return}const voted=getVotedChallengeIds();if(voted.has(id))return;const button=document.getElementById('voteBtn_'+id);if(button){button.disabled=true;button.textContent='VOTING…'}const {error}=await supabaseClient.rpc('vote_challenge',{p_challenge_id:id});if(error){const msg=String(error.message||'');if(/already voted|duplicate|unique/i.test(msg)){saveVotedChallenge(id);if(button){button.textContent='VOTED';button.disabled=true}const status=document.getElementById('voteStatus_'+id);if(status){status.textContent='You have voted successfully for this challenge.';status.className='status success'}return}if(button){button.disabled=false;button.textContent='VOTE'}alert('Could not vote: '+msg);return}saveVotedChallenge(id);if(button){button.textContent='VOTED';button.disabled=true}const status=document.getElementById('voteStatus_'+id);if(status){status.textContent='You have voted successfully for this challenge.';status.className='status success'}await loadChallenges();}
 async function createTask(){if(!session){show('auth');return}const title=document.getElementById('title').value.trim(),desc=document.getElementById('desc').value.trim();if(!title){setStatus('createStatus','Enter a challenge title.');return}setStatus('createStatus','Submitting challenge…');const {error}=await supabaseClient.rpc('create_challenge',{p_title:title,p_description:desc});if(error){setStatus('createStatus','Could not create challenge: '+error.message);return}setStatus('createStatus','✅ Challenge created — 20 CP deducted.',true);document.getElementById('title').value='';document.getElementById('desc').value='';await loadProfile();await loadChallenges();}
 async function loadChallenges(){const {data,error}=await supabaseClient.from('challenges').select('id,title,description,created_by,votes,status,created_at,completed_at,completed_by').neq('status','deleted').order('votes',{ascending:false}).order('created_at',{ascending:false});if(error){console.error(error);return}tasks=data||[];render();await loadDashboardStats();await loadLeaderboard();if(profile?.role==='admin')renderAdminChallenges();}
 function render(){const voted=getVotedChallengeIds();const activeHtml=tasks.filter(t=>t.status==='active').map(t=>{const hasVoted=voted.has(t.id);const voteButton=session?'<button id="voteBtn_'+esc(t.id)+'" '+(hasVoted?'disabled':'')+' onclick="vote(\''+t.id+'\')">'+(hasVoted?'VOTED':'VOTE')+'</button>':'<button onclick="show(\'auth\')">VOTE</button>';const voteStatus=hasVoted?' <small class="success">You have voted successfully for this challenge.</small>':'';return '<div class="challenge"><div class="challenge-number">'+(tasks.filter(x=>x.status==='active').indexOf(t)+1)+'</div><section><b>'+esc(t.title)+'</b><small>'+esc(t.description||'')+'</small>'+voteStatus+'</section><strong>'+Number(t.votes||0)+'<br><i>Votes</i></strong>'+voteButton+'</div>';}).join('');document.getElementById('taskList').innerHTML=activeHtml||'<p class="muted">No active challenges.</p>';document.getElementById('activeCount').textContent=tasks.filter(t=>t.status==='active').length;renderChallengesPage();renderTop10();}
-function renderAdminChallenges(){if(!requireAdmin())return;const q=(document.getElementById('adminChallengeSearch')?.value||'').toLowerCase().trim();const active=adminChallenges.filter(t=>t.status==='active'&&(!q||t.title.toLowerCase().includes(q)||(t.description||'').toLowerCase().includes(q)));const completed=adminChallenges.filter(t=>t.status==='completed');document.getElementById('adminStatActive').textContent=active.length;document.getElementById('adminStatCompleted').textContent=completed.length;document.getElementById('adminChallenges').innerHTML=active.length?active.map(t=>'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Created '+esc(new Date(t.created_at).toLocaleString())+'</span></span><span><input id="votes_'+t.id+'" type="number" min="0" value="'+Number(t.votes||0)+'" style="width:90px;padding:9px;background:#080808;color:#fff;border:1px solid #333;border-radius:5px" title="Set votes"><button class="red" onclick="editVotes(\''+t.id+'\')">SET VOTES</button> <button class="red" onclick="completeChallenge(\''+t.id+'\')">MARK COMPLETE</button> <button class="red danger" onclick="deleteChallenge(\''+t.id+'\')">DELETE</button></span></div>').join(''):'<p class="muted">No active challenges match your search.</p>';document.getElementById('adminCompletedChallenges').innerHTML=completed.length?completed.map(t=>'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Created '+esc(new Date(t.created_at).toLocaleString())+' · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+' · Completed by '+esc(t.completed_by||'—')+'</span></span><span class="success">✓ COMPLETED</span></div>').join(''):'<p class="muted">No completed challenges yet.</p>';}
+function renderAdminChallenges(){if(!requireAdmin())return;const q=(document.getElementById('adminChallengeSearch')?.value||'').toLowerCase().trim();const active=adminChallenges.filter(t=>t.status==='active'&&(!q||t.title.toLowerCase().includes(q)||(t.description||'').toLowerCase().includes(q)));const completed=adminChallenges.filter(t=>t.status==='completed');document.getElementById('adminStatActive').textContent=active.length;document.getElementById('adminStatCompleted').textContent=completed.length;document.getElementById('adminChallenges').innerHTML=active.length?active.map(t=>'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Created '+esc(new Date(t.created_at).toLocaleString())+'</span></span><span><input id="votes_'+t.id+'" type="number" min="0" value="'+Number(t.votes||0)+'" style="width:90px;padding:9px;background:#080808;color:#fff;border:1px solid #333;border-radius:5px" title="Set votes"><button class="red" onclick="editVotes(\''+t.id+'\')">SET VOTES</button> <button class="red" onclick="completeChallenge(\''+t.id+'\')">MARK COMPLETE</button> <button class="red danger" onclick="deleteChallenge(\''+t.id+'\')">DELETE</button></span></div>').join(''):'<p class="muted">No active challenges match your search.</p>';document.getElementById('adminCompletedChallenges').innerHTML=completed.length?completed.map(t=>'<div class="rank"><span><b>'+esc(t.title)+'</b><br><small>'+esc(t.description||'')+'</small><br><span class="muted">'+Number(t.votes||0)+' votes · Created '+esc(new Date(t.created_at).toLocaleString())+' · Completed '+esc(t.completed_at?new Date(t.completed_at).toLocaleString():'—')+' · Completed by '+esc(t.completed_by||'—')+'</span></span><span class="success completed-pill">✓ COMPLETED</span></div>').join(''):'<p class="muted">No completed challenges yet.</p>';}
 async function loadAdminProductIdeas(){if(!requireAdmin())return;const box=document.getElementById('adminProductIdeas');if(!box)return;const {data,error}=await supabaseClient.from('product_ideas').select('id,title,description,votes,created_at').order('votes',{ascending:false}).limit(200);if(error){box.innerHTML='<p class="status">Could not load product ideas: '+esc(error.message)+'</p>';return}if(!data?.length){box.innerHTML='<p class="muted">No product ideas yet.</p>';return}box.innerHTML=data.map(x=>'<div class="rank"><span><b>'+esc(x.title)+'</b><br><small>'+esc(x.description||'')+'</small><br><span class="muted">Current likes: '+Number(x.votes||0)+'</span></span><span><input id="productVotes_'+x.id+'" type="number" min="0" value="'+Number(x.votes||0)+'" style="width:90px;padding:9px;background:#080808;color:#fff;border:1px solid #333;border-radius:5px"><button class="red" onclick="adminSetProductLikes(\''+x.id+'\')">SET LIKES</button></span></div>').join('');}
 async function adminSetProductLikes(id){if(!requireAdmin())return;const input=document.getElementById('productVotes_'+id),likes=Number(input?.value);if(!Number.isInteger(likes)||likes<0){setStatus('adminProductStatus','Enter a whole number of 0 or more.');return}setStatus('adminProductStatus','Updating likes securely…');const {data,error}=await supabaseClient.rpc('admin_set_product_likes',{p_idea_id:id,p_likes:likes});if(error){setStatus('adminProductStatus','Could not change likes: '+error.message);return}setStatus('adminProductStatus','✅ Likes updated to '+data+'.',true);await loadAdminProductIdeas();await loadProductIdeas();}
 async function loadAdminChallenges(){if(!requireAdmin())return;const {data:s}=await supabaseClient.from('site_settings').select('member_count').eq('id',1).maybeSingle();if(s)document.getElementById('adminMemberCount').value=Number(s.member_count||0);const {data,error}=await supabaseClient.from('challenges').select('id,title,description,created_by,votes,status,created_at,completed_at,completed_by').order('created_at',{ascending:false}).limit(500);if(error){setStatus('adminChallengeStatusMsg','Could not load challenges: '+error.message);return}adminChallenges=data||[];renderAdminChallenges();await loadAdminProductIdeas();}
@@ -530,14 +652,65 @@ async function adminDeduct(){if(!requireAdmin())return;const uid=document.getEle
 async function loadLedger(){if(!requireAdmin())return;const {data,error}=await supabaseClient.from('cp_ledger').select('created_at,amount,reason,reference_id').order('created_at',{ascending:false}).limit(50);if(error){document.getElementById('adminLedger').textContent='Could not load ledger: '+error.message;return}if(!data.length){document.getElementById('adminLedger').textContent='No ledger entries yet.';return}document.getElementById('adminLedger').innerHTML=data.map(x=>'<div class="rank"><span>'+esc(new Date(x.created_at).toLocaleString())+' — '+esc(x.reason)+'</span><b>'+Number(x.amount)+' CP</b></div>').join('');}
 async function logout(){await supabaseClient.auth.signOut();session=null;profile=null;syncUI();show('about');}
 let chatChannel=null,chatPaused=false;
-function syncChatPauseUI(){const admin=!!session&&String(profile?.role||'').trim().toLowerCase()==='admin',input=document.getElementById('chatInput'),send=document.querySelector('.chat-compose button'),notice=document.getElementById('chatPausedNotice'),normalNotice=document.getElementById('chatNotice'),button=document.getElementById('chatPauseButton');if(input)input.disabled=chatPaused&&!admin;if(send)send.disabled=chatPaused&&!admin;if(notice)notice.classList.toggle('hidden',!chatPaused);if(normalNotice)normalNotice.textContent=chatPaused?'Temporarily Paused by Admin — members can read messages; only admins can send.':'Be respectful. Messages are limited to help prevent spam.';if(button){button.textContent=chatPaused?'RESUME CHAT':'PAUSE CHAT';button.classList.toggle('danger',chatPaused);} }
+function syncChatPauseUI(){const admin=!!session&&String(profile?.role||'').trim().toLowerCase()==='admin',input=document.getElementById('chatInput'),send=document.querySelector('#chatMember .chat-compose button'),notice=document.getElementById('chatPausedNotice'),normalNotice=document.getElementById('chatNotice'),button=document.getElementById('chatPauseButton');if(input)input.disabled=chatPaused&&!admin;if(send)send.disabled=chatPaused&&!admin;if(notice)notice.classList.toggle('hidden',!chatPaused);if(normalNotice)normalNotice.textContent=chatPaused?'Temporarily Paused by Admin — members can read messages; only admins can send.':'Be respectful. Messages are limited to help prevent spam.';if(button){button.textContent=chatPaused?'RESUME CHAT':'PAUSE CHAT';button.classList.toggle('danger',chatPaused);} }
 async function loadChatPauseState(){const {data,error}=await supabaseClient.from('site_settings').select('chat_paused').eq('id',1).maybeSingle();if(error){console.warn('Chat pause setting unavailable:',error.message);setStatus('chatPauseAdminStatus','Could not read chat status. Apply the SQL setup file, then refresh.',false);return}chatPaused=!!data?.chat_paused;syncChatPauseUI();if(document.getElementById('chatPauseAdminStatus'))setStatus('chatPauseAdminStatus',chatPaused?'Chat is currently paused.':'Chat is currently open.',true);}
 async function toggleChatPause(){if(!requireAdmin())return;const next=!chatPaused;setStatus('chatPauseAdminStatus',next?'Pausing chat…':'Resuming chat…');const {error}=await supabaseClient.from('site_settings').upsert({id:1,chat_paused:next});if(error){setStatus('chatPauseAdminStatus','Could not change chat status: '+error.message);return}chatPaused=next;syncChatPauseUI();setStatus('chatPauseAdminStatus',chatPaused?'Chat paused. Members can read; only admins can send.':'Chat resumed. Members can send messages again.',true);}
 function subscribeChat(){if(chatChannel)supabaseClient.removeChannel(chatChannel);chatChannel=supabaseClient.channel('council-chat');if(session)chatChannel.on('postgres_changes',{event:'*',schema:'public',table:'chat_messages'},()=>loadChatMessages());chatChannel.on('postgres_changes',{event:'*',schema:'public',table:'site_settings',filter:'id=eq.1'},()=>loadChatPauseState()).subscribe();}
 document.getElementById('bugReportForm')?.addEventListener('submit',submitBugReport);
-supabaseClient.auth.getSession().then(async({data})=>{session=data.session;await loadProfile();await loadChallenges();await loadProductIdeas();subscribeChat();await loadChatPauseState();if(session&&String(profile?.role||'').trim().toLowerCase()==='admin'){await loadAdminChallenges();await loadJoinedToday();}if(session)await loadMyBugReports();show(session?'dashboard':'about');});
-supabaseClient.auth.onAuthStateChange(async(_event,newSession)=>{session=newSession;await loadProfile();await loadChallenges();await loadProductIdeas();subscribeChat();await loadChatPauseState();if(newSession){await loadMyBugReports();if(String(profile?.role||'').trim().toLowerCase()==='admin'){await loadJoinedToday();await loadAdminChallenges();}show('dashboard');}else{const box=document.getElementById('myBugReports');if(box)box.innerHTML='<p class="muted">Sign in to view your reports.</p>';}});
-syncUI();loadDashboardStats();loadLeaderboard();loadProductIdeas();
+
+// Supabase auth callbacks must return immediately. Running profile/database queries
+// inside the callback can deadlock auth token refresh on some mobile browsers.
+let authWorkQueue=Promise.resolve();
+let lastHandledUserId=null;
+async function handleAuthSession(nextSession,reason='AUTH'){
+  const nextId=nextSession?.user?.id||null;
+  if(nextId===lastHandledUserId&&profile&&reason!=='USER_UPDATED'){
+    syncUI();
+    return;
+  }
+  session=nextSession;
+  if(!session)profile=null;
+  await loadProfile();
+  await loadChallenges();
+  await loadProductIdeas();
+  subscribeChat();
+  await loadChatPauseState();
+  if(session){
+    await loadMyBugReports();
+    if(String(profile?.role||'').trim().toLowerCase()==='admin'){
+      await loadJoinedToday();
+      await loadAdminChallenges();
+    }
+    if(!document.querySelector('.page:not(.hidden)')||['about','auth','joinInstructions'].includes(document.querySelector('.page:not(.hidden)')?.id)){
+      show('dashboard');
+    }
+  }else{
+    const box=document.getElementById('myBugReports');
+    if(box)box.innerHTML='<p class="muted">Sign in to view your reports.</p>';
+    if(reason==='SIGNED_OUT')show('about');
+    else if(!document.querySelector('.page:not(.hidden)'))show('about');
+  }
+  lastHandledUserId=nextId;
+  syncUI();
+}
+supabaseClient.auth.onAuthStateChange((event,newSession)=>{
+  authWorkQueue=authWorkQueue.then(()=>handleAuthSession(newSession,event))
+    .catch(error=>console.error('Auth state handling failed:',error));
+});
+
+syncUI();
+loadDashboardStats();
+loadLeaderboard();
+loadProductIdeas();
+// Re-check the active session once the page has fully initialized. INITIAL_SESSION
+// will also arrive through onAuthStateChange; the handler safely deduplicates it.
+supabaseClient.auth.getSession().then(({data,error})=>{
+  if(error){console.error('Could not restore login session:',error);show('about');return;}
+  if(data?.session){
+    authWorkQueue=authWorkQueue.then(()=>handleAuthSession(data.session,'RESTORE'))
+      .catch(error=>console.error('Session restore failed:',error));
+  }else if(!document.querySelector('.page:not(.hidden)'))show('about');
+});
 </script>
 </body>
 </html>
