@@ -329,6 +329,99 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+/* Compact mobile Community Chat: keep more messages visible without changing desktop. */
+@media (max-width: 700px) {
+  #chat .chat-box {
+    height: calc(100dvh - 190px);
+    min-height: 300px;
+    padding: 7px;
+    gap: 0;
+  }
+  #chat .chat-notice {
+    padding: 6px 8px;
+    margin: 0 0 6px;
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  #chat .chat-paused-notice {
+    padding: 7px 9px;
+    margin: 0 0 6px;
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  #chat .chat-messages {
+    min-height: 0;
+    padding: 7px;
+    gap: 5px;
+    margin-bottom: 7px;
+  }
+  #chat .chat-message {
+    min-width: 0;
+    max-width: 92%;
+    padding: 6px 9px;
+    margin: 0;
+    border-radius: 5px 11px 11px 11px;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+  #chat .chat-message.is-own {
+    border-radius: 11px 5px 11px 11px;
+  }
+  #chat .chat-message-head {
+    gap: 5px;
+    min-height: 16px;
+  }
+  #chat .chat-message-head b {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+  #chat .chat-message-head time {
+    font-size: 9px;
+  }
+  #chat .chat-message .chat-message-text {
+    margin-top: 2px;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+  #chat .chat-message .tiny-avatar {
+    width: 18px;
+    height: 18px;
+    margin-right: 2px;
+  }
+  #chat .chat-delete {
+    margin-top: 2px;
+    padding: 1px 0;
+    font-size: 10px;
+  }
+  #chat .chat-compose {
+    gap: 6px;
+    padding: 5px;
+    border-radius: 10px;
+  }
+  #chat .chat-compose textarea {
+    min-height: 39px;
+    max-height: 72px;
+    padding: 8px 9px;
+    font-size: 14px;
+    line-height: 1.25;
+  }
+  #chat .chat-compose button {
+    min-height: 38px;
+    min-width: 58px;
+    padding: 0 10px;
+    font-size: 11px;
+  }
+  #chat #chatStatus {
+    margin: 3px 0 0;
+    font-size: 11px;
+  }
+}
+@media (max-width: 380px) {
+  #chat .chat-message { max-width: 96%; padding: 5px 8px; }
+  #chat .chat-messages { padding: 6px; gap: 4px; }
+}
+</style>
 </head>
 <body>
 <aside class="sidebar">
