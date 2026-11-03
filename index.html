@@ -327,6 +327,30 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
   .mobile-bottom-nav{grid-auto-columns:64px!important}
 }
 
+
+/* Friends, profile navigation and presence */
+.friends-hero{background:linear-gradient(135deg,#160404,#090909);border:1px solid #4a1010;border-radius:12px;padding:25px;margin-bottom:12px}
+.friends-hero h1{margin:8px 0;color:#fff;font-size:38px}.friends-hero p{margin:0;color:#aaa;line-height:1.6}
+.friends-search-panel{margin-bottom:12px}.friends-search-row{display:flex;gap:9px}
+.friends-search-row input{flex:1;min-width:0;padding:13px;background:#080808;border:1px solid #393939;border-radius:8px;color:#fff;font-size:16px}
+.friends-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}.friends-count{float:right;color:#ff6666;font-size:13px}
+.friend-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #292929;min-width:0}
+.friend-row:last-child{border-bottom:0}.friend-avatar-wrap{position:relative;flex:0 0 42px;width:42px;height:42px}
+.friend-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#260b0b;border:1px solid #5c2222}
+.online-dot,.offline-dot{position:absolute;right:-1px;bottom:0;width:12px;height:12px;border-radius:50%;border:2px solid #101112}
+.online-dot{background:#28d17c;box-shadow:0 0 7px #28d17c88}.offline-dot{background:#666}
+.friend-row-main{flex:1;min-width:0}.friend-row-main b{display:block;color:#fff;overflow-wrap:anywhere}
+.friend-row-main small{display:block;color:#999;margin-top:4px}.friend-row-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.friend-row-actions button{padding:7px 10px;border:1px solid #762020;background:#210808;color:#ff8585;border-radius:7px;cursor:pointer;font-weight:700}
+.friend-row-actions button.accept{background:#123322;border-color:#286c46;color:#9de7bd}
+.profile-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}.profile-back-button{margin-bottom:15px;margin-left:0}
+.member-link{cursor:pointer}.member-link:hover{color:#ff7777}
+@media(max-width:700px){.friends-hero{padding:20px 16px}.friends-hero h1{font-size:30px}.friends-columns{grid-template-columns:1fr}
+.friends-search-row{flex-direction:column}.friends-search-row button{width:100%}
+.friend-row{align-items:flex-start;flex-wrap:wrap}.friend-row-actions{width:100%;padding-left:53px;justify-content:flex-start}
+.profile-actions{display:grid;grid-template-columns:1fr}.profile-actions button{width:100%;margin:0}
+.mobile-bottom-nav{grid-template-columns:repeat(9,minmax(64px,1fr))!important;grid-auto-flow:column!important;grid-auto-columns:64px!important;overflow-x:auto!important;overscroll-behavior-x:contain}}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -432,6 +456,7 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <button onclick="show('create')">◎ <span>Create Challenge</span></button>
 <button onclick="show('challenges')"><img class="nav-icon" src="https://assets-ds.chess.com/color-icons/communication-bubbles.svg" alt=""> <span>Challenges</span></button>
 <button onclick="show('bugReports');loadMyBugReports()">🐛 <span>Report a Bug</span></button>
+<button onclick="show('friends')">👥 <span>Friends</span></button>
 <button onclick="show('products')">💡 <span>Product Ideas</span></button>
 <button onclick="show('leaderboard')"><img class="nav-icon" src="https://assets-ds.chess.com/color-icons/leaderboard.svg" alt=""> <span>Leaderboard</span></button>
 <button onclick="openChat()"><img class="nav-icon" src="https://assets-ds.chess.com/color-icons/friends.svg" alt=""> <span>Community Chat</span></button>
@@ -447,6 +472,7 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
   <button type="button" onclick="show('earn')"><span class="mobile-nav-icon">＋</span><span>Earn CP</span></button>
   <button type="button" onclick="show('create')"><span class="mobile-nav-icon">✚</span><span>Create</span></button>
   <button type="button" onclick="show('challenges')"><span class="mobile-nav-icon">◎</span><span>Challenges</span></button>
+  <button type="button" onclick="show('friends')"><span class="mobile-nav-icon">♧</span><span>Friends</span></button>
   <button type="button" onclick="show('bugReports');loadMyBugReports()"><span class="mobile-nav-icon">🐛</span><span>Report Bug</span></button>
   <button type="button" onclick="show('products')"><span class="mobile-nav-icon">✦</span><span>Ideas</span></button>
   <button type="button" onclick="openChat()"><span class="mobile-nav-icon">☷</span><span>Chat</span></button>
@@ -613,7 +639,18 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 <div class="panel bug-report-panel"><h3>📋 MY BUG REPORTS</h3><p class="muted">Check the current status of reports you've submitted.</p><div id="myBugReports"><p class="muted">Sign in to view your reports.</p></div></div></section>
 <section id="leaderboard" class="page hidden"><h1>Top 100 Council Members</h1><div class="panel"><div id="fullLeaderboard"><p class="muted">Loading leaderboard…</p></div></div></section>
 <section id="profileSetup" class="page hidden"><div class="panel profile-editor"><h1>SET UP YOUR COUNCIL PROFILE</h1><p class="muted">Choose a unique username and an avatar so other Council members can recognise you.</p><label for="setupUsername">Username</label><input id="setupUsername" maxlength="20" placeholder="e.g. KingFan123" autocomplete="username"><small class="muted">3–20 characters: letters, numbers and underscores.</small><label for="setupAvatar">Profile photo</label><input id="setupAvatar" type="file" accept="image/png,image/jpeg,image/webp"><img id="setupAvatarPreview" class="avatar-preview hidden" alt="Avatar preview"><button class="red" onclick="saveMemberProfile()">SAVE PROFILE</button><p id="profileSetupStatus" class="status"></p></div></section>
-<section id="memberProfile" class="page hidden"><div class="panel public-profile"><div class="public-profile-head"><img id="publicAvatar" class="public-avatar" alt="Member avatar"><div><p class="about-kicker">COUNCIL MEMBER</p><h1 id="publicUsername">Member</h1><p id="publicJoined" class="muted"></p></div></div><div class="stats profile-stats"><div><small>TOTAL COUNCIL POINTS</small><b id="publicPoints">0 CP</b></div><div><small>CHAT GROUP</small><b id="publicGroup">Not assigned</b></div></div><button id="joinMemberChatButton" class="red" onclick="joinMemberChat()">JOIN THIS PERSON'S CHAT</button><button id="editMyProfileButton" class="outline" onclick="editMemberProfile()" style="display:none">EDIT MY PROFILE</button><p id="publicProfileStatus" class="status"></p></div></section>
+<section id="friends" class="page hidden">
+  <div class="friends-hero"><div class="about-kicker">THE COUNCIL COMMUNITY</div><h1>FRIENDS</h1><p>Find Council members, send friend requests, and see which of your friends are online.</p></div>
+  <div class="panel friends-search-panel"><h3>🔎 Find Council Members</h3>
+    <div class="friends-search-row"><input id="friendSearchInput" type="search" maxlength="40" placeholder="Search by username…" autocomplete="off" onkeydown="if(event.key==='Enter')searchCouncilMembers()"><button class="red" onclick="searchCouncilMembers()">SEARCH</button></div>
+    <div id="friendSearchResults"><p class="muted">Search for a Council member to send a friend request.</p></div><p id="friendSearchStatus" class="status"></p>
+  </div>
+  <div class="friends-columns">
+    <div class="panel"><h3>📨 Incoming Requests <span id="friendRequestCount" class="friends-count">0</span></h3><div id="incomingFriendRequests"><p class="muted">Loading requests…</p></div></div>
+    <div class="panel"><h3>👥 My Friends <span id="myFriendCount" class="friends-count">0</span></h3><div id="myFriendsList"><p class="muted">Loading friends…</p></div></div>
+  </div><p id="friendsStatus" class="status"></p>
+</section>
+<section id="memberProfile" class="page hidden"><div class="panel public-profile"><button class="outline profile-back-button" onclick="goBack()">← BACK</button><div class="public-profile-head"><img id="publicAvatar" class="public-avatar" alt="Member avatar"><div><p class="about-kicker">COUNCIL MEMBER</p><h1 id="publicUsername">Member</h1><p id="publicJoined" class="muted"></p><p id="publicOnlineStatus" class="profile-online-status muted">● OFFLINE</p></div></div><div class="stats profile-stats"><div><small>TOTAL COUNCIL POINTS</small><b id="publicPoints">0 CP</b></div><div><small>CHAT GROUP</small><b id="publicGroup">Not assigned</b></div></div><div class="profile-actions"><button id="friendProfileButton" class="red" onclick="sendFriendRequestFromProfile()" style="display:none">ADD FRIEND</button><button id="joinMemberChatButton" class="red" onclick="joinMemberChat()">JOIN THIS PERSON'S CHAT</button></div><button id="editMyProfileButton" class="outline" onclick="editMemberProfile()" style="display:none">EDIT MY PROFILE</button><p id="publicProfileStatus" class="status"></p></div></section>
 <section id="admin" class="page hidden"><h1>Admin Dashboard</h1><div class="stats"><div><small>YOUR CP</small><b id="adminStatCp">0</b></div><div><small>ACTIVE CHALLENGES</small><b id="adminStatActive">—</b></div><div><small>COMPLETED</small><b id="adminStatCompleted">—</b></div><div><small>ROLE</small><b id="adminStatRole">—</b></div></div><div class="panel admin-card"><h2>⚙️ Council Administration</h2>
 <div class="admin-grid">
 <div><h3>👥 Dashboard Member Count</h3><input id="adminMemberCount" type="number" min="0" placeholder="Number shown on Dashboard"><button class="red" onclick="saveMemberCount()">SAVE MEMBER COUNT</button><p id="adminMemberStatus" class="status"></p></div>
@@ -628,23 +665,31 @@ const SUPABASE_URL='https://wxsjttouasmvinjlrayk.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_UW-FqBWnc4IjNAk5Kuu6vA_jFV0tMqX';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 let session=null,profile=null,tasks=[],adminChallenges=[];
-function show(id){
+let lastCouncilPage='dashboard';
+function show(id, options={}){
   if(session&&id==='auth')id='dashboard';
   if(session&&id==='login')id='dashboard';
   const target=document.getElementById(id);
   if(!target){console.warn('Unknown page:',id);return;}
+  const current=document.querySelector('.page:not(.hidden)')?.id||lastCouncilPage;
+  if(!options.fromPop&&current!==id){
+    try{if(!history.state?.councilPage)history.replaceState({councilPage:current},'',location.href);history.pushState({councilPage:id},'',location.href);}catch(e){console.warn('Navigation history unavailable:',e);}
+  }
+  if(current!==id)lastCouncilPage=current;
   document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));
   target.classList.remove('hidden');
   document.querySelectorAll('.mobile-bottom-nav button').forEach(b=>b.classList.remove('active'));
-  const routeMap={dashboard:0,earn:1,create:2,challenges:3,bugReports:4,products:5,chat:6,leaderboard:7};
+  const routeMap={dashboard:0,earn:1,create:2,challenges:3,friends:4,bugReports:5,products:6,chat:7,leaderboard:8};
   const index=routeMap[id];
   if(index!==undefined)document.querySelectorAll('.mobile-bottom-nav button')[index]?.classList.add('active');
   if(id==='chat'&&session)loadChatMessages();
   if(id==='bugReports'&&session)loadMyBugReports();
+  if(id==='friends'&&session)loadFriends();
   if(session)document.querySelectorAll('.guest-only').forEach(x=>x.style.display='none');
-  syncLoginPrompts();
-  window.scrollTo({top:0,behavior:'smooth'});
+  syncLoginPrompts();window.scrollTo({top:0,behavior:'smooth'});
 }
+function goBack(){if(history.state?.councilPage){history.back();return;}show(lastCouncilPage||'dashboard');}
+window.addEventListener('popstate',event=>{const page=event.state?.councilPage;if(page&&document.getElementById(page))show(page,{fromPop:true});});
 function setStatus(id,msg,ok=false){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className=ok?'status success':'status';}
 function requireAdmin(){const role=String(profile?.role||'').trim().toLowerCase();if(!session){show('auth');return false}if(role!=='admin'){alert('Admin access denied.');show('dashboard');return false}return true;}
 async function googleLogin(){setStatus('authStatus','Opening Google sign-in…');const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin+'/'}});if(error)setStatus('authStatus','Login error: '+error.message);}
@@ -681,7 +726,7 @@ function syncUI(){
   render();
 }
 function syncLoginPrompts(){document.querySelectorAll('button').forEach(button=>{const action=button.getAttribute('onclick')||'';if(action.includes("show('auth')")||action.includes('show("auth")'))button.style.display=session?'none':'';});const auth=document.getElementById('auth');if(session&&auth)auth.classList.add('hidden');}
-async function loadJoinedToday(){if(!requireAdmin())return;const box=document.getElementById('joinedTodayList'),count=document.getElementById('joinedTodayCount');if(!box||!count)return;box.innerHTML='<p class="muted">Loading today’s members…</p>';count.textContent='Checking…';setStatus('joinedTodayStatus','');const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),now.getDate()),end=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);const {data,error}=await supabaseClient.from('profiles').select('id,display_name,created_at').gte('created_at',start.toISOString()).lt('created_at',end.toISOString()).order('created_at',{ascending:false}).limit(500);if(error){count.textContent='Could not load today’s count.';box.innerHTML='<p class="status">Could not load joined-today members: '+esc(error.message)+'</p>';setStatus('joinedTodayStatus','If created_at is missing, apply the supplied SQL setup file.');return}const rows=data||[];count.textContent=rows.length+' member'+(rows.length===1?'':'s')+' joined today';box.innerHTML=rows.length?rows.map((u,i)=>'<div class="admin-joined-row"><b>'+(i+1)+'. '+esc(u.display_name||'Member')+'</b><small>'+esc(u.created_at?new Date(u.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'Time unavailable')+'</small></div>').join(''):'<p class="muted">No new members found for today.</p>';}
+async function loadJoinedToday(){if(!requireAdmin())return;const box=document.getElementById('joinedTodayList'),count=document.getElementById('joinedTodayCount');if(!box||!count)return;box.innerHTML='<p class="muted">Loading today’s members…</p>';count.textContent='Checking…';setStatus('joinedTodayStatus','');const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),now.getDate()),end=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);const {data,error}=await supabaseClient.from('profiles').select('id,username,display_name,created_at').gte('created_at',start.toISOString()).lt('created_at',end.toISOString()).order('created_at',{ascending:false}).limit(500);if(error){count.textContent='Could not load today’s count.';box.innerHTML='<p class="status">Could not load joined-today members: '+esc(error.message)+'</p>';setStatus('joinedTodayStatus','If created_at is missing, apply the supplied SQL setup file.');return}const rows=data||[];count.textContent=rows.length+' member'+(rows.length===1?'':'s')+' joined today';box.innerHTML=rows.length?rows.map((u,i)=>'<div class="admin-joined-row"><button class="profile-name-button member-link" onclick="openProfile(\''+esc(u.id)+'\')">'+(i+1)+'. '+esc(u.username||u.display_name||'Member')+'</button><small>'+esc(u.created_at?new Date(u.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'Time unavailable')+'</small></div>').join(''):'<p class="muted">No new members found for today.</p>';}
 async function loadDashboardStats(){const {data:settings,error}=await supabaseClient.from('site_settings').select('member_count').eq('id',1).maybeSingle();if(!error)document.getElementById('dashboardMembers').textContent=Number(settings?.member_count||0);document.getElementById('dashboardCompleted').textContent=tasks.filter(t=>t.status==='completed').length;}
 async function loadLeaderboard(){const {data,error}=await supabaseClient.from('profiles').select('id,points,display_name,username,avatar_url').order('points',{ascending:false}).limit(100);if(error){console.error('Leaderboard error:',error);return}const rows=data||[];const html=rows.map((u,i)=>{const name=u.username||u.display_name||'Member';const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1);return '<div class="rank '+(u.id===session?.user?.id?'leaderboard-me':'')+'"><span class="member-link" onclick="openProfile(\''+esc(u.id)+'\')">'+medal+' &nbsp; '+(u.avatar_url?'<img class="tiny-avatar" src="'+esc(u.avatar_url)+'" alt="">':'')+esc(name)+'</span><b>'+Number(u.points||0)+' CP</b></div>';}).join('');const result=html||'<p class="muted">No members found.</p>';document.getElementById('dashboardLeaderboard').innerHTML='<div class="leaderboard-scroll">'+result+'</div>';document.getElementById('fullLeaderboard').innerHTML='<div class="leaderboard-scroll">'+result+'</div>';}
 
@@ -761,7 +806,7 @@ async function saveMemberProfile(){
 }
 document.getElementById('setupAvatar')?.addEventListener('change',event=>{const file=event.target.files?.[0],preview=document.getElementById('setupAvatarPreview');if(!file||!preview)return;preview.src=URL.createObjectURL(file);preview.classList.remove('hidden');});
 async function openProfile(userId){
-  if(!userId)return;viewedMemberId=userId;show('memberProfile');
+  if(!userId)return;viewedMemberId=userId;window.viewedMemberId=userId;show('memberProfile');
   const {data:user,error}=await supabaseClient.from('profiles').select('id,username,display_name,points,created_at,avatar_url').eq('id',userId).maybeSingle();
   if(error||!user){setStatus('publicProfileStatus','Could not load this member profile.');return;}
   document.getElementById('publicUsername').textContent=user.username||user.display_name||'Council Member';
@@ -772,6 +817,11 @@ async function openProfile(userId){
   document.getElementById('publicGroup').textContent=membership?.chat_groups?.name||'Not assigned';
   document.getElementById('joinMemberChatButton').style.display=session&&userId!==session.user.id?'inline-block':'none';
   document.getElementById('editMyProfileButton').style.display=session&&userId===session.user.id?'inline-block':'none';
+  const friendBtn=document.getElementById('friendProfileButton');
+  if(friendBtn){friendBtn.style.display=session&&userId!==session.user.id?'inline-block':'none';friendBtn.disabled=true;friendBtn.textContent='CHECKING…';}
+  const onlineEl=document.getElementById('publicOnlineStatus');
+  if(onlineEl)onlineEl.textContent=onlineMembers.has(userId)?'● ONLINE':'● OFFLINE';
+  if(session&&userId!==session.user.id)await refreshProfileFriendButton(userId);
   setStatus('publicProfileStatus','');
 }
 function editMemberProfile(){
@@ -788,6 +838,105 @@ async function joinMemberChat(){
   btn.disabled=false;btn.textContent="JOIN THIS PERSON'S CHAT";
   if(error){setStatus('publicProfileStatus',/full/i.test(error.message)?'That chat group is full.':'Could not join this chat: '+error.message);return;}
   show('chat');await loadChatMessages();setStatus('chatStatus','You joined that member’s chat group.',true);
+}
+
+
+/* FRIEND REQUESTS + LIVE ONLINE PRESENCE */
+let onlineChannel=null;
+let onlineMembers=new Set();
+let friendsCache=[];
+function updatePresenceLabels(){
+  document.querySelectorAll('[data-online-user]').forEach(el=>{const online=onlineMembers.has(el.dataset.onlineUser);el.textContent=online?'Online':'Offline';el.classList.toggle('online-text',online);});
+  document.querySelectorAll('[data-online-dot]').forEach(el=>{el.className=onlineMembers.has(el.dataset.onlineDot)?'online-dot':'offline-dot';});
+  const status=document.getElementById('publicOnlineStatus');
+  if(status&&window.viewedMemberId)status.textContent=onlineMembers.has(window.viewedMemberId)?'● ONLINE':'● OFFLINE';
+}
+function startOnlinePresence(){
+  if(!session?.user?.id)return;
+  if(onlineChannel){supabaseClient.removeChannel(onlineChannel);onlineChannel=null;}
+  onlineChannel=supabaseClient.channel('council-online-members',{config:{presence:{key:session.user.id}}});
+  onlineChannel.on('presence',{event:'sync'},()=>{onlineMembers=new Set(Object.keys(onlineChannel.presenceState()));updatePresenceLabels();})
+    .subscribe(async status=>{if(status==='SUBSCRIBED')await onlineChannel.track({user_id:session.user.id,username:profile?.username||profile?.display_name||'Council Member',online_at:new Date().toISOString()});});
+}
+async function refreshProfileFriendButton(targetId){
+  const btn=document.getElementById('friendProfileButton');if(!btn||!session)return;
+  const uid=session.user.id;
+  const {data,error}=await supabaseClient.from('friend_requests').select('id,sender_id,receiver_id,status')
+    .or('and(sender_id.eq.'+uid+',receiver_id.eq.'+targetId+'),and(sender_id.eq.'+targetId+',receiver_id.eq.'+uid+')')
+    .in('status',['pending','accepted']).limit(1);
+  btn.disabled=false;
+  if(error){btn.textContent='ADD FRIEND';btn.dataset.state='new';return;}
+  const row=data?.[0];
+  if(!row){btn.textContent='ADD FRIEND';btn.dataset.state='new';}
+  else if(row.status==='accepted'){btn.textContent='✓ FRIENDS';btn.dataset.state='friends';btn.disabled=true;}
+  else if(row.sender_id===uid){btn.textContent='REQUEST SENT';btn.dataset.state='sent';btn.disabled=true;}
+  else{btn.textContent='ACCEPT REQUEST';btn.dataset.state='incoming';}
+}
+async function sendFriendRequestFromProfile(){
+  if(!session||!window.viewedMemberId||window.viewedMemberId===session.user.id)return;
+  const btn=document.getElementById('friendProfileButton');
+  if(btn?.dataset.state==='incoming'){
+    const {data,error}=await supabaseClient.from('friend_requests').select('id').eq('sender_id',window.viewedMemberId).eq('receiver_id',session.user.id).eq('status','pending').maybeSingle();
+    if(error||!data){setStatus('publicProfileStatus','Could not find that request. Refresh and try again.');return;}
+    await respondToFriendRequest(data.id,true);await refreshProfileFriendButton(window.viewedMemberId);return;
+  }
+  if(btn?.dataset.state!=='new')return;
+  btn.disabled=true;btn.textContent='SENDING…';
+  const {error}=await supabaseClient.rpc('send_friend_request',{p_receiver_id:window.viewedMemberId});
+  if(error){btn.disabled=false;btn.textContent='ADD FRIEND';setStatus('publicProfileStatus','Could not send request: '+error.message);return;}
+  await refreshProfileFriendButton(window.viewedMemberId);setStatus('publicProfileStatus','Friend request sent.',true);
+}
+async function searchCouncilMembers(){
+  if(!session){show('auth');return;}
+  const q=document.getElementById('friendSearchInput')?.value.trim(),box=document.getElementById('friendSearchResults');
+  if(!q){box.innerHTML='<p class="muted">Enter a username to search.</p>';return;}
+  box.innerHTML='<p class="muted">Searching…</p>';setStatus('friendSearchStatus','');
+  const {data,error}=await supabaseClient.from('profiles').select('id,username,display_name,avatar_url')
+    .or('username.ilike.%'+q+'%,display_name.ilike.%'+q+'%').neq('id',session.user.id).limit(20);
+  if(error){box.innerHTML='<p class="status">Search failed: '+esc(error.message)+'</p>';return;}
+  if(!data?.length){box.innerHTML='<p class="muted">No matching members found.</p>';return;}
+  box.innerHTML=data.map(u=>friendRowHtml(u,'search')).join('');
+}
+function friendRowHtml(user,kind){
+  const name=user.username||user.display_name||'Council Member';
+  const online=onlineMembers.has(user.id);
+  const avatar=user.avatar_url||'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Ccircle cx=%2232%22 cy=%2232%22 r=%2232%22 fill=%22%23300%22/%3E%3Ctext x=%2232%22 y=%2243%22 text-anchor=%22middle%22 font-size=%2232%22 fill=%22white%22%3E?%3C/text%3E%3C/svg%3E';
+  let actions='';
+  if(kind==='request')actions='<div class="friend-row-actions"><button class="accept" onclick="respondToFriendRequest(\''+user.request_id+'\',true)">ACCEPT</button><button onclick="respondToFriendRequest(\''+user.request_id+'\',false)">DECLINE</button></div>';
+  else if(kind==='friend')actions='<div class="friend-row-actions"><button onclick="openProfile(\''+user.id+'\')">PROFILE</button><button onclick="removeFriend(\''+user.id+'\')">REMOVE</button></div>';
+  else actions='<div class="friend-row-actions"><button onclick="openProfile(\''+user.id+'\')">PROFILE</button></div>';
+  return '<div class="friend-row"><div class="friend-avatar-wrap"><img class="friend-avatar" src="'+esc(avatar)+'" alt=""><span data-online-dot="'+esc(user.id)+'" class="'+(online?'online-dot':'offline-dot')+'"></span></div><div class="friend-row-main"><b>'+esc(name)+'</b><small data-online-user="'+esc(user.id)+'" class="'+(online?'online-text':'')+'">'+(online?'Online':'Offline')+'</small></div>'+actions+'</div>';
+}
+async function loadFriends(){
+  if(!session){const a=document.getElementById('incomingFriendRequests');if(a)a.innerHTML='<p class="muted">Sign in to use Friends.</p>';return;}
+  const incoming=document.getElementById('incomingFriendRequests'),friends=document.getElementById('myFriendsList');
+  if(!incoming||!friends)return;
+  incoming.innerHTML='<p class="muted">Loading…</p>';friends.innerHTML='<p class="muted">Loading…</p>';
+  const uid=session.user.id;
+  const {data:requests,error:reqError}=await supabaseClient.from('friend_requests').select('id,sender_id,receiver_id,status').eq('receiver_id',uid).eq('status','pending').order('created_at',{ascending:false});
+  const {data:accepted,error:friendError}=await supabaseClient.from('friend_requests').select('id,sender_id,receiver_id,status').or('sender_id.eq.'+uid+',receiver_id.eq.'+uid).eq('status','accepted').order('updated_at',{ascending:false});
+  if(reqError||friendError){incoming.innerHTML='<p class="status">Could not load friends. Apply the Friends SQL setup file, then refresh.</p>';friends.innerHTML='';return;}
+  const requestRows=requests||[],friendRows=accepted||[];
+  document.getElementById('friendRequestCount').textContent=requestRows.length;document.getElementById('myFriendCount').textContent=friendRows.length;
+  const ids=[...new Set([...requestRows.map(x=>x.sender_id),...friendRows.map(x=>x.sender_id===uid?x.receiver_id:x.sender_id)])];
+  const profilesById={};
+  if(ids.length){const {data:people}=await supabaseClient.from('profiles').select('id,username,display_name,avatar_url').in('id',ids);(people||[]).forEach(p=>profilesById[p.id]=p);}
+  incoming.innerHTML=requestRows.length?requestRows.map(r=>friendRowHtml({...profilesById[r.sender_id],id:r.sender_id,request_id:r.id},'request')).join(''):'<p class="muted">No pending requests.</p>';
+  const myFriends=friendRows.map(r=>profilesById[r.sender_id===uid?r.receiver_id:r.sender_id]).filter(Boolean);
+  friendsCache=myFriends;
+  friends.innerHTML=myFriends.length?myFriends.map(u=>friendRowHtml(u,'friend')).join(''):'<p class="muted">You have no friends yet. Search for Council members above.</p>';
+  updatePresenceLabels();
+}
+async function respondToFriendRequest(requestId,accept){
+  const {error}=await supabaseClient.rpc('respond_friend_request',{p_request_id:requestId,p_accept:accept});
+  if(error){setStatus('friendsStatus','Could not update request: '+error.message);return;}
+  setStatus('friendsStatus',accept?'Friend request accepted.':'Friend request declined.',true);await loadFriends();
+}
+async function removeFriend(friendId){
+  if(!confirm('Remove this person from your friends?'))return;
+  const {error}=await supabaseClient.rpc('remove_friend',{p_friend_id:friendId});
+  if(error){setStatus('friendsStatus','Could not remove friend: '+error.message);return;}
+  setStatus('friendsStatus','Friend removed.',true);await loadFriends();
 }
 
 async function loadLedger(){if(!requireAdmin())return;const {data,error}=await supabaseClient.from('cp_ledger').select('created_at,amount,reason,reference_id').order('created_at',{ascending:false}).limit(50);if(error){document.getElementById('adminLedger').textContent='Could not load ledger: '+error.message;return}if(!data.length){document.getElementById('adminLedger').textContent='No ledger entries yet.';return}document.getElementById('adminLedger').innerHTML=data.map(x=>'<div class="rank"><span>'+esc(new Date(x.created_at).toLocaleString())+' — '+esc(x.reason)+'</span><b>'+Number(x.amount)+' CP</b></div>').join('');}
@@ -812,6 +961,8 @@ async function handleAuthSession(nextSession,reason='AUTH'){
   session=nextSession;
   if(!session)profile=null;
   await loadProfile();
+  if(session)startOnlinePresence();
+  else if(onlineChannel){supabaseClient.removeChannel(onlineChannel);onlineChannel=null;onlineMembers.clear();updatePresenceLabels();}
   await loadChallenges();
   await loadProductIdeas();
   subscribeChat();
@@ -858,4 +1009,10 @@ supabaseClient.auth.getSession().then(({data,error})=>{
 <style>
 .profile-editor{max-width:620px;margin:35px auto;padding:28px}.profile-editor label{display:block;margin:18px 0 7px;font-weight:700}.profile-editor input{display:block;width:100%;padding:13px;background:#080808;color:#fff;border:1px solid #444;border-radius:8px;margin-bottom:8px}.avatar-preview{width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid #a22;margin:14px 0}.public-profile{max-width:760px;margin:35px auto;padding:28px}.public-profile-head{display:flex;gap:22px;align-items:center}.public-avatar{width:112px;height:112px;border-radius:50%;object-fit:cover;border:2px solid #a22;background:#211}.public-profile-head h1{margin:5px 0;font-size:32px}.profile-stats{grid-template-columns:1fr 1fr;margin:24px 0}.member-link{cursor:pointer;color:#f3f3f3}.member-link:hover{color:#ff5555;text-decoration:underline}.tiny-avatar{width:25px;height:25px;object-fit:cover;border-radius:50%;vertical-align:middle;margin-right:7px;border:1px solid #722}.chat-message-head{display:flex;align-items:center;gap:4px}.chat-message-head time{margin-left:auto;color:#999;font-size:10px}.rank .member-link{display:inline-flex;align-items:center}.profile .profile-name-button{font-size:13px}
 @media(max-width:700px){.profile-editor,.public-profile{margin:12px auto;padding:18px}.public-profile-head{align-items:flex-start;gap:14px}.public-avatar{width:82px;height:82px}.public-profile-head h1{font-size:25px}.profile-stats{grid-template-columns:1fr 1fr}.profile{display:none}}
+
+/* Keep the new Friends tab reachable in the horizontally scrollable mobile navigation. */
+@media(max-width:900px){
+ .mobile-bottom-nav{grid-template-columns:repeat(9,64px)!important;grid-auto-flow:column!important;grid-auto-columns:64px!important;overflow-x:auto!important;justify-content:start!important}
+ .mobile-bottom-nav button{width:64px!important}
+}
 </style>
