@@ -447,6 +447,29 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 }
 </style>
 </head>
+<style>
+.member-count-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.member-count-actions button{
+  margin:0;
+}
+
+@media(max-width:560px){
+  .member-count-actions{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+
+  .member-count-actions button{
+    width:100%;
+  }
+}
+</style>
 <body>
 <aside class="sidebar">
 <div class="logo">🏛️ <span>THE<br><b>COUNCIL</b></span></div>
