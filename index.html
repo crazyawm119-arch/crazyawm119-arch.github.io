@@ -805,7 +805,57 @@ async function submitBugReport(event){event.preventDefault();if(!session){setSta
 async function loadMyBugReports(){const box=document.getElementById('myBugReports');if(!box)return;if(!session){box.innerHTML='<p class="muted">Please log in to submit a report and view your reports.</p>';return}box.innerHTML='<p class="muted">Loading your reports…</p>';const {data,error}=await supabaseClient.from('bug_reports').select('id,title,category,severity,status,description,admin_notes,created_at').eq('reporter_id',session.user.id).order('created_at',{ascending:false}).limit(50);if(error){box.innerHTML='<p class="muted">Could not load reports: '+esc(error.message)+'</p>';return}if(!data?.length){box.innerHTML='<p class="muted">You have not submitted any bug reports yet.</p>';return}box.innerHTML=data.map(r=>'<article class="bug-report-item"><h4>'+esc(r.title)+'</h4><div class="bug-report-meta"><span>'+esc(r.category)+'</span><span>Severity: '+esc(r.severity)+'</span><span>Status: <b>'+esc(r.status)+'</b></span><span>'+esc(new Date(r.created_at).toLocaleString())+'</span></div><p>'+esc(r.description).replace(/\n/g,'<br>')+'</p>'+(r.admin_notes?'<p><b>Admin note:</b> '+esc(r.admin_notes)+'</p>':'')+'</article>').join('');}
 async function loadBugReports(){if(!requireAdmin())return;const box=document.getElementById('adminBugReports');if(!box)return;box.innerHTML='<p class="muted">Loading bug reports…</p>';const {data,error}=await supabaseClient.from('bug_reports').select('id,reporter_id,title,category,severity,status,description,admin_notes,created_at').order('created_at',{ascending:false}).limit(200);if(error){box.innerHTML='<p class="muted">Could not load bug reports: '+esc(error.message)+'</p>';return}if(!data?.length){box.innerHTML='<p class="muted">No bug reports have been submitted yet.</p>';return}box.innerHTML=data.map(r=>'<article class="bug-report-item"><h4>'+esc(r.title)+'</h4><div class="bug-report-meta"><span>'+esc(r.category)+'</span><span>Severity: '+esc(r.severity)+'</span><span>Submitted: '+esc(new Date(r.created_at).toLocaleString())+'</span><span>User: <code>'+esc(r.reporter_id)+'</code></span></div><p>'+esc(r.description).replace(/\n/g,'<br>')+'</p><label for="bugStatus_'+esc(r.id)+'">Status</label><select id="bugStatus_'+esc(r.id)+'"><option'+(r.status==='Open'?' selected':'')+'>Open</option><option'+(r.status==='In Progress'?' selected':'')+'>In Progress</option><option'+(r.status==='Fixed'?' selected':'')+'>Fixed</option></select><label for="bugNote_'+esc(r.id)+'">Admin note (visible to reporter)</label><textarea id="bugNote_'+esc(r.id)+'" maxlength="2000" placeholder="Optional update for the member">'+esc(r.admin_notes||'')+'</textarea><button class="red" onclick="saveBugReport(\''+esc(r.id)+'\')">SAVE UPDATE</button></article>').join('');}
 async function saveBugReport(id){if(!requireAdmin())return;const status=document.getElementById('bugStatus_'+id)?.value,note=document.getElementById('bugNote_'+id)?.value.trim()||null;if(!['Open','In Progress','Fixed'].includes(status)){setStatus('adminBugReportStatus','Choose a valid status.');return}const {error}=await supabaseClient.from('bug_reports').update({status,admin_notes:note,updated_at:new Date().toISOString()}).eq('id',id);if(error){setStatus('adminBugReportStatus','Could not update report: '+error.message);return}setStatus('adminBugReportStatus','✅ Bug report updated.',true);await loadBugReports();}
-async function saveMemberCount(){if(!requireAdmin())return;const value=Math.floor(Number(document.getElementById('adminMemberCount').value));if(!Number.isFinite(value)||value<0){setStatus('adminMemberStatus','Enter a valid non-negative member count.');return}const {error}=await supabaseClient.from('site_settings').upsert({id:1,member_count:value});if(error){setStatus('adminMemberStatus','Could not save member count: '+error.message);return}document.getElementById('dashboardMembers').textContent=value;setStatus('adminMemberStatus','✅ Dashboard member count updated.',true);}
+async function saveMemberCount(){if(!requireAdmin())return;const value=Math.floor(Number(document.getElementById('adminMemberCount').value));if(!Number.isFinite(value)||value<0){setStatus('adminMemberStatus','Enter a valid non-negative member count.');return}const {error}=await supabaseClient.from('site_settings').upsert({id:1,member_count:value});if(error){setStatus('adminMemberStatus','Could not save member count: '+error.message);return}document.getElementById('dashboardMembers').textContent=value;setStatus('adminMemberStatus','✅ Dashboard member count updated.',true);}async function showRealMemberCount(){
+  if(!requireAdmin())return;
+
+  const button=document.getElementById('realMemberCountButton');
+
+  if(button){
+    button.disabled=true;
+    button.textContent='CHECKING...';
+  }
+
+  setStatus('adminMemberStatus','Counting registered members...');
+
+  try{
+    const {count,error:countError}=await supabaseClient
+      .from('profiles')
+      .select('id',{count:'exact',head:true});
+
+    if(countError)throw countError;
+
+    if(!Number.isInteger(count)||count<0){
+      throw new Error('Invalid member count returned by Supabase.');
+    }
+
+    const {error:saveError}=await supabaseClient
+      .from('site_settings')
+      .upsert({id:1,member_count:count});
+
+    if(saveError)throw saveError;
+
+    document.getElementById('adminMemberCount').value=count;
+    document.getElementById('dashboardMembers').textContent=count;
+
+    setStatus(
+      'adminMemberStatus',
+      'Real member count updated: '+count+' registered profiles.',
+      true
+    );
+
+  }catch(error){
+    setStatus(
+      'adminMemberStatus',
+      'Could not retrieve member count: '+(error?.message||String(error))
+    );
+
+  }finally{
+    if(button){
+      button.disabled=false;
+      button.textContent='SHOW REAL MEMBER COUNT';
+    }
+  }
+}
 async function editVotes(id){if(!requireAdmin())return;const votes=Math.floor(Number(document.getElementById('votes_'+id)?.value));if(!Number.isFinite(votes)||votes<0){setStatus('adminChallengeStatusMsg','Votes must be 0 or greater.');return}const {error}=await supabaseClient.rpc('admin_set_challenge_votes',{p_challenge_id:id,p_votes:votes});if(error){setStatus('adminChallengeStatusMsg','Could not update votes: '+error.message);return}const i=tasks.findIndex(x=>x.id===id);if(i>=0)tasks[i].votes=votes;const j=adminChallenges.findIndex(x=>x.id===id);if(j>=0)adminChallenges[j].votes=votes;setStatus('adminChallengeStatusMsg','✅ Votes updated to '+votes+'.',true);render();renderAdminChallenges();}
 async function resolveAdminTarget(){const username=document.getElementById('adminUsername').value.trim();if(!username){setStatus('adminCpStatus','Enter the member username.');return null}const {data,error}=await supabaseClient.from('profiles').select('id,username').ilike('username',username).maybeSingle();if(error||!data){setStatus('adminCpStatus',error?'Could not find username: '+error.message:'No member found with that username.');return null}return data;}
 async function adminAdjustByUsername(direction){if(!requireAdmin())return;const target=await resolveAdminTarget(),value=Number(document.getElementById('adminAmount').value),reason=document.getElementById('adminReason').value.trim();if(!target)return;if(!Number.isInteger(value)||value<1||!reason){setStatus('adminCpStatus','Enter a positive whole-number amount and a reason.');return}setStatus('adminCpStatus',direction>0?'Awarding CP securely…':'Deducting CP securely…');const {data,error}=await supabaseClient.rpc('admin_adjust_cp',{p_user_id:target.id,p_amount:direction*value,p_reason:reason});if(error){setStatus('adminCpStatus','Admin action failed: '+error.message);return}setStatus('adminCpStatus','✅ '+value+' CP '+(direction>0?'awarded to ':'deducted from ')+target.username+'. New balance: '+data+' CP',true);if(target.id===session.user.id){profile.points=Number(data);syncUI()}await loadLeaderboard();}
