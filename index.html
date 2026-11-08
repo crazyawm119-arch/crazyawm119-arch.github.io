@@ -3,8 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Chris Council</title>
-<meta name="description" content="Learn how The Chris Council works, how Council Points are used, how community challenges are created and voted on, and how completed challenges are recorded.">
+<title>The Chris Council | King Chris Community &amp; Challenges</title>
+<meta name="description" content="Join The Chris Council, the community for King Chris fans. Earn Council Points, suggest challenges, vote on ideas, explore the leaderboard, and connect with other Council members.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="The Chris Council">
+<meta name="theme-color" content="#070708">
+<link rel="canonical" href="https://crazyawm119-arch.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Chris Council">
+<meta property="og:title" content="The Chris Council | King Chris Community">
+<meta property="og:description" content="Join The Chris Council: suggest challenges for King Chris, vote with the community, explore Council Points, and connect with members.">
+<meta property="og:url" content="https://crazyawm119-arch.github.io/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The Chris Council | King Chris Community">
+<meta name="twitter:description" content="Join The Chris Council community. Suggest challenges for King Chris, vote, and connect with other members.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "The Chris Council",
+  "alternateName": ["Chris Council", "The Council"],
+  "url": "https://crazyawm119-arch.github.io/",
+  "description": "A community platform where King Chris fans can suggest challenges, vote on ideas, and connect with other Council members."
+}
+</script>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#070708;color:#eee;font-family:Arial,Helvetica,sans-serif}
 .sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#090a0b;border-right:1px solid #292929;padding:24px 18px;z-index:5}
@@ -444,6 +467,16 @@ main{margin-left:245px;padding:80px 26px 60px}.page{max-width:1300px;margin:auto
 @media (max-width: 380px) {
   #chat .chat-message { max-width: 96%; padding: 5px 8px; }
   #chat .chat-messages { padding: 6px; gap: 4px; }
+}
+</style>
+<style>
+.profile-editor{max-width:620px;margin:35px auto;padding:28px}.profile-editor label{display:block;margin:18px 0 7px;font-weight:700}.profile-editor input{display:block;width:100%;padding:13px;background:#080808;color:#fff;border:1px solid #444;border-radius:8px;margin-bottom:8px}.avatar-preview{width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid #a22;margin:14px 0}.public-profile{max-width:760px;margin:35px auto;padding:28px}.public-profile-head{display:flex;gap:22px;align-items:center}.public-avatar{width:112px;height:112px;border-radius:50%;object-fit:cover;border:2px solid #a22;background:#211}.public-profile-head h1{margin:5px 0;font-size:32px}.profile-stats{grid-template-columns:1fr 1fr;margin:24px 0}.member-link{cursor:pointer;color:#f3f3f3}.member-link:hover{color:#ff5555;text-decoration:underline}.tiny-avatar{width:25px;height:25px;object-fit:cover;border-radius:50%;vertical-align:middle;margin-right:7px;border:1px solid #722}.chat-message-head{display:flex;align-items:center;gap:4px}.chat-message-head time{margin-left:auto;color:#999;font-size:10px}.rank .member-link{display:inline-flex;align-items:center}.profile .profile-name-button{font-size:13px}
+@media(max-width:700px){.profile-editor,.public-profile{margin:12px auto;padding:18px}.public-profile-head{align-items:flex-start;gap:14px}.public-avatar{width:82px;height:82px}.public-profile-head h1{font-size:25px}.profile-stats{grid-template-columns:1fr 1fr}.profile{display:none}}
+
+/* Keep the new Friends tab reachable in the horizontally scrollable mobile navigation. */
+@media(max-width:900px){
+ .mobile-bottom-nav{grid-template-columns:repeat(9,64px)!important;grid-auto-flow:column!important;grid-auto-columns:64px!important;overflow-x:auto!important;justify-content:start!important}
+ .mobile-bottom-nav button{width:64px!important}
 }
 </style>
 </head>
@@ -1107,13 +1140,3 @@ supabaseClient.auth.getSession().then(({data,error})=>{
 </script>
 </body>
 </html>
-<style>
-.profile-editor{max-width:620px;margin:35px auto;padding:28px}.profile-editor label{display:block;margin:18px 0 7px;font-weight:700}.profile-editor input{display:block;width:100%;padding:13px;background:#080808;color:#fff;border:1px solid #444;border-radius:8px;margin-bottom:8px}.avatar-preview{width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid #a22;margin:14px 0}.public-profile{max-width:760px;margin:35px auto;padding:28px}.public-profile-head{display:flex;gap:22px;align-items:center}.public-avatar{width:112px;height:112px;border-radius:50%;object-fit:cover;border:2px solid #a22;background:#211}.public-profile-head h1{margin:5px 0;font-size:32px}.profile-stats{grid-template-columns:1fr 1fr;margin:24px 0}.member-link{cursor:pointer;color:#f3f3f3}.member-link:hover{color:#ff5555;text-decoration:underline}.tiny-avatar{width:25px;height:25px;object-fit:cover;border-radius:50%;vertical-align:middle;margin-right:7px;border:1px solid #722}.chat-message-head{display:flex;align-items:center;gap:4px}.chat-message-head time{margin-left:auto;color:#999;font-size:10px}.rank .member-link{display:inline-flex;align-items:center}.profile .profile-name-button{font-size:13px}
-@media(max-width:700px){.profile-editor,.public-profile{margin:12px auto;padding:18px}.public-profile-head{align-items:flex-start;gap:14px}.public-avatar{width:82px;height:82px}.public-profile-head h1{font-size:25px}.profile-stats{grid-template-columns:1fr 1fr}.profile{display:none}}
-
-/* Keep the new Friends tab reachable in the horizontally scrollable mobile navigation. */
-@media(max-width:900px){
- .mobile-bottom-nav{grid-template-columns:repeat(9,64px)!important;grid-auto-flow:column!important;grid-auto-columns:64px!important;overflow-x:auto!important;justify-content:start!important}
- .mobile-bottom-nav button{width:64px!important}
-}
-</style>
